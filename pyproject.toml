@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gamai-trust"
+version = "0.1.1"
+description = "Fail-closed claim verification, learned injection antibodies, and false-success benchmarking for AI agents."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "gamAI" }]
+keywords = ["ai-agents", "trust", "verification", "prompt-injection", "mcp"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Topic :: Software Development :: Quality Assurance",
+  "Topic :: Security",
+]
+
+[project.scripts]
+gamai-trust = "gamai_trust.cli:main"
+gamai-trust-mcp = "gamai_trust.mcp_server:main"
+
+[project.urls]
+Homepage = "https://gamai.io"
+Source = "https://github.com/gamai-io/evidence-first-agent-runtime"
+
+[tool.setuptools]
+packages = ["gamai_trust"]

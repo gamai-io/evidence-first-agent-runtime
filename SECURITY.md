@@ -11,10 +11,16 @@ report in scope:
   is reproducible on the public corpus, **or** a false denial of clearly
   benign text that is reproducible;
 - a false success that `crossnode-bench` fails to detect given a node that
-  claims `ok:true` while ground truth fails.
+  claims `ok:true` while ground truth fails;
+- a provenance envelope (`HMAC-SHA256` or `Ed25519`) that verifies after the
+  signed report was mutated, or a signature that does not cover the evidence
+  hash.
 
 Out of scope: model-level jailbreaks unrelated to these components, denial of
-service by resource exhaustion, and reports that require private data.
+service by resource exhaustion, reports that require private data, and
+compromise of a signing key (HMAC secret or Ed25519 private key). Keys must be
+kept outside the repository; a leaked key is a deployment incident, not a
+component bypass.
 
 ## Reporting
 

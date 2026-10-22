@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# One command, no network, no keys. Runs every test and both demos.
+# One command, no network, no keys. Runs every test, MCP selftest, held-out smoke and both demos.
 set -euo pipefail
 cd "$(dirname "$0")"
 echo "== proofgate =="
@@ -15,6 +15,15 @@ PY
 echo "== agent-immunity =="
 python3 agent-immunity/tests/run_tests.py | tail -2
 python3 agent-immunity/eval.py | tail -12
+
+echo "== provenance =="
+python3 proofgate/tests/test_provenance.py | tail -2
+
+echo "== mcp =="
+python3 -m gamai_trust.mcp_server --selftest
+
+echo "== held-out (20) =="
+python3 bench/run_heldout.py --limit 20 --out /tmp/heldout_smoke.json | tail -8
 
 echo "== crossnode-bench =="
 python3 crossnode-bench/tests/run_tests.py | tail -2

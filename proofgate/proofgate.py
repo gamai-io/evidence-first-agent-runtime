@@ -56,7 +56,9 @@ def sha256_text(text: Any) -> str:
 def evidence_hash(payload: Any) -> str:
     """Hash of the canonical payload, excluding the hash field itself."""
     if isinstance(payload, dict):
-        payload = {k: v for k, v in payload.items() if k != "evidence_sha256"}
+        # signature is an envelope field, not part of the evidence payload
+        payload = {k: v for k, v in payload.items()
+                   if k not in ("evidence_sha256", "signature")}
     return sha256_text(_canon(payload))
 
 

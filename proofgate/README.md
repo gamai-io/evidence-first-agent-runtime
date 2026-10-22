@@ -59,6 +59,24 @@ python3 proofgate.py check claims.json
 python3 proofgate.py verify report.json   # tamper check
 ```
 
+## Provenance (optional)
+
+SHA-256 proves integrity, not authenticity. `provenance.py` adds an explicit
+signature envelope without breaking the evidence hash:
+
+```python
+import proofgate
+import provenance
+signed = provenance.sign_hmac(report, "shared-secret", key_id="node-a")
+assert provenance.verify_hmac(signed, "shared-secret")["ok"]
+assert proofgate.verify(signed)["ok"]   # hash still valid after signing
+```
+
+Ed25519 is available when `cryptography` is installed:
+`sign_ed25519(report, private_key_pem)` / `verify_ed25519(signed, public_key_pem)`.
+Neither scheme proves the evidence was truthful at the source; see
+[PROVENANCE.md](PROVENANCE.md) for the trust model.
+
 ## Integration patterns
 
 **Before the agent is allowed to answer**, decompose its claim:
