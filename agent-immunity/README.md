@@ -91,6 +91,9 @@ untouched/adaptive corpus has been run. See
   vocabulary with an attack can cause false positives. The 100% figures are
   tuned regressions, so the 0% built-in table is not a general protection
   claim; an untouched corpus is required before quoting a generalization rate.
+- **Cross-language gap:** a 30-attack German holdout scored **1/30 (3.3%)**
+  with 0 benign FP. The filter is English/Bosnian-specific; do not present the
+  tuned 100% as multilingual protection.
 - Near-miss is lexical. A semantic paraphrase with different vocabulary is not
   caught until a human or a classifier adds an antibody.
 - Taint is only as good as the trust labels your writers supply.
