@@ -1,0 +1,89 @@
+{
+  "true_claim": {
+    "ok": true,
+    "allow": true,
+    "reasons": [],
+    "lease_id": "L001"
+  },
+  "replay_first": {
+    "ok": true,
+    "allow": true,
+    "reasons": [],
+    "lease_id": "L001"
+  },
+  "replay_second": {
+    "ok": false,
+    "allow": false,
+    "reasons": [
+      "replay"
+    ]
+  },
+  "tamper_cases": [
+    {
+      "case": "report_observed",
+      "ok": false,
+      "reasons": [
+        "bad_signature",
+        "evidence_out_mismatch"
+      ]
+    },
+    {
+      "case": "lease_id",
+      "ok": false,
+      "reasons": [
+        "bad_signature",
+        "lease_id_mismatch"
+      ]
+    },
+    {
+      "case": "genome",
+      "ok": false,
+      "reasons": [
+        "bad_signature",
+        "genome_mismatch"
+      ]
+    },
+    {
+      "case": "cmd",
+      "ok": false,
+      "reasons": [
+        "bad_signature",
+        "cmd_mismatch"
+      ]
+    },
+    {
+      "case": "evidence",
+      "ok": false,
+      "reasons": [
+        "bad_signature",
+        "evidence_out_mismatch"
+      ]
+    },
+    {
+      "case": "status",
+      "ok": false,
+      "reasons": [
+        "bad_signature",
+        "bad_status"
+      ]
+    },
+    {
+      "case": "audience",
+      "ok": false,
+      "reasons": [
+        "bad_signature",
+        "wrong_audience"
+      ]
+    },
+    {
+      "case": "expired",
+      "ok": false,
+      "reasons": [
+        "bad_signature",
+        "expired"
+      ]
+    }
+  ],
+  "false_confirmed": 0,
+  "pass": true
+}
