@@ -9,6 +9,9 @@ Three small, dependency-free components for agents that must be **provable**,
 | **[agent-immunity](agent-immunity/)** | "Has this attack been seen before?" | injection success 100% → **0%** by round 3, utility 100%, false denial 0%, ~1.3 ms/check |
 | **[crossnode-bench](crossnode-bench/)** | "Does the agent lie about other machines?" | demo detects **2 false successes** that a naive `ok:true` scorer would count as passes |
 
+
+**Blog post (BS):** [Agent koji ne laže: dokaz, imunitet i poštenje](https://gamai.io/blog/evidence-first-agent-runtime.html)
+
 The thesis is simple: **capability is no longer the bottleneck — trust is.**
 A runtime that can prove an action, remember a refusal, and measure its own
 false-success rate is more useful than one that is merely fast.
