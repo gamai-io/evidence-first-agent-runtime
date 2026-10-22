@@ -1,0 +1,120 @@
+{
+  "test": "40 Hz gamma literature gate",
+  "unique_works": 133,
+  "human_works": 70,
+  "human_randomized_or_sham": 18,
+  "relevant_rct_like": 6,
+  "animal_works": 34,
+  "verdict": "meta-analysis is NOT justified yet: fewer than 10 relevant human RCT-like records",
+  "rct_sample": [
+    {
+      "title": "Effects of 40 Hz Brain Stimulation Across Modalities: A Comparative Narrative Review",
+      "year": 2026,
+      "doi": "https://doi.org/10.3390/brainsci16080808",
+      "review_or_protocol": true,
+      "alzheimer": true,
+      "cognition": true,
+      "other_neuromod": true
+    },
+    {
+      "title": "No Frequency-Specific Effect of Transcranial Random Noise Stimulation on Resting EEG",
+      "year": 2024,
+      "doi": "https://doi.org/10.31083/j.jin2303059",
+      "review_or_protocol": false,
+      "alzheimer": false,
+      "cognition": true,
+      "other_neuromod": true
+    },
+    {
+      "title": "Feasibility of immersive 40 Hz gamma sensory stimulation in early-stage Alzheimer’s disease",
+      "year": 2026,
+      "doi": "https://doi.org/10.1016/j.tjpad.2026.100679",
+      "review_or_protocol": false,
+      "alzheimer": true,
+      "cognition": true,
+      "other_neuromod": false
+    },
+    {
+      "title": "Research progress on 40 Hz sensory stimulation for the treatment of Alzheimer’s disease",
+      "year": 2026,
+      "doi": "https://doi.org/10.3389/fnagi.2025.1710041",
+      "review_or_protocol": true,
+      "alzheimer": true,
+      "cognition": true,
+      "other_neuromod": false
+    },
+    {
+      "title": "40 Hz audiovisual stimulation improves sustained attention and related brain oscillations",
+      "year": 2026,
+      "doi": "https://doi.org/10.1162/imag.a.1229",
+      "review_or_protocol": false,
+      "alzheimer": false,
+      "cognition": true,
+      "other_neuromod": false
+    },
+    {
+      "title": "Transcranial direct current stimulation over the sensory‐motor regions inhibits gamma synchrony",
+      "year": 2019,
+      "doi": "https://doi.org/10.1002/hbm.24556",
+      "review_or_protocol": false,
+      "alzheimer": false,
+      "cognition": false,
+      "other_neuromod": true
+    },
+    {
+      "title": "Exploring vibroacoustic therapy in adults experiencing pain: a scoping review",
+      "year": 2022,
+      "doi": "https://doi.org/10.1136/bmjopen-2020-046591",
+      "review_or_protocol": true,
+      "alzheimer": false,
+      "cognition": false,
+      "other_neuromod": true
+    },
+    {
+      "title": "Face pareidolia is enhanced by 40 Hz transcranial alternating current stimulation (tACS) of the face perception network",
+      "year": 2023,
+      "doi": "https://doi.org/10.1038/s41598-023-29124-8",
+      "review_or_protocol": false,
+      "alzheimer": false,
+      "cognition": false,
+      "other_neuromod": true
+    },
+    {
+      "title": "A parallel randomized controlled trial examining the effects of rhythmic sensory stimulation on fibromyalgia symptoms",
+      "year": 2019,
+      "doi": "https://doi.org/10.1371/journal.pone.0212021",
+      "review_or_protocol": false,
+      "alzheimer": false,
+      "cognition": false,
+      "other_neuromod": true
+    },
+    {
+      "title": "40-Hz sensory stimulation-induced gamma oscillations enhancing brain network connectivity to improve poststroke cognitive impairment: study protocol for a prosp",
+      "year": 2026,
+      "doi": "https://doi.org/10.1186/s13063-026-09562-1",
+      "review_or_protocol": true,
+      "alzheimer": false,
+      "cognition": true,
+      "other_neuromod": false
+    },
+    {
+      "title": "The role of 40 Hz auditory stimulation in sustaining cognitive health: a pilot study in dementia",
+      "year": 2025,
+      "doi": "https://doi.org/10.18203/2394-6040.ijcmph20252237",
+      "review_or_protocol": true,
+      "alzheimer": false,
+      "cognition": true,
+      "other_neuromod": false
+    },
+    {
+      "title": "Noninvasive Gamma Sensory Stimulation May Reduce White Matter and Myelin Loss in Alzheimer’s Disease",
+      "year": 2023,
+      "doi": "https://doi.org/10.3233/jad-230506",
+      "review_or_protocol": false,
+      "alzheimer": true,
+      "cognition": false,
+      "other_neuromod": false
+    }
+  ],
+  "limits": "OpenAlex metadata/abstracts only; no effect sizes, no GRADE, no full-text review"
+}
