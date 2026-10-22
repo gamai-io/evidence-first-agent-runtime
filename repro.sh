@@ -19,8 +19,11 @@ python3 agent-immunity/eval.py | tail -12
 echo "== polymorph E1 =="
 python3 polymorph/run_e1.py | tail -12
 python3 polymorph/tests/run_tests.py | tail -2
+python3 polymorph/tests/test_safe_exec.py
 python3 polymorph/run_e2.py | tail -6
 python3 polymorph/tests/test_lease_proof.py
+python3 polymorph/tests/run_tests.py | tail -2
+python3 polymorph/tests/test_safe_exec.py
 python3 polymorph/e3_cross_language.py | tail -8
 
 echo "== provenance =="
