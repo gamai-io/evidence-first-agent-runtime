@@ -3,7 +3,7 @@
 **Title (70 chars):**
 `Show HN: An agent runtime that refuses to claim what it can't prove`
 
-**URL:** https://github.com/gamai-labs/evidence-first-agent-runtime
+**URL:** https://github.com/gamai-io/evidence-first-agent-runtime
 
 **Text:**
 

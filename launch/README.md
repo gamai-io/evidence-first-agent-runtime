@@ -36,7 +36,7 @@ one word, not a week of work.
 ## Publish order (when approved)
 
 1. Push the three repos + root README to a **new public org** (suggested:
-   `gamai-labs`), MIT, no history from private repos.
+   `gamai-io`), MIT, no history from private repos.
 2. Tag `v0.1.0`, enable Issues, add a `good first issue` for each repo.
 3. Post the blog + video.
 4. Show HN (Tue–Thu, 08:00–10:00 ET), then Product Hunt (00:01 PT), then X

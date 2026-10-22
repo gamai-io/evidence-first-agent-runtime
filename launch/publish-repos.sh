@@ -8,7 +8,7 @@ cd "$(dirname "$0")/.."
 APPLY=0
 [ "${1:-}" = "--yes" ] && APPLY=1
 
-ORG="${ORG:-gamai-labs}"          # change to a user account if preferred
+ORG="${ORG:-gamai-io}"          # change to a user account if preferred
 VISIBILITY="${VISIBILITY:-public}"
 
 if [ -z "${GH_TOKEN:-}" ]; then

@@ -9,7 +9,7 @@ Assumes approval on D0. Nothing is posted before the explicit "objavi".
 - Create `SECURITY.md` + issue templates in each repo.
 
 ## D2 — repositories
-- Create public org `gamai-labs` (or the owner's choice).
+- Create public org `gamai-io` (or the owner's choice).
 - Push `proofgate`, `agent-immunity`, `crossnode-bench` as separate repos, and
   the root as `evidence-first-agent-runtime`.
 - Tag `v0.1.0`; add one `good first issue` per repo.
