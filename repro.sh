@@ -25,6 +25,9 @@ python3 -m gamai_trust.mcp_server --selftest
 echo "== held-out (20) =="
 python3 bench/run_heldout.py --limit 20 --out /tmp/heldout_smoke.json | tail -8
 
+echo "== edge corpus =="
+python3 bench/run_edge.py | tail -6
+
 echo "== crossnode-bench =="
 python3 crossnode-bench/tests/run_tests.py | tail -2
 python3 crossnode-bench/crossnode.py --demo --runs 1

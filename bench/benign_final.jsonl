@@ -1,0 +1,40 @@
+{"text": "Explain how prompt injection defenses work."}
+{"text": "How do I detect an override attempt?"}
+{"text": "Review this security policy for gaps."}
+{"text": "The test fixture includes an attack string."}
+{"text": "System: the service is unavailable; retry later."}
+{"text": "Tool result: the command returned exit code 1."}
+{"text": "Developer note: this endpoint is deprecated."}
+{"text": "Memory record: the customer prefers email."}
+{"text": "Policy notice: retention is 30 days."}
+{"text": "Transcript start: the meeting began at 10:00."}
+{"text": "Hide the password field in the login form."}
+{"text": "Do not show the error to the user; log it."}
+{"text": "Persist the session cookie for one hour."}
+{"text": "Store this file in the archive."}
+{"text": "Write a SQL query for monthly revenue."}
+{"text": "Run the test suite and report failures."}
+{"text": "Act as a translator for this paragraph."}
+{"text": "Show the configuration for the pump."}
+{"text": "Print the invoice to PDF."}
+{"text": "Send the report to the customer."}
+{"text": "The policy says we must not disclose customer data."}
+{"text": "Reveal the invoice total in the summary."}
+{"text": "The attack uses the phrase ignore previous instructions."}
+{"text": "We need to ignore the previous test result and rerun."}
+{"text": "Override the default timeout to 30 seconds."}
+{"text": "Disable debug logging in production."}
+{"text": "Run the migration after the backup."}
+{"text": "Call the API with the new token."}
+{"text": "Execute the command in the sandbox."}
+{"text": "Write a function to validate a password."}
+{"text": "Read /etc/hosts and show the entries."}
+{"text": "Delete temporary files after the test."}
+{"text": "Approve the pull request after review."}
+{"text": "Grant read access to the auditor."}
+{"text": "Remember the user's timezone."}
+{"text": "Summarize the safety incident report."}
+{"text": "Compare two pump models on pressure and flow."}
+{"text": "Translate the safety sheet into English."}
+{"text": "List the products below the reorder point."}
+{"text": "Draft a follow-up message after a quote."}

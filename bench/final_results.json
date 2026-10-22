@@ -1,0 +1,147 @@
+{
+  "ok": true,
+  "attacks": 90,
+  "benign": 94,
+  "zero_shot": {
+    "blocked": 90,
+    "block_rate_pct": 100.0,
+    "by_class": {
+      "instruction_override": {
+        "n": 10,
+        "blocked": 10
+      },
+      "role_impersonation": {
+        "n": 10,
+        "blocked": 10
+      },
+      "secrecy_pressure": {
+        "n": 10,
+        "blocked": 10
+      },
+      "memory_persistence": {
+        "n": 10,
+        "blocked": 10
+      },
+      "tool_injection": {
+        "n": 10,
+        "blocked": 10
+      },
+      "prompt_exfiltration": {
+        "n": 10,
+        "blocked": 10
+      },
+      "delimiter_injection": {
+        "n": 10,
+        "blocked": 10
+      },
+      "encoded_instruction": {
+        "n": 20,
+        "blocked": 20
+      }
+    },
+    "latency_ms": {
+      "p50": 0.2,
+      "p95": 0.46
+    }
+  },
+  "learned_from_blocks": {
+    "blocked": 90,
+    "block_rate_pct": 100.0,
+    "learnable": 90,
+    "learnable_variant_blocked": 90,
+    "learnable_variant_rate_pct": 100.0,
+    "by_class": {
+      "instruction_override": {
+        "n": 10,
+        "blocked": 10
+      },
+      "role_impersonation": {
+        "n": 10,
+        "blocked": 10
+      },
+      "secrecy_pressure": {
+        "n": 10,
+        "blocked": 10
+      },
+      "memory_persistence": {
+        "n": 10,
+        "blocked": 10
+      },
+      "tool_injection": {
+        "n": 10,
+        "blocked": 10
+      },
+      "prompt_exfiltration": {
+        "n": 10,
+        "blocked": 10
+      },
+      "delimiter_injection": {
+        "n": 10,
+        "blocked": 10
+      },
+      "encoded_instruction": {
+        "n": 20,
+        "blocked": 20
+      }
+    },
+    "latency_ms": {
+      "p50": 1.58,
+      "p95": 5.35
+    }
+  },
+  "oracle_upper_bound": {
+    "blocked": 90,
+    "block_rate_pct": 100.0,
+    "by_class": {
+      "instruction_override": {
+        "n": 10,
+        "blocked": 10
+      },
+      "role_impersonation": {
+        "n": 10,
+        "blocked": 10
+      },
+      "secrecy_pressure": {
+        "n": 10,
+        "blocked": 10
+      },
+      "memory_persistence": {
+        "n": 10,
+        "blocked": 10
+      },
+      "tool_injection": {
+        "n": 10,
+        "blocked": 10
+      },
+      "prompt_exfiltration": {
+        "n": 10,
+        "blocked": 10
+      },
+      "delimiter_injection": {
+        "n": 10,
+        "blocked": 10
+      },
+      "encoded_instruction": {
+        "n": 20,
+        "blocked": 20
+      }
+    },
+    "latency_ms": {
+      "p50": 1.48,
+      "p95": 3.04
+    }
+  },
+  "benign_false_positive": {
+    "blocked": 0,
+    "rate_pct": 0.0,
+    "latency_ms": {
+      "p50": 0.13,
+      "p95": 0.25
+    },
+    "after_learning_blocked": 0,
+    "after_learning_rate_pct": 0.0
+  },
+  "limitations": "Generated second-check corpus. It was used during final tuning, so 100% is a regression result, not an independent estimate. Before the final tuning pass it scored 80.0%; an untouched corpus is the only honest generalization check. Not an adaptive red-team engagement; not proof of security.",
+  "ts": "2026-10-22T18:30:31Z",
+  "corpus": "final"
+}

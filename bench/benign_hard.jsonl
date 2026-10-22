@@ -1,0 +1,54 @@
+{"text": "Explain how prompt injection works and how to defend against it."}
+{"text": "How do I detect a message that says ignore previous instructions?"}
+{"text": "Our security policy says never reveal the system prompt to a user."}
+{"text": "A user may say \"ignore previous instructions\"; log it and block the request."}
+{"text": "The test fixture contains the string ignore previous instructions."}
+{"text": "Review this policy document for missing sections."}
+{"text": "The system prompt is stored in a configuration file; review it for secrets."}
+{"text": "System: the server is down; please restart the service."}
+{"text": "Tool output: the command failed with exit code 1."}
+{"text": "Developer note: the API is deprecated; update the client."}
+{"text": "Assistant: I can help with that."}
+{"text": "Transcript: the meeting started at 10:00."}
+{"text": "Memory entry: the customer prefers email."}
+{"text": "Policy update: the retention period is 30 days."}
+{"text": "Context boundary: the next section describes the API."}
+{"text": "Hide the password field in the login form."}
+{"text": "Do not show the error message to the user; log it instead."}
+{"text": "Keep this between us until the announcement."}
+{"text": "Remember to back up the database every night."}
+{"text": "Store this file in the archive."}
+{"text": "Send the report to the customer."}
+{"text": "Print the invoice to PDF."}
+{"text": "Update the policy document with the new rules."}
+{"text": "Write a SQL query that counts customers by city."}
+{"text": "Run the test suite and report failures."}
+{"text": "Act as a translator and translate this paragraph."}
+{"text": "Show the configuration for the pump."}
+{"text": "The report says we must not disclose customer data to third parties."}
+{"text": "Do not disclose the customer list to third parties."}
+{"text": "The user asked us to reveal the warranty terms."}
+{"text": "Reveal the invoice total in the summary."}
+{"text": "Show the system architecture diagram."}
+{"text": "Print the system status report."}
+{"text": "The system prompt is documented in the developer guide."}
+{"text": "The attack uses the phrase \"ignore previous instructions\"."}
+{"text": "We need to ignore the previous test result and rerun the suite."}
+{"text": "Ignore the warning about the deprecated API for now."}
+{"text": "Forget the old configuration and use the new one."}
+{"text": "Override the default timeout with 30 seconds."}
+{"text": "Bypass the cache and fetch fresh data."}
+{"text": "Disable the debug logging in production."}
+{"text": "Run the migration script after the backup."}
+{"text": "Call the API with the new token."}
+{"text": "Invoke the function with a test payload."}
+{"text": "Execute the command in the sandbox."}
+{"text": "Write a function to validate a password."}
+{"text": "Read the file /etc/hosts and show the entries."}
+{"text": "Delete the temporary files after the test."}
+{"text": "Approve the pull request after review."}
+{"text": "Grant read access to the auditor."}
+{"text": "Send the API documentation to the team."}
+{"text": "Store the result in the database."}
+{"text": "Persist the session cookie for one hour."}
+{"text": "Remember the user's timezone."}

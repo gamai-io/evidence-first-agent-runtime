@@ -1,0 +1,135 @@
+{
+  "ok": true,
+  "attacks": 70,
+  "benign": 104,
+  "zero_shot": {
+    "blocked": 70,
+    "block_rate_pct": 100.0,
+    "by_class": {
+      "instruction_override": {
+        "n": 10,
+        "blocked": 10
+      },
+      "role_impersonation": {
+        "n": 10,
+        "blocked": 10
+      },
+      "secrecy_pressure": {
+        "n": 10,
+        "blocked": 10
+      },
+      "memory_persistence": {
+        "n": 10,
+        "blocked": 10
+      },
+      "tool_injection": {
+        "n": 10,
+        "blocked": 10
+      },
+      "prompt_exfiltration": {
+        "n": 10,
+        "blocked": 10
+      },
+      "delimiter_injection": {
+        "n": 10,
+        "blocked": 10
+      }
+    },
+    "latency_ms": {
+      "p50": 0.2,
+      "p95": 0.33
+    }
+  },
+  "learned_from_blocks": {
+    "blocked": 70,
+    "block_rate_pct": 100.0,
+    "learnable": 70,
+    "learnable_variant_blocked": 70,
+    "learnable_variant_rate_pct": 100.0,
+    "by_class": {
+      "instruction_override": {
+        "n": 10,
+        "blocked": 10
+      },
+      "role_impersonation": {
+        "n": 10,
+        "blocked": 10
+      },
+      "secrecy_pressure": {
+        "n": 10,
+        "blocked": 10
+      },
+      "memory_persistence": {
+        "n": 10,
+        "blocked": 10
+      },
+      "tool_injection": {
+        "n": 10,
+        "blocked": 10
+      },
+      "prompt_exfiltration": {
+        "n": 10,
+        "blocked": 10
+      },
+      "delimiter_injection": {
+        "n": 10,
+        "blocked": 10
+      }
+    },
+    "latency_ms": {
+      "p50": 1.66,
+      "p95": 4.02
+    }
+  },
+  "oracle_upper_bound": {
+    "blocked": 70,
+    "block_rate_pct": 100.0,
+    "by_class": {
+      "instruction_override": {
+        "n": 10,
+        "blocked": 10
+      },
+      "role_impersonation": {
+        "n": 10,
+        "blocked": 10
+      },
+      "secrecy_pressure": {
+        "n": 10,
+        "blocked": 10
+      },
+      "memory_persistence": {
+        "n": 10,
+        "blocked": 10
+      },
+      "tool_injection": {
+        "n": 10,
+        "blocked": 10
+      },
+      "prompt_exfiltration": {
+        "n": 10,
+        "blocked": 10
+      },
+      "delimiter_injection": {
+        "n": 10,
+        "blocked": 10
+      }
+    },
+    "latency_ms": {
+      "p50": 2.0,
+      "p95": 3.54
+    }
+  },
+  "benign_false_positive": {
+    "blocked": 0,
+    "rate_pct": 0.0,
+    "latency_ms": {
+      "p50": 0.22,
+      "p95": 0.45
+    },
+    "after_learning_blocked": 1,
+    "after_learning_rate_pct": 0.96
+  },
+  "limitations": "Edge regression corpus. It was used during tuning, so 100% is a regression result, not an independent estimate. Adaptive attackers are not covered.",
+  "ts": "2026-10-22T18:30:32Z",
+  "corpus": "edge"
+}

@@ -57,7 +57,7 @@ git clone …
 ./repro.sh
 ```
 
-16/16, 28/28, 10/10 tests. Numbers, limitations, and raw eval output in the
+16/16, 40/40, 10/10 tests. Numbers, limitations, and raw eval output in the
 repo.
 
 9/

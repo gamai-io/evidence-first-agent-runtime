@@ -31,7 +31,7 @@ this repository.
 | **Information disclosure** | Logs or MCP output leak secrets | Do not log evidence bodies; redact in callers; MCP is local stdio | Caller can still put secrets in `observed` |
 | **Denial of service** | Huge claim list or pathological JSON | Caller-side limits; `MAX_*` bounds in agent-immunity; no network listener | No hard CPU/memory quota in the library |
 | **Elevation of privilege** | MCP tool abused to write files or run shell | MCP tools are pure/read-only: verify, check, add antibody, stats, demo | Host that wraps the MCP server must enforce its own permissions |
-| **Prompt injection** | Document says "ignore previous instructions" | NFKC + invisible stripping + homoglyph folding + base64 + patterns + antibodies | Adaptive attacker with new vocabulary; held-out zero-shot is 29% |
+| **Prompt injection** | Document says "ignore previous instructions" | NFKC + invisible stripping + homoglyph folding + base64 + patterns + antibodies | Adaptive attacker with new vocabulary; tuned corpora reach 100%, second corpus was 80% before tuning; adaptive attacker untested |
 | **False success** | Node says `ok:true` after a timeout | Ground-truth predicates in crossnode-bench; false success is a separate metric | Benchmark tasks are finite; a new failure mode can be missed |
 | **Key compromise** | HMAC secret or private key leaks | Keys outside repo; rotation via `key_id`; least privilege | Rotation/revocation is operational, not enforced by the library |
 | **Supply chain** | Malicious pip package or CI action | Core has no runtime dependencies; CI actions pinned by major version; add SBOM and secret scanning | `cryptography` is optional and must be pinned by the consumer |

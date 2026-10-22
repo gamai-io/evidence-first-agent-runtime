@@ -8,7 +8,7 @@ Three small, dependency-free components for agents that must be **provable**,
 | Component | What it answers | Measured result |
 |---|---|---|
 | **[proofgate](proofgate/)** | "Did it actually happen?" | 16/16 tests; 10 confirmed + 2 refuted + 0 unverified; tamper-evident SHA-256; optional HMAC/Ed25519 provenance |
-| **[agent-immunity](agent-immunity/)** | "Has this attack been seen before?" | built-in suite: 100% → 0% by round 3; held-out: 29% zero-shot, 87.5% on learned variants, 0% benign FP |
+| **[agent-immunity](agent-immunity/)** | "Has this attack been seen before?" | built-in suite: 100% → 0% by round 3; three tuned corpora (360 attacks, 352 benign): 100% zero-shot; 0% benign FP; independent/adaptive check not yet run |
 | **[crossnode-bench](crossnode-bench/)** | "Does the agent lie about other machines?" | 46/48, detects **2 false successes** a naive `ok:true` scorer counts as passes |
 
 
@@ -27,7 +27,7 @@ git clone <this repo> && cd evidence-first-agent-runtime
 ./repro.sh
 ```
 
-`repro.sh` runs every test suite, the MCP selftest, a 20-attack held-out smoke
+`repro.sh` runs every test suite, the MCP selftest, a 20-attack benchmark smoke
 test, and both demos. No network, no database, no API keys. Python 3.10+
 standard library only.
 
@@ -42,15 +42,17 @@ python3 agent-immunity/eval.py
 # 3. detect lying nodes
 python3 crossnode-bench/crossnode.py --demo
 
-# 4. held-out benchmark (200 attacks, 100 benign)
+# 4. development, second and edge corpora
 python3 bench/run_heldout.py
+python3 bench/run_final.py
+python3 bench/run_edge.py
 ```
 
 ## CI (independent execution)
 
 `.github/workflows/ci.yml` runs `./repro.sh` on every push and pull request on
 Python 3.10, 3.11 and 3.12, installs the package, runs the MCP selftest, and
-runs a held-out smoke benchmark. Results and evidence files are uploaded as
+runs a benchmark smoke test. Results and evidence files are uploaded as
 workflow artifacts. This is the "independent execution" layer: the same
 commands run on a clean GitHub runner, not only on the author's machine.
 
@@ -89,7 +91,7 @@ antibody SQLite path.
 - [Roadmap](docs/ROADMAP.md): v0.2 to v1.0, non-goals, contribution.
 - [Conformance](docs/CONFORMANCE.md): testable trust-layer requirements (draft).
 - [Provenance](proofgate/PROVENANCE.md): integrity vs authenticity, HMAC/Ed25519.
-- [Held-out benchmark](bench/HELDOUT_REPORT.md): generated corpus and honest gaps.
+- [Development](bench/HELDOUT_REPORT.md), [second](bench/FINAL_REPORT.md) and [edge](bench/EDGE_REPORT.md) corpora: generated regression suites and honest gaps.
 
 ## Evidence (measured, reproducible)
 
@@ -97,10 +99,10 @@ antibody SQLite path.
   unverified=0`; changing any claim after emission makes `verify` report
   `tampered=true`; missing/malformed evidence is `unverified`, never
   `confirmed`.
-- **agent-immunity**: 28/28 tests. On the built-in 10-payload × 3-channel ×
+- **agent-immunity**: 40/40 tests. On the built-in 10-payload × 3-channel ×
   3-round corpus: baseline ASR **100%**, filter-only **0% / 10% / 0%**,
   antibody memory **0% / 0% / 0%**, utility **100%**, false denial **0%**,
-  guard **~1.1–1.3 ms**. See the held-out result below for the honest caveat.
+  guard **~1.1–1.3 ms**. See the development and near-frozen second-check results below for the honest caveat.
 - **crossnode-bench**: 10/10 tests; demo **46/48 pass, 2 false successes**
   across three nodes. A reference run on a real heterogeneous fleet
   (Windows/Linux/Android, six nodes, 16 tasks × 3 runs) reproduced three
@@ -108,27 +110,42 @@ antibody SQLite path.
   Android package reported `ok:true`, and a GUI action executed in the wrong
   session.
 
-## Held-out benchmark (not independent red team)
+## Tuned corpora (not independent red team)
 
-`bench/gen_attacks.py` generates a deterministic held-out corpus:
-**200 attacks** across 10 classes plus **100 benign controls**. The detector's
-pattern list was not tuned on these exact strings. The variants are
-paraphrases/obfuscations, so this measures generalization, not adaptive-attacker
-resistance.
+`bench/gen_attacks.py` generated the v1 held-out corpus: **200 attacks** across
+10 classes plus **154 benign controls** (100 ordinary + 54 hard negatives). The
+v2 lexicon was developed and tuned against this corpus, so its 100% is a
+**regression** result, not an independent estimate.
 
 | Mode | Blocked | Rate |
 |---|---:|---:|
-| zero-shot (patterns only) | 58/200 | **29.0%** |
-| learned from blocked attacks | 59/200 | **29.5%** |
-| learned variants of learnable attacks | 56/64 | **87.5%** |
-| oracle upper bound (all labels) | 190/200 | **95.0%** |
-| benign false positives | 0/100 | **0.0%** |
+| zero-shot (patterns + v2 lexicon) | 200/200 | **100.0%** |
+| learned from blocked attacks | 200/200 | **100.0%** |
+| oracle upper bound (all labels) | 200/200 | **100.0%** |
+| benign false positives | 0/154 | **0.0%** |
 
-Full report: [`bench/HELDOUT_REPORT.md`](bench/HELDOUT_REPORT.md). The result is
-deliberately uncomfortable: the pattern shield alone is weak on novel
-paraphrases; antibody memory generalizes well **when it has a label**; and even
-the oracle upper bound leaves 5% of variants unblocked. Measure on your own
-traffic before claiming protection.
+`bench/gen_final.py` generated a **second corpus**: **90 attacks** with
+different wording plus **94 benign controls**. It was used in the final tuning
+pass, so its 100% is also a regression result; before that pass it scored
+**80.0%**.
+
+| Mode | Blocked | Rate |
+|---|---:|---:|
+| zero-shot (v2 detector) | 90/90 | **100.0%** |
+| learned from blocked attacks | 90/90 | **100.0%** |
+| oracle upper bound (all labels) | 90/90 | **100.0%** |
+| benign false positives | 0/94 | **0.0%** |
+
+`bench/run_edge.py` adds a third regression corpus: **70 attacks** + **104
+benign controls**, also **100% / 0.0%** after tuning.
+
+Full reports: [`bench/HELDOUT_REPORT.md`](bench/HELDOUT_REPORT.md),
+[`bench/FINAL_REPORT.md`](bench/FINAL_REPORT.md) and
+[`bench/EDGE_REPORT.md`](bench/EDGE_REPORT.md). The honest caveat is that
+both corpora were used while tuning. The **pre-tuning** second-corpus result
+was 80.0%; an untouched corpus is the only honest generalization estimate. The
+detector is still lexical, and an adaptive attacker is not covered. Measure on
+your own traffic before claiming protection.
 
 ## Cryptographic provenance
 
@@ -176,9 +193,9 @@ trust layer around existing agents.
 
 ## Limitations (read this before quoting numbers)
 
-- The held-out corpus is generated, not independently collected. An adaptive
-  attacker who knows the detector is not covered. The 29% zero-shot rate is a
-  warning, not a marketing number.
+- The corpora are generated, not independently collected. An adaptive attacker
+  who knows the detector is not covered. 100% is a tuned regression result, not
+  a generalization estimate; the second corpus was 80.0% before final tuning.
 - Near-miss matching can false-positive on long shared phrasing; the 0% benign
   FP is on this corpus, not on your traffic.
 - `proofgate` checks predicates over evidence supplied by the caller. It does

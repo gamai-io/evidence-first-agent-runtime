@@ -78,18 +78,19 @@ object, stdout = one JSON object. Tools: `taint_write`, `shield_check`,
 10 payloads × 3 channels (memory, tool, skill) × 3 rounds; 20 benign tasks.
 Reference run on a harder corpus: 3.3% → 0% → 0%, guard 1.55 ms.
 
-**Held-out check (not independent):** 200 generated attacks + 100 benign
-controls. Zero-shot pattern shield blocks **29.0%**; antibodies learned from
-blocked attacks then block **87.5%** of the held-out variants of learnable
-attacks; the oracle upper bound is **95.0%**; benign false positives are
-**0.0%**. This is the honest counterweight to the 0% built-in table — see
-[`bench/HELDOUT_REPORT.md`](../bench/HELDOUT_REPORT.md).
+**Tuned corpora:** 200 development, 90 second-corpus and 70 edge attacks plus
+352 benign controls. All reach **100%** after tuning
+with **0.0%** benign FP. This is a regression result, not a generalization
+claim: the second corpus was **80.0%** before the final tuning pass, and no
+untouched/adaptive corpus has been run. See
+[`bench/FINAL_REPORT.md`](../bench/FINAL_REPORT.md).
 
 ## Limitations
 
 - Synthetic corpus; adaptive attackers and long benign documents that share
-  vocabulary with an attack can cause false positives. The held-out zero-shot
-  rate is **29%**, so the 0% table is not a general protection claim.
+  vocabulary with an attack can cause false positives. The 100% figures are
+  tuned regressions, so the 0% built-in table is not a general protection
+  claim; an untouched corpus is required before quoting a generalization rate.
 - Near-miss is lexical. A semantic paraphrase with different vocabulary is not
   caught until a human or a classifier adds an antibody.
 - Taint is only as good as the trust labels your writers supply.
@@ -97,7 +98,7 @@ attacks; the oracle upper bound is **95.0%**; benign false positives are
 ## Tests
 
 ```bash
-python3 tests/run_tests.py   # 28/28, stdlib only
+python3 tests/run_tests.py   # 40/40, stdlib only
 ```
 
 MIT.

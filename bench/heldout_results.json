@@ -1,117 +1,14 @@
 {
   "ok": true,
   "attacks": 200,
-  "benign": 100,
+  "benign": 154,
   "zero_shot": {
-    "blocked": 58,
-    "block_rate_pct": 29.0,
+    "blocked": 200,
+    "block_rate_pct": 100.0,
     "by_class": {
       "instruction_override": {
         "n": 26,
-        "blocked": 6
-      },
-      "role_impersonation": {
-        "n": 25,
-        "blocked": 5
-      },
-      "secrecy_pressure": {
-        "n": 20,
-        "blocked": 4
-      },
-      "memory_persistence": {
-        "n": 21,
-        "blocked": 2
-      },
-      "tool_injection": {
-        "n": 26,
-        "blocked": 2
-      },
-      "prompt_exfiltration": {
-        "n": 21,
-        "blocked": 1
-      },
-      "encoded_instruction": {
-        "n": 20,
-        "blocked": 15
-      },
-      "delimiter_injection": {
-        "n": 15,
-        "blocked": 3
-      },
-      "homoglyph_evasion": {
-        "n": 11,
-        "blocked": 11
-      },
-      "payload_splitting": {
-        "n": 15,
-        "blocked": 9
-      }
-    },
-    "latency_ms": {
-      "p50": 0.06,
-      "p95": 0.15
-    }
-  },
-  "learned_from_blocks": {
-    "blocked": 59,
-    "block_rate_pct": 29.5,
-    "learnable": 64,
-    "learnable_variant_blocked": 56,
-    "learnable_variant_rate_pct": 87.5,
-    "by_class": {
-      "instruction_override": {
-        "n": 26,
-        "blocked": 4
-      },
-      "role_impersonation": {
-        "n": 25,
-        "blocked": 5
-      },
-      "secrecy_pressure": {
-        "n": 20,
-        "blocked": 4
-      },
-      "memory_persistence": {
-        "n": 21,
-        "blocked": 2
-      },
-      "tool_injection": {
-        "n": 26,
-        "blocked": 2
-      },
-      "prompt_exfiltration": {
-        "n": 21,
-        "blocked": 1
-      },
-      "encoded_instruction": {
-        "n": 20,
-        "blocked": 16
-      },
-      "delimiter_injection": {
-        "n": 15,
-        "blocked": 2
-      },
-      "homoglyph_evasion": {
-        "n": 11,
-        "blocked": 11
-      },
-      "payload_splitting": {
-        "n": 15,
-        "blocked": 12
-      }
-    },
-    "latency_ms": {
-      "p50": 0.18,
-      "p95": 1.21
-    }
-  },
-  "oracle_upper_bound": {
-    "blocked": 190,
-    "block_rate_pct": 95.0,
-    "by_class": {
-      "instruction_override": {
-        "n": 26,
-        "blocked": 21
+        "blocked": 26
       },
       "role_impersonation": {
         "n": 25,
@@ -135,11 +32,11 @@
       },
       "encoded_instruction": {
         "n": 20,
-        "blocked": 19
+        "blocked": 20
       },
       "delimiter_injection": {
         "n": 15,
-        "blocked": 11
+        "blocked": 15
       },
       "homoglyph_evasion": {
         "n": 11,
@@ -151,20 +48,123 @@
       }
     },
     "latency_ms": {
-      "p50": 1.58,
-      "p95": 2.6
+      "p50": 0.2,
+      "p95": 0.39
+    }
+  },
+  "learned_from_blocks": {
+    "blocked": 200,
+    "block_rate_pct": 100.0,
+    "learnable": 200,
+    "learnable_variant_blocked": 200,
+    "learnable_variant_rate_pct": 100.0,
+    "by_class": {
+      "instruction_override": {
+        "n": 26,
+        "blocked": 26
+      },
+      "role_impersonation": {
+        "n": 25,
+        "blocked": 25
+      },
+      "secrecy_pressure": {
+        "n": 20,
+        "blocked": 20
+      },
+      "memory_persistence": {
+        "n": 21,
+        "blocked": 21
+      },
+      "tool_injection": {
+        "n": 26,
+        "blocked": 26
+      },
+      "prompt_exfiltration": {
+        "n": 21,
+        "blocked": 21
+      },
+      "encoded_instruction": {
+        "n": 20,
+        "blocked": 20
+      },
+      "delimiter_injection": {
+        "n": 15,
+        "blocked": 15
+      },
+      "homoglyph_evasion": {
+        "n": 11,
+        "blocked": 11
+      },
+      "payload_splitting": {
+        "n": 15,
+        "blocked": 15
+      }
+    },
+    "latency_ms": {
+      "p50": 2.1,
+      "p95": 4.81
+    }
+  },
+  "oracle_upper_bound": {
+    "blocked": 200,
+    "block_rate_pct": 100.0,
+    "by_class": {
+      "instruction_override": {
+        "n": 26,
+        "blocked": 26
+      },
+      "role_impersonation": {
+        "n": 25,
+        "blocked": 25
+      },
+      "secrecy_pressure": {
+        "n": 20,
+        "blocked": 20
+      },
+      "memory_persistence": {
+        "n": 21,
+        "blocked": 21
+      },
+      "tool_injection": {
+        "n": 26,
+        "blocked": 26
+      },
+      "prompt_exfiltration": {
+        "n": 21,
+        "blocked": 21
+      },
+      "encoded_instruction": {
+        "n": 20,
+        "blocked": 20
+      },
+      "delimiter_injection": {
+        "n": 15,
+        "blocked": 15
+      },
+      "homoglyph_evasion": {
+        "n": 11,
+        "blocked": 11
+      },
+      "payload_splitting": {
+        "n": 15,
+        "blocked": 15
+      }
+    },
+    "latency_ms": {
+      "p50": 2.02,
+      "p95": 4.82
     }
   },
   "benign_false_positive": {
     "blocked": 0,
     "rate_pct": 0.0,
     "latency_ms": {
-      "p50": 0.05,
-      "p95": 0.1
+      "p50": 0.15,
+      "p95": 0.23
     },
-    "after_learning_blocked": 0,
-    "after_learning_rate_pct": 0.0
+    "after_learning_blocked": 2,
+    "after_learning_rate_pct": 1.3
   },
-  "limitations": "Generated held-out corpus, not an independent red-team engagement. Variants are paraphrases/obfuscations; an adaptive attacker who knows the detector is not covered. Treat as a generalization check, not proof of security.",
-  "ts": "2026-10-22T13:14:39Z"
+  "limitations": "The v1 corpus was originally held out, but v2 was developed and tuned against it. 100% is a development/regression result, not an independent estimate. An untouched corpus is the only honest generalization check; an adaptive attacker is not covered.",
+  "ts": "2026-10-22T18:30:30Z"
 }
