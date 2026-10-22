@@ -9,7 +9,7 @@ artifact. This index is deliberately short; the full claims ledger is in
 | proofgate demo: 10 confirmed, 2 refuted, 0 unverified | `python3 proofgate/proofgate.py demo` | `/tmp/proofgate_demo.json` | 12 built-in claims; predicates are caller-supplied |
 | Reports are tamper-evident | `python3 proofgate/tests/run_tests.py` | test output | A hash proves integrity, not authenticity |
 | Provenance signatures detect tampering | `python3 proofgate/tests/test_provenance.py` | 9/9 tests | Does not prove the source was truthful |
-| Built-in injection suite: 100% -> 0% | `python3 agent-immunity/eval.py` | `agent-immunity/eval_results.json` | Synthetic corpus; not an adaptive attacker |
+| Built-in injection suite: 100% -> 0% | `python3 agent-immunity/eval.py` | `agent-immunity/eval_results.json` (generated; not tracked) | Synthetic corpus; not an adaptive attacker |
 | Held-out zero-shot: 29.0% | `python3 bench/run_heldout.py` | `bench/heldout_results.json`, `bench/HELDOUT_REPORT.md` | Generated, not an independent red team |
 | Learned variants: 87.5% of learnable attacks | same | same | Only attacks blocked once can be learned |
 | Oracle upper bound: 95.0% | same | same | Upper bound, not a deployable mode |
