@@ -1,0 +1,11 @@
+{
+  "test": "deterministic sequence semantics",
+  "k": 5,
+  "sequences": 20,
+  "unique_hashes": 20,
+  "rc_invariant": 20,
+  "frame1_changed": 20,
+  "frame2_changed": 20,
+  "repeat_hash_equal": true,
+  "pass": true
+}

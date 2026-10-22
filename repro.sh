@@ -16,6 +16,9 @@ echo "== agent-immunity =="
 python3 agent-immunity/tests/run_tests.py | tail -2
 python3 agent-immunity/eval.py | tail -12
 
+echo "== T1 det-seq =="
+python3 labs/det_seq.py | tail -10
+
 echo "== polymorph E1 =="
 python3 polymorph/run_e1.py | tail -12
 python3 polymorph/tests/run_tests.py | tail -2
