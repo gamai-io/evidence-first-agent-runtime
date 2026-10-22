@@ -16,6 +16,7 @@ artifact. This index is deliberately short; the full claims ledger is in
 | Benign false positives: 0/154 dev, 0/94 second check | both runs | both reports | Small, English/Bosnian benign set |
 | Edge-corpus zero-shot: 100% (tuned) | `python3 bench/run_edge.py` | `bench/edge_results.json`, `bench/EDGE_REPORT.md` | Also used during tuning; not independent |
 | German cross-language holdout: 1/30 (3.3%), 0/15 benign FP | `python3 polymorph/e3_cross_language.py` | `polymorph/corpus/e3_results.json`, `docs/E3_RESULTS_2026-10-22.md` | Human-authored German, not adaptive; shows filter is language-specific |
+| German semantic gate: 28/30 (93.3%), 0/15 FP, ~120 ms/item | `python3 polymorph/semantic_gate.py` | `polymorph/corpus/e4_results.json`, `docs/E4_RESULTS_2026-10-22.md` | Local Qwen3B; varies 93–97%; guards tuned; not a boundary |
 | Agent-immunity tests: 40/40 | `python3 agent-immunity/tests/run_tests.py` | test output | Stdlib only; no adaptive attacker |
 | crossnode-bench: 46/48, 2 false successes | `python3 crossnode-bench/crossnode.py --demo --runs 1` | `crossnode-bench/runs/<stamp>/report.json` | Demo uses mocked lying nodes; fleet run is separate |
 | CI runs on Python 3.10/3.11/3.12 | `.github/workflows/ci.yml` | GitHub Actions run | Hosted runner, public logs only |

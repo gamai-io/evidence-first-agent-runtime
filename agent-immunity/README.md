@@ -93,7 +93,8 @@ untouched/adaptive corpus has been run. See
   claim; an untouched corpus is required before quoting a generalization rate.
 - **Cross-language gap:** a 30-attack German holdout scored **1/30 (3.3%)**
   with 0 benign FP. The filter is English/Bosnian-specific; do not present the
-  tuned 100% as multilingual protection.
+  tuned 100% as multilingual protection. A local 3B semantic prototype reached
+  28/30 German (93.3%) with 0 benign FP, still a filter and not a boundary.
 - Near-miss is lexical. A semantic paraphrase with different vocabulary is not
   caught until a human or a classifier adds an antibody.
 - Taint is only as good as the trust labels your writers supply.
