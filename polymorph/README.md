@@ -24,6 +24,10 @@ python3 polymorph/tests/run_tests.py
 Expected: **20/20 benign allowed, 40/40 malicious denied, 40/40 with a recorded
 capability gain, 0 false allow, 0 false deny**, static check p50 under 1 ms.
 
+The checker is strict: unknown keys, missing/extra scope, nested `args`,
+duplicate JSON keys and percent/fullwidth traversal are denied. It is static;
+symlink resolution belongs to execution (`safe_exec.py` / `openat2`).
+
 This is a static admission check, not a sandbox. Execution isolation is a
 separate layer (PROTEAN / gVisor / Firecracker). The result does not prove
 protection against an adaptive attacker.

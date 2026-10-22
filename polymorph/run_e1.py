@@ -10,7 +10,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
-from effect_lease import Lease, check  # noqa: E402
+from effect_lease import Lease, check, loads_strict  # noqa: E402
 
 LEASE = Lease.from_dict({"effects": {
     "fs.read": ["/in"],
@@ -27,7 +27,7 @@ def main() -> int:
     if not path.exists():
         import gen_e1
         gen_e1.main()
-    rows = [json.loads(x) for x in path.read_text(encoding="utf-8").splitlines() if x.strip()]
+    rows = [loads_strict(x) for x in path.read_text(encoding="utf-8").splitlines() if x.strip()]
     out = []
     lat = []
     for row in rows:

@@ -6,7 +6,7 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
-from effect_lease import Lease, check  # noqa: E402
+from effect_lease import Lease, check, loads_strict  # noqa: E402
 
 L = Lease.from_dict({"effects": {
     "fs.read": ["/in"], "fs.write": ["/out"],
@@ -56,12 +56,53 @@ def approved_net_allowed():
 
 
 @test
-def unknown_effect_denied():
+def missing_steps_denied():
+    assert not check({"id": "m", "ops": []}, L)["allow"]
+
+
+@test
+def missing_scope_denied():
+    assert not check({"id": "m", "steps": [{"op": "fs.read"}]}, L)["allow"]
+
+
+@test
+def nested_args_denied():
+    assert not check({"id": "m", "steps": [{"op": "fs.read", "args": {"path": "/etc/passwd"}}]}, L)["allow"]
+
+
+@test
+def extra_key_denied():
+    assert not check({"id": "m", "steps": [{"op": "fs.read", "path": "/in/a", "url": "https://x"}]}, L)["allow"]
+
+
+@test
+def percent_traversal_denied():
+    assert not check({"id": "m", "steps": [{"op": "fs.read", "path": "/in/%2e%2e/%2e%2e/etc/passwd"}]}, L)["allow"]
+
+
+@test
+def fullwidth_traversal_denied():
+    assert not check({"id": "m", "steps": [{"op": "fs.read", "path": "/in/／..／..／etc/passwd"}]}, L)["allow"]
+
+
+@test
+def malformed_is_deny_not_exception():
+    d = check({"id": "m", "steps": [{"op": "gpu.run"}]}, L)
+    assert d["allow"] is False and d["reasons"][0].startswith("schema:")
+
+
+@test
+def duplicate_keys_rejected():
     try:
-        check({"id": "m", "steps": [{"op": "gpu.run"}]}, L)
+        loads_strict('{"a":1,"a":2}')
     except ValueError:
         return
-    raise AssertionError("unknown effect accepted")
+    raise AssertionError("duplicate key accepted")
+
+
+@test
+def unknown_effect_denied():
+    assert not check({"id": "m", "steps": [{"op": "gpu.run"}]}, L)["allow"]
 
 
 def main():
