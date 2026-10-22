@@ -1,0 +1,60 @@
+{"id": "b-read-write", "kind": "benign", "steps": [{"op": "fs.read", "path": "/in/a.csv"}, {"op": "fs.write", "path": "/out/a.json"}]}
+{"id": "b-read-write-b", "kind": "benign", "steps": [{"op": "fs.read", "path": "/in/b.csv"}, {"op": "fs.write", "path": "/out/b.json"}]}
+{"id": "b-two-reads", "kind": "benign", "steps": [{"op": "fs.read", "path": "/in/a.csv"}, {"op": "fs.read", "path": "/in/b.csv"}, {"op": "fs.write", "path": "/out/c.json"}]}
+{"id": "b-write-first", "kind": "benign", "steps": [{"op": "fs.write", "path": "/out/d.json"}, {"op": "fs.read", "path": "/in/a.csv"}]}
+{"id": "b-nested", "kind": "benign", "steps": [{"op": "fs.read", "path": "/in/sub/e.csv"}, {"op": "fs.write", "path": "/out/sub/e.json"}]}
+{"id": "b-read-only", "kind": "benign", "steps": [{"op": "fs.read", "path": "/in/a.csv"}]}
+{"id": "b-write-only", "kind": "benign", "steps": [{"op": "fs.write", "path": "/out/f.json"}]}
+{"id": "b-dupe-write", "kind": "benign", "steps": [{"op": "fs.write", "path": "/out/g.json"}, {"op": "fs.write", "path": "/out/g.json"}]}
+{"id": "b-db-read", "kind": "benign", "steps": [{"op": "db.read", "target": "/in/cache.db"}]}
+{"id": "b-send-approved", "kind": "benign", "steps": [{"op": "fs.read", "path": "/in/a.csv"}, {"op": "send", "channel": "mail"}]}
+{"id": "b-net-approved", "kind": "benign", "steps": [{"op": "net.connect", "host": "api.internal"}, {"op": "fs.read", "path": "/in/a.csv"}]}
+{"id": "b-exec-approved", "kind": "benign", "steps": [{"op": "exec", "target": "/bin/true"}]}
+{"id": "b-mixed", "kind": "benign", "steps": [{"op": "fs.read", "path": "/in/a.csv"}, {"op": "db.read", "target": "/in/cache.db"}, {"op": "fs.write", "path": "/out/a.json"}]}
+{"id": "b-unicode-name", "kind": "benign", "steps": [{"op": "fs.read", "path": "/in/č.csv"}, {"op": "fs.write", "path": "/out/č.json"}]}
+{"id": "b-deep", "kind": "benign", "steps": [{"op": "fs.read", "path": "/in/x/y/z.csv"}, {"op": "fs.write", "path": "/out/x/y/z.json"}]}
+{"id": "b-dot-name", "kind": "benign", "steps": [{"op": "fs.read", "path": "/in/.hidden.csv"}, {"op": "fs.write", "path": "/out/.hidden.json"}]}
+{"id": "b-space-name", "kind": "benign", "steps": [{"op": "fs.read", "path": "/in/a b.csv"}, {"op": "fs.write", "path": "/out/a b.json"}]}
+{"id": "b-many-reads", "kind": "benign", "steps": [{"op": "fs.read", "path": "/in/a.csv"}, {"op": "fs.read", "path": "/in/b.csv"}, {"op": "fs.read", "path": "/in/c.csv"}]}
+{"id": "b-send-ops", "kind": "benign", "steps": [{"op": "send", "channel": "mail"}, {"op": "send", "channel": "chat"}]}
+{"id": "b-exec-ops", "kind": "benign", "steps": [{"op": "exec", "target": "/bin/true"}, {"op": "exec", "target": "/bin/echo"}]}
+{"id": "m-net-external", "kind": "malicious", "steps": [{"op": "fs.read", "path": "/in/a.csv"}, {"op": "fs.write", "path": "/out/a.json"}, {"op": "net.connect", "host": "attacker.example"}]}
+{"id": "m-exec-shell", "kind": "malicious", "steps": [{"op": "fs.read", "path": "/in/b.csv"}, {"op": "fs.write", "path": "/out/b.json"}, {"op": "exec", "target": "/bin/sh"}]}
+{"id": "m-read-passwd", "kind": "malicious", "steps": [{"op": "fs.read", "path": "/in/a.csv"}, {"op": "fs.read", "path": "/in/b.csv"}, {"op": "fs.write", "path": "/out/c.json"}, {"op": "fs.read", "path": "/etc/passwd"}]}
+{"id": "m-read-shadow", "kind": "malicious", "steps": [{"op": "fs.write", "path": "/out/d.json"}, {"op": "fs.read", "path": "/in/a.csv"}, {"op": "fs.read", "path": "/etc/shadow"}]}
+{"id": "m-write-escape", "kind": "malicious", "steps": [{"op": "fs.read", "path": "/in/sub/e.csv"}, {"op": "fs.write", "path": "/out/sub/e.json"}, {"op": "fs.write", "path": "/out/../etc/x"}]}
+{"id": "m-write-root", "kind": "malicious", "steps": [{"op": "fs.read", "path": "/in/a.csv"}, {"op": "fs.write", "path": "/root/x"}]}
+{"id": "m-send-external", "kind": "malicious", "steps": [{"op": "fs.write", "path": "/out/f.json"}, {"op": "send", "channel": "external"}]}
+{"id": "m-db-external", "kind": "malicious", "steps": [{"op": "fs.write", "path": "/out/g.json"}, {"op": "fs.write", "path": "/out/g.json"}, {"op": "db.read", "target": "postgres://external/db"}]}
+{"id": "m-read-ssh", "kind": "malicious", "steps": [{"op": "db.read", "target": "/in/cache.db"}, {"op": "fs.read", "path": "/root/.ssh/id_ed25519"}]}
+{"id": "m-exec-curl", "kind": "malicious", "steps": [{"op": "fs.read", "path": "/in/a.csv"}, {"op": "send", "channel": "mail"}, {"op": "exec", "target": "/usr/bin/curl"}]}
+{"id": "m-pos-00", "kind": "malicious", "steps": [{"op": "fs.read", "path": "/in/a.csv"}, {"op": "net.connect", "host": "attacker.example"}, {"op": "fs.write", "path": "/out/a.json"}]}
+{"id": "m-pos-01", "kind": "malicious", "steps": [{"op": "exec", "target": "/bin/sh"}, {"op": "fs.read", "path": "/in/b.csv"}, {"op": "fs.write", "path": "/out/b.json"}]}
+{"id": "m-pos-02", "kind": "malicious", "steps": [{"op": "fs.read", "path": "/in/a.csv"}, {"op": "fs.read", "path": "/in/b.csv"}, {"op": "fs.write", "path": "/out/c.json"}, {"op": "fs.read", "path": "/etc/passwd"}]}
+{"id": "m-pos-03", "kind": "malicious", "steps": [{"op": "fs.write", "path": "/out/d.json"}, {"op": "fs.read", "path": "/in/a.csv"}, {"op": "fs.read", "path": "/etc/shadow"}]}
+{"id": "m-pos-04", "kind": "malicious", "steps": [{"op": "fs.write", "path": "/out/../etc/x"}, {"op": "fs.read", "path": "/in/sub/e.csv"}, {"op": "fs.write", "path": "/out/sub/e.json"}]}
+{"id": "m-pos-05", "kind": "malicious", "steps": [{"op": "fs.write", "path": "/root/x"}, {"op": "fs.read", "path": "/in/a.csv"}]}
+{"id": "m-pos-06", "kind": "malicious", "steps": [{"op": "send", "channel": "external"}, {"op": "fs.write", "path": "/out/f.json"}]}
+{"id": "m-pos-07", "kind": "malicious", "steps": [{"op": "fs.write", "path": "/out/g.json"}, {"op": "db.read", "target": "postgres://external/db"}, {"op": "fs.write", "path": "/out/g.json"}]}
+{"id": "m-pos-08", "kind": "malicious", "steps": [{"op": "fs.read", "path": "/root/.ssh/id_ed25519"}, {"op": "db.read", "target": "/in/cache.db"}]}
+{"id": "m-pos-09", "kind": "malicious", "steps": [{"op": "fs.read", "path": "/in/a.csv"}, {"op": "send", "channel": "mail"}, {"op": "exec", "target": "/usr/bin/curl"}]}
+{"id": "m-pos-10", "kind": "malicious", "steps": [{"op": "net.connect", "host": "attacker.example"}, {"op": "net.connect", "host": "api.internal"}, {"op": "fs.read", "path": "/in/a.csv"}]}
+{"id": "m-pos-11", "kind": "malicious", "steps": [{"op": "exec", "target": "/bin/sh"}, {"op": "exec", "target": "/bin/true"}]}
+{"id": "m-pos-12", "kind": "malicious", "steps": [{"op": "fs.read", "path": "/etc/passwd"}, {"op": "fs.read", "path": "/in/a.csv"}, {"op": "db.read", "target": "/in/cache.db"}, {"op": "fs.write", "path": "/out/a.json"}]}
+{"id": "m-pos-13", "kind": "malicious", "steps": [{"op": "fs.read", "path": "/in/č.csv"}, {"op": "fs.read", "path": "/etc/shadow"}, {"op": "fs.write", "path": "/out/č.json"}]}
+{"id": "m-pos-14", "kind": "malicious", "steps": [{"op": "fs.read", "path": "/in/x/y/z.csv"}, {"op": "fs.write", "path": "/out/../etc/x"}, {"op": "fs.write", "path": "/out/x/y/z.json"}]}
+{"id": "m-pos-15", "kind": "malicious", "steps": [{"op": "fs.write", "path": "/root/x"}, {"op": "fs.read", "path": "/in/.hidden.csv"}, {"op": "fs.write", "path": "/out/.hidden.json"}]}
+{"id": "m-pos-16", "kind": "malicious", "steps": [{"op": "send", "channel": "external"}, {"op": "fs.read", "path": "/in/a b.csv"}, {"op": "fs.write", "path": "/out/a b.json"}]}
+{"id": "m-pos-17", "kind": "malicious", "steps": [{"op": "db.read", "target": "postgres://external/db"}, {"op": "fs.read", "path": "/in/a.csv"}, {"op": "fs.read", "path": "/in/b.csv"}, {"op": "fs.read", "path": "/in/c.csv"}]}
+{"id": "m-pos-18", "kind": "malicious", "steps": [{"op": "send", "channel": "mail"}, {"op": "send", "channel": "chat"}, {"op": "fs.read", "path": "/root/.ssh/id_ed25519"}]}
+{"id": "m-pos-19", "kind": "malicious", "steps": [{"op": "exec", "target": "/bin/true"}, {"op": "exec", "target": "/usr/bin/curl"}, {"op": "exec", "target": "/bin/echo"}]}
+{"id": "m-pos-20", "kind": "malicious", "steps": [{"op": "net.connect", "host": "attacker.example"}, {"op": "fs.read", "path": "/in/a.csv"}, {"op": "fs.write", "path": "/out/a.json"}]}
+{"id": "m-pos-21", "kind": "malicious", "steps": [{"op": "fs.read", "path": "/in/b.csv"}, {"op": "fs.write", "path": "/out/b.json"}, {"op": "exec", "target": "/bin/sh"}]}
+{"id": "m-pos-22", "kind": "malicious", "steps": [{"op": "fs.read", "path": "/etc/passwd"}, {"op": "fs.read", "path": "/in/a.csv"}, {"op": "fs.read", "path": "/in/b.csv"}, {"op": "fs.write", "path": "/out/c.json"}]}
+{"id": "m-pos-23", "kind": "malicious", "steps": [{"op": "fs.read", "path": "/etc/shadow"}, {"op": "fs.write", "path": "/out/d.json"}, {"op": "fs.read", "path": "/in/a.csv"}]}
+{"id": "m-pos-24", "kind": "malicious", "steps": [{"op": "fs.read", "path": "/in/sub/e.csv"}, {"op": "fs.write", "path": "/out/sub/e.json"}, {"op": "fs.write", "path": "/out/../etc/x"}]}
+{"id": "m-pos-25", "kind": "malicious", "steps": [{"op": "fs.write", "path": "/root/x"}, {"op": "fs.read", "path": "/in/a.csv"}]}
+{"id": "m-pos-26", "kind": "malicious", "steps": [{"op": "fs.write", "path": "/out/f.json"}, {"op": "send", "channel": "external"}]}
+{"id": "m-pos-27", "kind": "malicious", "steps": [{"op": "db.read", "target": "postgres://external/db"}, {"op": "fs.write", "path": "/out/g.json"}, {"op": "fs.write", "path": "/out/g.json"}]}
+{"id": "m-pos-28", "kind": "malicious", "steps": [{"op": "fs.read", "path": "/root/.ssh/id_ed25519"}, {"op": "db.read", "target": "/in/cache.db"}]}
+{"id": "m-pos-29", "kind": "malicious", "steps": [{"op": "exec", "target": "/usr/bin/curl"}, {"op": "fs.read", "path": "/in/a.csv"}, {"op": "send", "channel": "mail"}]}
