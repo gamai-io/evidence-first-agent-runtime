@@ -7,8 +7,8 @@
   "malicious_with_capability_gain": 40,
   "benign_false_deny": 0,
   "malicious_false_allow": 0,
-  "latency_p50_ms": 0.0064,
-  "latency_p95_ms": 0.0251,
+  "latency_p50_ms": 0.0118,
+  "latency_p95_ms": 0.0277,
   "pass": true,
   "results": [
     {
