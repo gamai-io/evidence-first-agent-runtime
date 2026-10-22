@@ -2,7 +2,7 @@
 """Pinned-fd + memfd + pre-exec hash countermeasure (lab only).
 
 Usage:
-  safe_exec.py [--ready PATH] [--delay SECONDS] PATH EXPECTED_SHA [ARG...]
+  safe_exec.py [--ready PATH] [--receipt PATH] [--delay SECONDS] PATH EXPECTED_SHA [ARG...]
 """
 from __future__ import annotations
 
@@ -32,6 +32,7 @@ def read_all(fd: int) -> bytes:
 def main() -> int:
     args = sys.argv[1:]
     ready = None
+    receipt = None
     delay = 0.0
     while args and args[0].startswith("--"):
         if args[0] == "--ready":
@@ -40,6 +41,9 @@ def main() -> int:
         elif args[0] == "--delay":
             args.pop(0)
             delay = float(args.pop(0))
+        elif args[0] == "--receipt":
+            args.pop(0)
+            receipt = args.pop(0)
         else:
             return deny("bad_option", args[0])
     if len(args) < 2:
@@ -77,6 +81,11 @@ def main() -> int:
     if snap_hash != expected:
         return deny("memfd_hash_mismatch", snap_hash)
     os.set_inheritable(mfd, True)
+
+    if receipt:
+        with open(receipt, "w", encoding="utf-8") as fh:
+            json.dump({"ok": True, "path": path, "admitted_sha": expected,
+                       "executed_sha": snap_hash, "ts": time.time()}, fh, sort_keys=True)
 
     if ready:
         with open(ready, "w", encoding="utf-8") as fh:

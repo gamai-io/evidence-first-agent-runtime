@@ -25,6 +25,9 @@ python3 labs/ecc_hash.py | tail -12
 echo "== T3 chladni =="
 python3 labs/chladni.py | tail -8
 
+echo "== gamai-guard =="
+python3 gamai_guard/tests/run_tests.py | tail -2
+
 echo "== polymorph E1 =="
 python3 polymorph/run_e1.py | tail -12
 python3 polymorph/tests/run_tests.py | tail -2
