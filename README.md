@@ -86,6 +86,8 @@ antibody SQLite path.
 - [Architecture](docs/ARCHITECTURE.md): components, data flow, trust boundaries.
 - [Threat model](docs/THREAT_MODEL.md): STRIDE, adversaries, residual risk.
 - [Evidence index](docs/EVIDENCE.md): claim -> command -> artifact -> limitation.
+- [Roadmap](docs/ROADMAP.md): v0.2 to v1.0, non-goals, contribution.
+- [Conformance](docs/CONFORMANCE.md): testable trust-layer requirements (draft).
 - [Provenance](proofgate/PROVENANCE.md): integrity vs authenticity, HMAC/Ed25519.
 - [Held-out benchmark](bench/HELDOUT_REPORT.md): generated corpus and honest gaps.
 
