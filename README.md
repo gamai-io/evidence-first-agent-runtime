@@ -89,7 +89,7 @@ antibody SQLite path.
 - [Threat model](docs/THREAT_MODEL.md): STRIDE, adversaries, residual risk.
 - [Evidence index](docs/EVIDENCE.md): claim -> command -> artifact -> limitation.
 - [Roadmap](docs/ROADMAP.md): v0.2 to v1.0, non-goals, contribution.
-- [Polymorph plan](docs/POLYMORPH_PLAN.md), [E1](docs/E1_RESULTS_2026-10-22.md), [E2](docs/E2_RESULTS_2026-10-22.md), [E3](docs/E3_RESULTS_2026-10-22.md), [E4](docs/E4_RESULTS_2026-10-22.md): capability widening, lease-bound proof, cross-language gap, semantic gate.
+- [T1 deterministic sequence test](docs/T1_DET_SEQ_2026-10-22.md), [Polymorph plan](docs/POLYMORPH_PLAN.md), [E1](docs/E1_RESULTS_2026-10-22.md), [E2](docs/E2_RESULTS_2026-10-22.md), [E3](docs/E3_RESULTS_2026-10-22.md), [E4](docs/E4_RESULTS_2026-10-22.md): capability widening, lease-bound proof, cross-language gap, semantic gate.
 - [Conformance](docs/CONFORMANCE.md): testable trust-layer requirements (draft).
 - [Provenance](proofgate/PROVENANCE.md): integrity vs authenticity, HMAC/Ed25519.
 - [Development](bench/HELDOUT_REPORT.md), [second](bench/FINAL_REPORT.md) and [edge](bench/EDGE_REPORT.md) corpora: generated regression suites and honest gaps.
