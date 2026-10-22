@@ -1,0 +1,93 @@
+{
+  "test": "analytic Chladni/membrane calibration",
+  "grid": 401,
+  "modes": 6,
+  "rows": [
+    {
+      "mode": [
+        1,
+        1
+      ],
+      "vertical_crossings": 0,
+      "horizontal_crossings": 0,
+      "expected": [
+        0,
+        0
+      ],
+      "freq_ratio_to_11": 1.0,
+      "pass": true
+    },
+    {
+      "mode": [
+        2,
+        1
+      ],
+      "vertical_crossings": 1,
+      "horizontal_crossings": 0,
+      "expected": [
+        1,
+        0
+      ],
+      "freq_ratio_to_11": 1.581139,
+      "pass": true
+    },
+    {
+      "mode": [
+        1,
+        2
+      ],
+      "vertical_crossings": 0,
+      "horizontal_crossings": 1,
+      "expected": [
+        0,
+        1
+      ],
+      "freq_ratio_to_11": 1.581139,
+      "pass": true
+    },
+    {
+      "mode": [
+        2,
+        2
+      ],
+      "vertical_crossings": 1,
+      "horizontal_crossings": 1,
+      "expected": [
+        1,
+        1
+      ],
+      "freq_ratio_to_11": 2.0,
+      "pass": true
+    },
+    {
+      "mode": [
+        3,
+        2
+      ],
+      "vertical_crossings": 2,
+      "horizontal_crossings": 1,
+      "expected": [
+        2,
+        1
+      ],
+      "freq_ratio_to_11": 2.54951,
+      "pass": true
+    },
+    {
+      "mode": [
+        3,
+        3
+      ],
+      "vertical_crossings": 2,
+      "horizontal_crossings": 2,
+      "expected": [
+        2,
+        2
+      ],
+      "freq_ratio_to_11": 3.0,
+      "pass": true
+    }
+  ],
+  "pass": true,
+  "scope": "solver self-test only; no public image dataset; no cymatics claim"
+}

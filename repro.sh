@@ -22,6 +22,9 @@ python3 labs/det_seq.py | tail -10
 echo "== T2 ecc/hash =="
 python3 labs/ecc_hash.py | tail -12
 
+echo "== T3 chladni =="
+python3 labs/chladni.py | tail -8
+
 echo "== polymorph E1 =="
 python3 polymorph/run_e1.py | tail -12
 python3 polymorph/tests/run_tests.py | tail -2
