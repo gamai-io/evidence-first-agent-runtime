@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "gamai-trust"
-version = "0.1.1"
+version = "0.2.0"
 description = "Fail-closed claim verification, learned injection antibodies, and false-success benchmarking for AI agents."
 readme = "README.md"
 requires-python = ">=3.10"

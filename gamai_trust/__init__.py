@@ -13,7 +13,7 @@ from .core import (
     verify_report,
 )
 
-__version__ = "0.1.1"
+__version__ = "0.2.0"
 __all__ = [
     "ROOT", "proofgate", "immunity", "crossnode",
     "verify_claims", "verify_report", "check_injection",
