@@ -81,6 +81,14 @@ The package loads the component scripts from the checkout. Set
 `GAMAI_TRUST_ROOT` if they live elsewhere; set `GAMAI_TRUST_DB` to choose the
 antibody SQLite path.
 
+## Documentation
+
+- [Architecture](docs/ARCHITECTURE.md): components, data flow, trust boundaries.
+- [Threat model](docs/THREAT_MODEL.md): STRIDE, adversaries, residual risk.
+- [Evidence index](docs/EVIDENCE.md): claim -> command -> artifact -> limitation.
+- [Provenance](proofgate/PROVENANCE.md): integrity vs authenticity, HMAC/Ed25519.
+- [Held-out benchmark](bench/HELDOUT_REPORT.md): generated corpus and honest gaps.
+
 ## Evidence (measured, reproducible)
 
 - **proofgate**: 16/16 tests; demo returns `confirmed=10, refuted=2,
