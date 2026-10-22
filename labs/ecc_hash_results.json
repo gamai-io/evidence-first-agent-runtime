@@ -1,0 +1,81 @@
+{
+  "test": "ECC + canonical AST hash",
+  "programs": 40,
+  "ast": {
+    "rename": {
+      "n": 40,
+      "detected": 40,
+      "same": 0,
+      "same_pct": 0.0,
+      "detected_pct": 100.0
+    },
+    "constant": {
+      "n": 40,
+      "detected": 40,
+      "same": 0,
+      "same_pct": 0.0,
+      "detected_pct": 100.0
+    },
+    "control": {
+      "n": 40,
+      "detected": 40,
+      "same": 0,
+      "same_pct": 0.0,
+      "detected_pct": 100.0
+    },
+    "dead": {
+      "n": 40,
+      "detected": 40,
+      "same": 0,
+      "same_pct": 0.0,
+      "detected_pct": 100.0
+    },
+    "format": {
+      "n": 40,
+      "detected": 0,
+      "same": 40,
+      "same_pct": 100.0,
+      "detected_pct": 0.0
+    },
+    "comment": {
+      "n": 40,
+      "detected": 0,
+      "same": 40,
+      "same_pct": 100.0,
+      "detected_pct": 0.0
+    }
+  },
+  "ecc": {
+    "bytes": 46,
+    "code_bytes": 142,
+    "trials_per_flip_count": 200,
+    "results": [
+      {
+        "flips": 0,
+        "accepted": 200,
+        "detected": 0,
+        "false_accept": 0
+      },
+      {
+        "flips": 1,
+        "accepted": 200,
+        "detected": 0,
+        "false_accept": 0
+      },
+      {
+        "flips": 2,
+        "accepted": 195,
+        "detected": 5,
+        "false_accept": 0
+      },
+      {
+        "flips": 3,
+        "accepted": 195,
+        "detected": 5,
+        "false_accept": 0
+      }
+    ],
+    "truncation_detected": true
+  },
+  "pass": true
+}
