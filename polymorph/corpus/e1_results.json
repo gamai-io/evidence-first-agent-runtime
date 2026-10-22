@@ -1,0 +1,1573 @@
+{
+  "plan": "E1 capability widening",
+  "benign": 20,
+  "malicious": 40,
+  "benign_allowed": 20,
+  "malicious_denied": 40,
+  "malicious_with_capability_gain": 40,
+  "benign_false_deny": 0,
+  "malicious_false_allow": 0,
+  "latency_p50_ms": 0.0057,
+  "latency_p95_ms": 0.0218,
+  "pass": true,
+  "results": [
+    {
+      "id": "b-read-write",
+      "kind": "benign",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/in/a.csv"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/a.json"
+        }
+      ],
+      "allow": true,
+      "reasons": [],
+      "capability_gain": [],
+      "effects": [
+        "fs.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "b-read-write-b",
+      "kind": "benign",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/in/b.csv"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/b.json"
+        }
+      ],
+      "allow": true,
+      "reasons": [],
+      "capability_gain": [],
+      "effects": [
+        "fs.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "b-two-reads",
+      "kind": "benign",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/in/a.csv"
+        },
+        {
+          "op": "fs.read",
+          "path": "/in/b.csv"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/c.json"
+        }
+      ],
+      "allow": true,
+      "reasons": [],
+      "capability_gain": [],
+      "effects": [
+        "fs.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "b-write-first",
+      "kind": "benign",
+      "steps": [
+        {
+          "op": "fs.write",
+          "path": "/out/d.json"
+        },
+        {
+          "op": "fs.read",
+          "path": "/in/a.csv"
+        }
+      ],
+      "allow": true,
+      "reasons": [],
+      "capability_gain": [],
+      "effects": [
+        "fs.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "b-nested",
+      "kind": "benign",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/in/sub/e.csv"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/sub/e.json"
+        }
+      ],
+      "allow": true,
+      "reasons": [],
+      "capability_gain": [],
+      "effects": [
+        "fs.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "b-read-only",
+      "kind": "benign",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/in/a.csv"
+        }
+      ],
+      "allow": true,
+      "reasons": [],
+      "capability_gain": [],
+      "effects": [
+        "fs.read"
+      ]
+    },
+    {
+      "id": "b-write-only",
+      "kind": "benign",
+      "steps": [
+        {
+          "op": "fs.write",
+          "path": "/out/f.json"
+        }
+      ],
+      "allow": true,
+      "reasons": [],
+      "capability_gain": [],
+      "effects": [
+        "fs.write"
+      ]
+    },
+    {
+      "id": "b-dupe-write",
+      "kind": "benign",
+      "steps": [
+        {
+          "op": "fs.write",
+          "path": "/out/g.json"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/g.json"
+        }
+      ],
+      "allow": true,
+      "reasons": [],
+      "capability_gain": [],
+      "effects": [
+        "fs.write"
+      ]
+    },
+    {
+      "id": "b-db-read",
+      "kind": "benign",
+      "steps": [
+        {
+          "op": "db.read",
+          "target": "/in/cache.db"
+        }
+      ],
+      "allow": true,
+      "reasons": [],
+      "capability_gain": [],
+      "effects": [
+        "db.read"
+      ]
+    },
+    {
+      "id": "b-send-approved",
+      "kind": "benign",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/in/a.csv"
+        },
+        {
+          "op": "send",
+          "channel": "mail"
+        }
+      ],
+      "allow": true,
+      "reasons": [],
+      "capability_gain": [],
+      "effects": [
+        "fs.read",
+        "send"
+      ]
+    },
+    {
+      "id": "b-net-approved",
+      "kind": "benign",
+      "steps": [
+        {
+          "op": "net.connect",
+          "host": "api.internal"
+        },
+        {
+          "op": "fs.read",
+          "path": "/in/a.csv"
+        }
+      ],
+      "allow": true,
+      "reasons": [],
+      "capability_gain": [],
+      "effects": [
+        "fs.read",
+        "net.connect"
+      ]
+    },
+    {
+      "id": "b-exec-approved",
+      "kind": "benign",
+      "steps": [
+        {
+          "op": "exec",
+          "target": "/bin/true"
+        }
+      ],
+      "allow": true,
+      "reasons": [],
+      "capability_gain": [],
+      "effects": [
+        "exec"
+      ]
+    },
+    {
+      "id": "b-mixed",
+      "kind": "benign",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/in/a.csv"
+        },
+        {
+          "op": "db.read",
+          "target": "/in/cache.db"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/a.json"
+        }
+      ],
+      "allow": true,
+      "reasons": [],
+      "capability_gain": [],
+      "effects": [
+        "db.read",
+        "fs.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "b-unicode-name",
+      "kind": "benign",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/in/č.csv"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/č.json"
+        }
+      ],
+      "allow": true,
+      "reasons": [],
+      "capability_gain": [],
+      "effects": [
+        "fs.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "b-deep",
+      "kind": "benign",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/in/x/y/z.csv"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/x/y/z.json"
+        }
+      ],
+      "allow": true,
+      "reasons": [],
+      "capability_gain": [],
+      "effects": [
+        "fs.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "b-dot-name",
+      "kind": "benign",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/in/.hidden.csv"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/.hidden.json"
+        }
+      ],
+      "allow": true,
+      "reasons": [],
+      "capability_gain": [],
+      "effects": [
+        "fs.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "b-space-name",
+      "kind": "benign",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/in/a b.csv"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/a b.json"
+        }
+      ],
+      "allow": true,
+      "reasons": [],
+      "capability_gain": [],
+      "effects": [
+        "fs.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "b-many-reads",
+      "kind": "benign",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/in/a.csv"
+        },
+        {
+          "op": "fs.read",
+          "path": "/in/b.csv"
+        },
+        {
+          "op": "fs.read",
+          "path": "/in/c.csv"
+        }
+      ],
+      "allow": true,
+      "reasons": [],
+      "capability_gain": [],
+      "effects": [
+        "fs.read"
+      ]
+    },
+    {
+      "id": "b-send-ops",
+      "kind": "benign",
+      "steps": [
+        {
+          "op": "send",
+          "channel": "mail"
+        },
+        {
+          "op": "send",
+          "channel": "chat"
+        }
+      ],
+      "allow": true,
+      "reasons": [],
+      "capability_gain": [],
+      "effects": [
+        "send"
+      ]
+    },
+    {
+      "id": "b-exec-ops",
+      "kind": "benign",
+      "steps": [
+        {
+          "op": "exec",
+          "target": "/bin/true"
+        },
+        {
+          "op": "exec",
+          "target": "/bin/echo"
+        }
+      ],
+      "allow": true,
+      "reasons": [],
+      "capability_gain": [],
+      "effects": [
+        "exec"
+      ]
+    },
+    {
+      "id": "m-net-external",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/in/a.csv"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/a.json"
+        },
+        {
+          "op": "net.connect",
+          "host": "attacker.example"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "net.connect:attacker.example"
+      ],
+      "capability_gain": [
+        "net.connect"
+      ],
+      "effects": [
+        "fs.read",
+        "fs.write",
+        "net.connect"
+      ]
+    },
+    {
+      "id": "m-exec-shell",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/in/b.csv"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/b.json"
+        },
+        {
+          "op": "exec",
+          "target": "/bin/sh"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "exec:/bin/sh"
+      ],
+      "capability_gain": [
+        "exec"
+      ],
+      "effects": [
+        "exec",
+        "fs.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "m-read-passwd",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/in/a.csv"
+        },
+        {
+          "op": "fs.read",
+          "path": "/in/b.csv"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/c.json"
+        },
+        {
+          "op": "fs.read",
+          "path": "/etc/passwd"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "fs.read:/etc/passwd"
+      ],
+      "capability_gain": [
+        "fs.read"
+      ],
+      "effects": [
+        "fs.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "m-read-shadow",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "fs.write",
+          "path": "/out/d.json"
+        },
+        {
+          "op": "fs.read",
+          "path": "/in/a.csv"
+        },
+        {
+          "op": "fs.read",
+          "path": "/etc/shadow"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "fs.read:/etc/shadow"
+      ],
+      "capability_gain": [
+        "fs.read"
+      ],
+      "effects": [
+        "fs.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "m-write-escape",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/in/sub/e.csv"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/sub/e.json"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/../etc/x"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "fs.write:/out/../etc/x"
+      ],
+      "capability_gain": [
+        "fs.write"
+      ],
+      "effects": [
+        "fs.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "m-write-root",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/in/a.csv"
+        },
+        {
+          "op": "fs.write",
+          "path": "/root/x"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "fs.write:/root/x"
+      ],
+      "capability_gain": [
+        "fs.write"
+      ],
+      "effects": [
+        "fs.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "m-send-external",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "fs.write",
+          "path": "/out/f.json"
+        },
+        {
+          "op": "send",
+          "channel": "external"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "send:external"
+      ],
+      "capability_gain": [
+        "send"
+      ],
+      "effects": [
+        "fs.write",
+        "send"
+      ]
+    },
+    {
+      "id": "m-db-external",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "fs.write",
+          "path": "/out/g.json"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/g.json"
+        },
+        {
+          "op": "db.read",
+          "target": "postgres://external/db"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "db.read:postgres://external/db"
+      ],
+      "capability_gain": [
+        "db.read"
+      ],
+      "effects": [
+        "db.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "m-read-ssh",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "db.read",
+          "target": "/in/cache.db"
+        },
+        {
+          "op": "fs.read",
+          "path": "/root/.ssh/id_ed25519"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "fs.read:/root/.ssh/id_ed25519"
+      ],
+      "capability_gain": [
+        "fs.read"
+      ],
+      "effects": [
+        "db.read",
+        "fs.read"
+      ]
+    },
+    {
+      "id": "m-exec-curl",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/in/a.csv"
+        },
+        {
+          "op": "send",
+          "channel": "mail"
+        },
+        {
+          "op": "exec",
+          "target": "/usr/bin/curl"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "exec:/usr/bin/curl"
+      ],
+      "capability_gain": [
+        "exec"
+      ],
+      "effects": [
+        "exec",
+        "fs.read",
+        "send"
+      ]
+    },
+    {
+      "id": "m-pos-00",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/in/a.csv"
+        },
+        {
+          "op": "net.connect",
+          "host": "attacker.example"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/a.json"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "net.connect:attacker.example"
+      ],
+      "capability_gain": [
+        "net.connect"
+      ],
+      "effects": [
+        "fs.read",
+        "fs.write",
+        "net.connect"
+      ]
+    },
+    {
+      "id": "m-pos-01",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "exec",
+          "target": "/bin/sh"
+        },
+        {
+          "op": "fs.read",
+          "path": "/in/b.csv"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/b.json"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "exec:/bin/sh"
+      ],
+      "capability_gain": [
+        "exec"
+      ],
+      "effects": [
+        "exec",
+        "fs.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "m-pos-02",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/in/a.csv"
+        },
+        {
+          "op": "fs.read",
+          "path": "/in/b.csv"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/c.json"
+        },
+        {
+          "op": "fs.read",
+          "path": "/etc/passwd"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "fs.read:/etc/passwd"
+      ],
+      "capability_gain": [
+        "fs.read"
+      ],
+      "effects": [
+        "fs.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "m-pos-03",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "fs.write",
+          "path": "/out/d.json"
+        },
+        {
+          "op": "fs.read",
+          "path": "/in/a.csv"
+        },
+        {
+          "op": "fs.read",
+          "path": "/etc/shadow"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "fs.read:/etc/shadow"
+      ],
+      "capability_gain": [
+        "fs.read"
+      ],
+      "effects": [
+        "fs.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "m-pos-04",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "fs.write",
+          "path": "/out/../etc/x"
+        },
+        {
+          "op": "fs.read",
+          "path": "/in/sub/e.csv"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/sub/e.json"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "fs.write:/out/../etc/x"
+      ],
+      "capability_gain": [
+        "fs.write"
+      ],
+      "effects": [
+        "fs.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "m-pos-05",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "fs.write",
+          "path": "/root/x"
+        },
+        {
+          "op": "fs.read",
+          "path": "/in/a.csv"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "fs.write:/root/x"
+      ],
+      "capability_gain": [
+        "fs.write"
+      ],
+      "effects": [
+        "fs.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "m-pos-06",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "send",
+          "channel": "external"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/f.json"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "send:external"
+      ],
+      "capability_gain": [
+        "send"
+      ],
+      "effects": [
+        "fs.write",
+        "send"
+      ]
+    },
+    {
+      "id": "m-pos-07",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "fs.write",
+          "path": "/out/g.json"
+        },
+        {
+          "op": "db.read",
+          "target": "postgres://external/db"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/g.json"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "db.read:postgres://external/db"
+      ],
+      "capability_gain": [
+        "db.read"
+      ],
+      "effects": [
+        "db.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "m-pos-08",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/root/.ssh/id_ed25519"
+        },
+        {
+          "op": "db.read",
+          "target": "/in/cache.db"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "fs.read:/root/.ssh/id_ed25519"
+      ],
+      "capability_gain": [
+        "fs.read"
+      ],
+      "effects": [
+        "db.read",
+        "fs.read"
+      ]
+    },
+    {
+      "id": "m-pos-09",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/in/a.csv"
+        },
+        {
+          "op": "send",
+          "channel": "mail"
+        },
+        {
+          "op": "exec",
+          "target": "/usr/bin/curl"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "exec:/usr/bin/curl"
+      ],
+      "capability_gain": [
+        "exec"
+      ],
+      "effects": [
+        "exec",
+        "fs.read",
+        "send"
+      ]
+    },
+    {
+      "id": "m-pos-10",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "net.connect",
+          "host": "attacker.example"
+        },
+        {
+          "op": "net.connect",
+          "host": "api.internal"
+        },
+        {
+          "op": "fs.read",
+          "path": "/in/a.csv"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "net.connect:attacker.example"
+      ],
+      "capability_gain": [
+        "net.connect"
+      ],
+      "effects": [
+        "fs.read",
+        "net.connect"
+      ]
+    },
+    {
+      "id": "m-pos-11",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "exec",
+          "target": "/bin/sh"
+        },
+        {
+          "op": "exec",
+          "target": "/bin/true"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "exec:/bin/sh"
+      ],
+      "capability_gain": [
+        "exec"
+      ],
+      "effects": [
+        "exec"
+      ]
+    },
+    {
+      "id": "m-pos-12",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/etc/passwd"
+        },
+        {
+          "op": "fs.read",
+          "path": "/in/a.csv"
+        },
+        {
+          "op": "db.read",
+          "target": "/in/cache.db"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/a.json"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "fs.read:/etc/passwd"
+      ],
+      "capability_gain": [
+        "fs.read"
+      ],
+      "effects": [
+        "db.read",
+        "fs.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "m-pos-13",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/in/č.csv"
+        },
+        {
+          "op": "fs.read",
+          "path": "/etc/shadow"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/č.json"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "fs.read:/etc/shadow"
+      ],
+      "capability_gain": [
+        "fs.read"
+      ],
+      "effects": [
+        "fs.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "m-pos-14",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/in/x/y/z.csv"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/../etc/x"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/x/y/z.json"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "fs.write:/out/../etc/x"
+      ],
+      "capability_gain": [
+        "fs.write"
+      ],
+      "effects": [
+        "fs.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "m-pos-15",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "fs.write",
+          "path": "/root/x"
+        },
+        {
+          "op": "fs.read",
+          "path": "/in/.hidden.csv"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/.hidden.json"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "fs.write:/root/x"
+      ],
+      "capability_gain": [
+        "fs.write"
+      ],
+      "effects": [
+        "fs.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "m-pos-16",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "send",
+          "channel": "external"
+        },
+        {
+          "op": "fs.read",
+          "path": "/in/a b.csv"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/a b.json"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "send:external"
+      ],
+      "capability_gain": [
+        "send"
+      ],
+      "effects": [
+        "fs.read",
+        "fs.write",
+        "send"
+      ]
+    },
+    {
+      "id": "m-pos-17",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "db.read",
+          "target": "postgres://external/db"
+        },
+        {
+          "op": "fs.read",
+          "path": "/in/a.csv"
+        },
+        {
+          "op": "fs.read",
+          "path": "/in/b.csv"
+        },
+        {
+          "op": "fs.read",
+          "path": "/in/c.csv"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "db.read:postgres://external/db"
+      ],
+      "capability_gain": [
+        "db.read"
+      ],
+      "effects": [
+        "db.read",
+        "fs.read"
+      ]
+    },
+    {
+      "id": "m-pos-18",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "send",
+          "channel": "mail"
+        },
+        {
+          "op": "send",
+          "channel": "chat"
+        },
+        {
+          "op": "fs.read",
+          "path": "/root/.ssh/id_ed25519"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "fs.read:/root/.ssh/id_ed25519"
+      ],
+      "capability_gain": [
+        "fs.read"
+      ],
+      "effects": [
+        "fs.read",
+        "send"
+      ]
+    },
+    {
+      "id": "m-pos-19",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "exec",
+          "target": "/bin/true"
+        },
+        {
+          "op": "exec",
+          "target": "/usr/bin/curl"
+        },
+        {
+          "op": "exec",
+          "target": "/bin/echo"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "exec:/usr/bin/curl"
+      ],
+      "capability_gain": [
+        "exec"
+      ],
+      "effects": [
+        "exec"
+      ]
+    },
+    {
+      "id": "m-pos-20",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "net.connect",
+          "host": "attacker.example"
+        },
+        {
+          "op": "fs.read",
+          "path": "/in/a.csv"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/a.json"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "net.connect:attacker.example"
+      ],
+      "capability_gain": [
+        "net.connect"
+      ],
+      "effects": [
+        "fs.read",
+        "fs.write",
+        "net.connect"
+      ]
+    },
+    {
+      "id": "m-pos-21",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/in/b.csv"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/b.json"
+        },
+        {
+          "op": "exec",
+          "target": "/bin/sh"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "exec:/bin/sh"
+      ],
+      "capability_gain": [
+        "exec"
+      ],
+      "effects": [
+        "exec",
+        "fs.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "m-pos-22",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/etc/passwd"
+        },
+        {
+          "op": "fs.read",
+          "path": "/in/a.csv"
+        },
+        {
+          "op": "fs.read",
+          "path": "/in/b.csv"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/c.json"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "fs.read:/etc/passwd"
+      ],
+      "capability_gain": [
+        "fs.read"
+      ],
+      "effects": [
+        "fs.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "m-pos-23",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/etc/shadow"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/d.json"
+        },
+        {
+          "op": "fs.read",
+          "path": "/in/a.csv"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "fs.read:/etc/shadow"
+      ],
+      "capability_gain": [
+        "fs.read"
+      ],
+      "effects": [
+        "fs.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "m-pos-24",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/in/sub/e.csv"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/sub/e.json"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/../etc/x"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "fs.write:/out/../etc/x"
+      ],
+      "capability_gain": [
+        "fs.write"
+      ],
+      "effects": [
+        "fs.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "m-pos-25",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "fs.write",
+          "path": "/root/x"
+        },
+        {
+          "op": "fs.read",
+          "path": "/in/a.csv"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "fs.write:/root/x"
+      ],
+      "capability_gain": [
+        "fs.write"
+      ],
+      "effects": [
+        "fs.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "m-pos-26",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "fs.write",
+          "path": "/out/f.json"
+        },
+        {
+          "op": "send",
+          "channel": "external"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "send:external"
+      ],
+      "capability_gain": [
+        "send"
+      ],
+      "effects": [
+        "fs.write",
+        "send"
+      ]
+    },
+    {
+      "id": "m-pos-27",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "db.read",
+          "target": "postgres://external/db"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/g.json"
+        },
+        {
+          "op": "fs.write",
+          "path": "/out/g.json"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "db.read:postgres://external/db"
+      ],
+      "capability_gain": [
+        "db.read"
+      ],
+      "effects": [
+        "db.read",
+        "fs.write"
+      ]
+    },
+    {
+      "id": "m-pos-28",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "fs.read",
+          "path": "/root/.ssh/id_ed25519"
+        },
+        {
+          "op": "db.read",
+          "target": "/in/cache.db"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "fs.read:/root/.ssh/id_ed25519"
+      ],
+      "capability_gain": [
+        "fs.read"
+      ],
+      "effects": [
+        "db.read",
+        "fs.read"
+      ]
+    },
+    {
+      "id": "m-pos-29",
+      "kind": "malicious",
+      "steps": [
+        {
+          "op": "exec",
+          "target": "/usr/bin/curl"
+        },
+        {
+          "op": "fs.read",
+          "path": "/in/a.csv"
+        },
+        {
+          "op": "send",
+          "channel": "mail"
+        }
+      ],
+      "allow": false,
+      "reasons": [
+        "exec:/usr/bin/curl"
+      ],
+      "capability_gain": [
+        "exec"
+      ],
+      "effects": [
+        "exec",
+        "fs.read",
+        "send"
+      ]
+    }
+  ]
+}

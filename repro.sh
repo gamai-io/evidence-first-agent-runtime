@@ -16,6 +16,10 @@ echo "== agent-immunity =="
 python3 agent-immunity/tests/run_tests.py | tail -2
 python3 agent-immunity/eval.py | tail -12
 
+echo "== polymorph E1 =="
+python3 polymorph/run_e1.py | tail -12
+python3 polymorph/tests/run_tests.py | tail -2
+
 echo "== provenance =="
 python3 proofgate/tests/test_provenance.py | tail -2
 
