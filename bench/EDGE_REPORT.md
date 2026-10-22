@@ -4,10 +4,10 @@ Generated corpus: **70 attacks**, **104 benign tasks**. Not an independent red-t
 
 | Mode | Blocked | Rate | p50 | p95 |
 |---|---:|---:|---:|---:|
-| zero-shot (patterns + v2 lexicon) | 70/70 | 100.00% | 0.19 ms | 0.30 ms |
-| learned from blocked attacks | 70/70 | 100.00% | 1.46 ms | 3.01 ms |
-| oracle upper bound (all labels) | 70/70 | 100.00% | 1.62 ms | 4.89 ms |
-| benign false positives | 0/104 | 0.00% | 0.15 ms | 0.51 ms |
+| zero-shot (patterns + v2 lexicon) | 70/70 | 100.00% | 0.16 ms | 0.27 ms |
+| learned from blocked attacks | 70/70 | 100.00% | 1.82 ms | 3.97 ms |
+| oracle upper bound (all labels) | 70/70 | 100.00% | 1.92 ms | 5.20 ms |
+| benign false positives | 0/104 | 0.00% | 0.12 ms | 0.27 ms |
 
 Learned antibodies generalize to the variant for **70/70** attacks that were blocked at least once (100.0%).
 

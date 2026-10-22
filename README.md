@@ -89,7 +89,7 @@ antibody SQLite path.
 - [Threat model](docs/THREAT_MODEL.md): STRIDE, adversaries, residual risk.
 - [Evidence index](docs/EVIDENCE.md): claim -> command -> artifact -> limitation.
 - [Roadmap](docs/ROADMAP.md): v0.2 to v1.0, non-goals, contribution.
-- [T1 deterministic sequence test](docs/T1_DET_SEQ_2026-10-22.md), [CBR gate](docs/CBR_GATE_2026-10-22.md), [T2 ECC/hash](docs/T2_ECC_HASH_2026-10-22.md), [T3 Chladni](docs/T3_CHLADNI_2026-10-22.md), [T4 gamma audit](docs/T4_GAMMA_AUDIT_2026-10-22.md), [Polymorph plan](docs/POLYMORPH_PLAN.md), [E1](docs/E1_RESULTS_2026-10-22.md), [E2](docs/E2_RESULTS_2026-10-22.md), [E3](docs/E3_RESULTS_2026-10-22.md), [E4](docs/E4_RESULTS_2026-10-22.md): capability widening, lease-bound proof, cross-language gap, semantic gate.
+- [T1 deterministic sequence test](docs/T1_DET_SEQ_2026-10-22.md), [GAMA Guard system](docs/GUARD_SYSTEM_2026-10-22.md), [blind multilingual](docs/BLIND_MULTILINGUAL_2026-10-22.md), [CBR gate](docs/CBR_GATE_2026-10-22.md), [T2 ECC/hash](docs/T2_ECC_HASH_2026-10-22.md), [T3 Chladni](docs/T3_CHLADNI_2026-10-22.md), [T4 gamma audit](docs/T4_GAMMA_AUDIT_2026-10-22.md), [Polymorph plan](docs/POLYMORPH_PLAN.md), [E1](docs/E1_RESULTS_2026-10-22.md), [E2](docs/E2_RESULTS_2026-10-22.md), [E3](docs/E3_RESULTS_2026-10-22.md), [E4](docs/E4_RESULTS_2026-10-22.md): capability widening, lease-bound proof, cross-language gap, semantic gate.
 - [Conformance](docs/CONFORMANCE.md): testable trust-layer requirements (draft).
 - [Provenance](proofgate/PROVENANCE.md): integrity vs authenticity, HMAC/Ed25519.
 - [Development](bench/HELDOUT_REPORT.md), [second](bench/FINAL_REPORT.md) and [edge](bench/EDGE_REPORT.md) corpora: generated regression suites and honest gaps.
