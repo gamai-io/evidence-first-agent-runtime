@@ -89,7 +89,7 @@ antibody SQLite path.
 - [Threat model](docs/THREAT_MODEL.md): STRIDE, adversaries, residual risk.
 - [Evidence index](docs/EVIDENCE.md): claim -> command -> artifact -> limitation.
 - [Roadmap](docs/ROADMAP.md): v0.2 to v1.0, non-goals, contribution.
-- [Polymorph plan](docs/POLYMORPH_PLAN.md) and [E1 results](docs/E1_RESULTS_2026-10-22.md): capability-widening experiment.
+- [Polymorph plan](docs/POLYMORPH_PLAN.md) and [E1 results](docs/E1_RESULTS_2026-10-22.md) and [E2 results](docs/E2_RESULTS_2026-10-22.md): capability widening and lease-bound proof.
 - [Conformance](docs/CONFORMANCE.md): testable trust-layer requirements (draft).
 - [Provenance](proofgate/PROVENANCE.md): integrity vs authenticity, HMAC/Ed25519.
 - [Development](bench/HELDOUT_REPORT.md), [second](bench/FINAL_REPORT.md) and [edge](bench/EDGE_REPORT.md) corpora: generated regression suites and honest gaps.
