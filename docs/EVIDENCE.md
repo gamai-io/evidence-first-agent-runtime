@@ -21,6 +21,7 @@ artifact. This index is deliberately short; the full claims ledger is in
 | CBR before gate: 131 qualifying, 120 pending, 2 timers stopped (historical) | read-only SQL + systemd | `docs/SECURITY_ALERT_CBR_2026-10-22.md` | Superseded by the live 0-promotion/58-review row; no data deleted |
 | GAMA Guard tests: 7/7 | `python3 gamai_guard/tests/run_tests.py` | test output | Unit scope; not an adaptive attacker |
 | Blind multilingual: lexical 4/30, embedding 29/30, 0/10 FP | `python3 labs/eval_blind.py` | `labs/blind_multilingual_results.json` | 30 human attacks; one wording miss; CPU 55 s / GTX 1660S 3.31 s |
+| Guard worker: 40 texts in 1.37 s, 29/30, 0 FP | `POST localhost:8091/check_many` | `docs/GUARD_WORKER_2026-10-23.md` | VM-only; 127.0.0.1; serialized GPU batch |
 | Executed-byte binding: admitted SHA = executed SHA | `python3 polymorph/tests/test_safe_exec.py` | 3/3 tests; `polymorph/safe_exec.py --receipt` | Shell scope; no ELF/argv/env binding |
 | CBR gate: 0 automatic promotions, 58 unique review; dual control | live `/opt/gama-harness/gama_cbr_promote.py` dry-run | `_cbr_review.jsonl`, `_cbr_approvals.json` | Operator path; approval key custody external |
 | I Ching/codon: r=1 is a tautology | `python3 labs/iching_codons.py` | `labs/iching_codons_results.json` | 6-bit mapping is distance-preserving; non-identifiable |
