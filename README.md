@@ -20,6 +20,22 @@ false-success rate is more useful than one that is merely fast.
 
 ![30-second terminal demo](docs/demo.gif)
 
+## Hackathon app: rush (Blast Radius Zero)
+
+`rush/` is a web app that plans a task, runs every command inside an isolated
+sandbox (Docker with no network, or a disposable Vultr instance), and accepts
+the result only when the sandbox proves it — exit code plus SHA-256 of stdout,
+chained into a tamper-evident ledger. Destructive commands and injected
+instructions are refused *before* execution.
+
+```bash
+pip install fastapi uvicorn
+python -m uvicorn rush.app:app --port 8098    # http://127.0.0.1:8098
+python -m pytest rush/tests -q                # 6 tests
+```
+
+See [rush/README.md](rush/README.md).
+
 ## Quickstart
 
 ```bash
