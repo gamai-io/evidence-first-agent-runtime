@@ -9,3 +9,8 @@ runs/
 *.egg-info/
 agent-immunity/eval_results.json
 launch/.private-patterns
+
+# rush
+__pycache__/
+*.pyc
+.pytest_cache/
