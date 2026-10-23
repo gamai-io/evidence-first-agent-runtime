@@ -71,7 +71,7 @@ def main() -> int:
         "verdict": ("tautology: both sides are the same 6-bit hypercube; "
                     "r=1 is constructed by the bit mapping, not biological evidence"),
         "evidence_for_connection": False,
-        "pass": True,
+        "negative_control_ok": True,
         "limits": "Equal counts (64=2^6 vs 4^3) and a distance-preserving 6-bit mapping make this test non-identifiable",
     }
     (HERE / "iching_codons_results.json").write_text(json.dumps(res, indent=2), encoding="utf-8")
