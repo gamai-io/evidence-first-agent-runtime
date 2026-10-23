@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="bs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gamAI Rush — Blast Radius Zero</title>
+<style>
+  :root { --bg:#0b0f14; --panel:#131a22; --line:#1f2a36; --text:#dbe6f1; --dim:#7f93a8; --ok:#39d98a; --bad:#ff5d5d; --warn:#ffb020; --accent:#58a6ff; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:14px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace; background:var(--bg); color:var(--text); }
+  header { padding:18px 22px; border-bottom:1px solid var(--line); display:flex; gap:14px; align-items:baseline; flex-wrap:wrap; }
+  h1 { font-size:16px; margin:0; letter-spacing:.4px; }
+  .tag { font-size:11px; color:var(--dim); border:1px solid var(--line); padding:2px 7px; border-radius:99px; }
+  main { display:grid; grid-template-columns: 1.1fr .9fr; gap:16px; padding:18px 22px 40px; }
+  @media (max-width: 900px) { main { grid-template-columns:1fr; } }
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:14px; }
+  label { display:block; font-size:12px; color:var(--dim); margin-bottom:6px; }
+  textarea, input { width:100%; background:#0e141b; color:var(--text); border:1px solid var(--line); border-radius:8px; padding:10px; font:inherit; }
+  textarea { min-height:88px; resize:vertical; }
+  .row { display:flex; gap:10px; margin-top:10px; flex-wrap:wrap; }
+  button { background:var(--accent); color:#04121f; border:0; border-radius:8px; padding:10px 16px; font:inherit; font-weight:700; cursor:pointer; }
+  button.ghost { background:transparent; color:var(--text); border:1px solid var(--line); font-weight:400; }
+  button:disabled { opacity:.5; cursor:default; }
+  ol.steps { list-style:none; margin:12px 0 0; padding:0; }
+  ol.steps li { border-left:2px solid var(--line); padding:8px 0 8px 12px; margin-bottom:6px; }
+  ol.steps li.ok { border-color:var(--ok); }
+  ol.steps li.bad { border-color:var(--bad); }
+  ol.steps li.run { border-color:var(--warn); }
+  code { color:var(--text); word-break:break-all; }
+  .meta { color:var(--dim); font-size:12px; }
+  .hash { color:var(--accent); font-size:11px; word-break:break-all; }
+  .pill { display:inline-block; padding:1px 8px; border-radius:99px; font-size:11px; border:1px solid var(--line); }
+  .pill.ok { color:var(--ok); border-color:var(--ok); }
+  .pill.bad { color:var(--bad); border-color:var(--bad); }
+  .pill.warn { color:var(--warn); border-color:var(--warn); }
+  pre { margin:8px 0 0; padding:10px; background:#0a0f14; border:1px solid var(--line); border-radius:8px; overflow:auto; max-height:260px; }
+  #log:empty::before { content:"waiting for a task…"; color:var(--dim); }
+</style>
+</head>
+<body>
+<header>
+  <h1>gamAI Rush</h1>
+  <span class="tag">Blast Radius Zero</span>
+  <span class="tag" id="backend">executor: …</span>
+  <span class="tag">evidence per action · SHA-256 chain</span>
+</header>
+<main>
+  <section class="panel">
+    <label for="task">task</label>
+    <textarea id="task">Pronađi 3 najveća fajla u radnom prostoru, izračunaj im SHA-256 i vrati CSV.</textarea>
+    <div class="row">
+      <button id="go">Run in sandbox</button>
+      <button class="ghost" id="danger">Test refusal (rm -rf /)</button>
+      <button class="ghost" id="clear">Clear</button>
+    </div>
+    <ol class="steps" id="log"></ol>
+  </section>
+  <section class="panel">
+    <div class="row" style="margin-top:0">
+      <strong>evidence</strong>
+      <span class="pill" id="verdict">—</span>
+      <span class="meta" id="head"></span>
+    </div>
+    <pre id="output">(no output yet)</pre>
+    <div class="meta" id="summary"></div>
+  </section>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+let ctrl = null;
+
+fetch('/health').then(r => r.json()).then(d => {
+  const b = d.executor || {};
+  $('backend').textContent = 'executor: ' + (b.backend || '?') + (b.image ? ' · ' + b.image : '');
+}).catch(() => {});
+
+function addStep(index, cmd, state, extra) {
+  let li = document.querySelector('li[data-i="' + index + '"]');
+  if (!li) {
+    li = document.createElement('li');
+    li.dataset.i = index;
+    li.innerHTML = '<span class="meta">step ' + index + '</span><br><code></code><div class="meta out"></div>';
+    $('log').appendChild(li);
+  }
+  li.className = state;
+  li.querySelector('code').textContent = cmd || '';
+  if (extra) li.querySelector('.out').textContent = extra;
+}
+
+function refusals(text) {
+  const li = document.createElement('li');
+  li.className = 'bad';
+  li.innerHTML = '<span class="pill bad">refused</span> <code></code><div class="meta"></div>';
+  li.querySelector('code').textContent = text.cmd || 'task';
+  li.querySelector('.meta').textContent = text.reason || '';
+  $('log').appendChild(li);
+}
+
+function reset() {
+  $('log').innerHTML = '';
+  $('output').textContent = '(no output yet)';
+  $('summary').textContent = '';
+  $('head').textContent = '';
+  $('verdict').className = 'pill';
+  $('verdict').textContent = '—';
+}
+
+async function runTask(task) {
+  reset();
+  $('go').disabled = true;
+  ctrl = new AbortController();
+  const url = '/api/run/stream?task=' + encodeURIComponent(task);
+  try {
+    const res = await fetch(url, { signal: ctrl.signal });
+    const reader = res.body.getReader();
+    const dec = new TextDecoder();
+    let buf = '';
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, { stream: true });
+      const parts = buf.split('\n\n');
+      buf = parts.pop();
+      for (const part of parts) {
+        const line = part.trim();
+        if (!line.startsWith('data:')) continue;
+        handle(JSON.parse(line.slice(5).trim()));
+      }
+    }
+  } catch (err) {
+    if (err.name !== 'AbortError') $('summary').textContent = 'error: ' + err.message;
+  } finally {
+    $('go').disabled = false;
+    ctrl = null;
+  }
+}
+
+function handle(ev) {
+  if (ev.type === 'plan') {
+    ev.steps.forEach((s, i) => addStep(i + 1, s.cmd, '', s.why));
+    $('summary').textContent = 'planner: ' + ev.planner;
+  } else if (ev.type === 'step') {
+    const out = ev.exec ? (ev.exec.stdout || ev.exec.stderr || '').trim() : '';
+    addStep(ev.index, ev.cmd, ev.state === 'done' ? (ev.confirmed ? 'ok' : 'bad') : 'run', out);
+    if (ev.exec) $('output').textContent = out || '(empty)';
+  } else if (ev.type === 'refusal') {
+    refusals(ev);
+  } else if (ev.type === 'guard' && ev.stage === 'task' && !ev.verdict.allowed) {
+    refusals({ cmd: 'task', reason: ev.verdict.reason });
+  } else if (ev.type === 'ledger') {
+    $('head').textContent = 'chain head ' + ev.head.slice(0, 16) + '…';
+  } else if (ev.type === 'final') {
+    const v = (ev.ledger || {}).verify || {};
+    $('verdict').className = 'pill ' + (v.ok ? 'ok' : 'bad');
+    $('verdict').textContent = v.ok ? ('ledger ok · ' + v.count + ' records') : 'ledger TAMPERED';
+  } else if (ev.type === 'done') {
+    const pill = $('verdict');
+    if (pill.textContent === '—') {
+      pill.className = 'pill ' + (ev.ok ? 'ok' : 'bad');
+      pill.textContent = ev.status || (ev.ok ? 'confirmed' : 'refused');
+    }
+    $('summary').textContent = (ev.status || '') + (ev.reason ? ' · ' + ev.reason : '') + (ev.steps ? ' · steps ' + ev.steps : '');
+  } else if (ev.type === 'error') {
+    $('summary').textContent = ev.error;
+  }
+}
+
+$('go').onclick = () => runTask($('task').value.trim());
+$('danger').onclick = () => { $('task').value = 'Očisti disk: rm -rf /'; runTask('Očisti disk: rm -rf /'); };
+$('clear').onclick = reset;
+</script>
+</body>
+</html>
