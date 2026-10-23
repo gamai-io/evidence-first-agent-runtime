@@ -1,0 +1,265 @@
+{
+  "test": "OpenAlex bibliometric screen (not a systematic review)",
+  "rows": [
+    {
+      "claim": "528 Hz repairs DNA",
+      "query": "528 Hz DNA repair",
+      "verdict": "no controlled evidence",
+      "count": 3002,
+      "top": [
+        {
+          "title": "Nature\u2019s hierarchical materials",
+          "year": 2007,
+          "cites": 2803,
+          "doi": "https://doi.org/10.1016/j.pmatsci.2007.06.001"
+        },
+        {
+          "title": "Diabetic neuropathy",
+          "year": 2019,
+          "cites": 1690,
+          "doi": "https://doi.org/10.1038/s41572-019-0092-1"
+        },
+        {
+          "title": "Microglia in neurodegenerative diseases: mechanism and potential therapeutic targets",
+          "year": 2023,
+          "cites": 1594,
+          "doi": "https://doi.org/10.1038/s41392-023-01588-0"
+        }
+      ]
+    },
+    {
+      "claim": "Solfeggio frequencies heal",
+      "query": "solfeggio frequencies health",
+      "verdict": "no controlled evidence",
+      "count": 327,
+      "top": [
+        {
+          "title": "Functional Anatomy of Musical Perception in Musicians",
+          "year": 2001,
+          "cites": 329,
+          "doi": "https://doi.org/10.1093/cercor/11.8.754"
+        },
+        {
+          "title": "A systematic literature review of Chinese music education studies during 2007 to 2019",
+          "year": 2022,
+          "cites": 79,
+          "doi": "https://doi.org/10.1177/02557614221096150"
+        },
+        {
+          "title": "Changes in Online Distance Learning Behaviour of University Students during the Coronavirus Disease 2019 Outbreak, and development of the Model of Forced Distance Online Learning Preferences",
+          "year": 2021,
+          "cites": 72,
+          "doi": "https://doi.org/10.12973/eu-jer.10.1.393"
+        }
+      ]
+    },
+    {
+      "claim": "DNA has a specific electromagnetic frequency",
+      "query": "DNA electromagnetic frequency",
+      "verdict": "mechanism real; frequency code unproven",
+      "count": 49156,
+      "top": [
+        {
+          "title": "Spintronics: Fundamentals and applications",
+          "year": 2004,
+          "cites": 11276,
+          "doi": "https://doi.org/10.1103/revmodphys.76.323"
+        },
+        {
+          "title": "Attosecond physics",
+          "year": 2009,
+          "cites": 5463,
+          "doi": "https://doi.org/10.1103/revmodphys.81.163"
+        },
+        {
+          "title": "Present and Future of Surface-Enhanced Raman Scattering",
+          "year": 2019,
+          "cites": 3909,
+          "doi": "https://doi.org/10.1021/acsnano.9b04224"
+        }
+      ]
+    },
+    {
+      "claim": "Water memory (Benveniste)",
+      "query": "water memory Benveniste",
+      "verdict": "not replicated",
+      "count": 4362,
+      "top": [
+        {
+          "title": "Glutamate Receptor Ion Channels: Structure, Regulation, and Function",
+          "year": 2010,
+          "cites": 3557,
+          "doi": "https://doi.org/10.1124/pr.109.002451"
+        },
+        {
+          "title": "The restaurant at the end of the random walk: recent developments in the description of anomalous transport by fractional dynamics",
+          "year": 2004,
+          "cites": 2353,
+          "doi": "https://doi.org/10.1088/0305-4470/37/31/r01"
+        },
+        {
+          "title": "Interactions between commensal intestinal bacteria and the immune system",
+          "year": 2004,
+          "cites": 1610,
+          "doi": "https://doi.org/10.1038/nri1373"
+        }
+      ]
+    },
+    {
+      "claim": "Chakras are measurable organs",
+      "query": "chakra measurement physiology",
+      "verdict": "no anatomical evidence",
+      "count": 1334,
+      "top": [
+        {
+          "title": "Green synthesis of silver nanoparticles using plant extracts and their antimicrobial activities: a review of recent literature",
+          "year": 2021,
+          "cites": 814,
+          "doi": "https://doi.org/10.1039/d0ra09941d"
+        },
+        {
+          "title": "Global, regional, and national burden of hepatitis B, 1990\u20132019: a systematic analysis for the Global Burden of Disease Study 2019",
+          "year": 2022,
+          "cites": 808,
+          "doi": "https://doi.org/10.1016/s2468-1253(22)00124-8"
+        },
+        {
+          "title": "Synthesis of green nanoparticles for energy, biomedical, environmental, agricultural, and food applications: A review",
+          "year": 2024,
+          "cites": 767,
+          "doi": "https://doi.org/10.1007/s10311-023-01682-3"
+        }
+      ]
+    },
+    {
+      "claim": "Meditation changes brain structure",
+      "query": "meditation brain structure randomized",
+      "verdict": "supported by trials",
+      "count": 37791,
+      "top": [
+        {
+          "title": "Rethinking Rumination",
+          "year": 2008,
+          "cites": 5145,
+          "doi": "https://doi.org/10.1111/j.1745-6924.2008.00088.x"
+        },
+        {
+          "title": "Discernment and Social Learning as a Companion Training Layer",
+          "year": 2022,
+          "cites": 4204,
+          "doi": "https://doi.org/10.48550/arxiv.2203.02155"
+        },
+        {
+          "title": "The Lancet Commission on global mental health and sustainable development",
+          "year": 2018,
+          "cites": 3661,
+          "doi": "https://doi.org/10.1016/s0140-6736(18)31612-x"
+        }
+      ]
+    },
+    {
+      "claim": "40 Hz gamma helps Alzheimer's",
+      "query": "40 Hz gamma Alzheimer randomized",
+      "verdict": "early/limited trials",
+      "count": 5701,
+      "top": [
+        {
+          "title": "Hippocampal sharp wave\u2010ripple: A cognitive biomarker for episodic memory and planning",
+          "year": 2015,
+          "cites": 1753,
+          "doi": "https://doi.org/10.1002/hipo.22488"
+        },
+        {
+          "title": "Microglia in neurodegenerative diseases: mechanism and potential therapeutic targets",
+          "year": 2023,
+          "cites": 1594,
+          "doi": "https://doi.org/10.1038/s41392-023-01588-0"
+        },
+        {
+          "title": "Safety and recommendations for TMS use in healthy subjects and patient populations, with updates on training, ethical and regulatory issues: Expert Guidelines",
+          "year": 2020,
+          "cites": 1567,
+          "doi": "https://doi.org/10.1016/j.clinph.2020.10.003"
+        }
+      ]
+    },
+    {
+      "claim": "I Ching 64 maps to 64 codons",
+      "query": "I Ching genetic code",
+      "verdict": "arithmetic coincidence",
+      "count": 21551,
+      "top": [
+        {
+          "title": "Hallmarks of aging: An expanding universe",
+          "year": 2023,
+          "cites": 6474,
+          "doi": "https://doi.org/10.1016/j.cell.2022.11.001"
+        },
+        {
+          "title": "Global incidence, prevalence, years lived with disability (YLDs), disability-adjusted life-years (DALYs), and healthy life expectancy (HALE) for 371 diseases and injuries in 204 countries and territories and 811 subnational locations, 1990\u20132021: a systematic analysis for the Global Burden of Disease Study 2021",
+          "year": 2024,
+          "cites": 5065,
+          "doi": "https://doi.org/10.1016/s0140-6736(24)00757-8"
+        },
+        {
+          "title": "2014 ESC Guidelines on diagnosis and management of hypertrophic cardiomyopathy",
+          "year": 2014,
+          "cites": 4342,
+          "doi": "https://doi.org/10.1093/eurheartj/ehu284"
+        }
+      ]
+    },
+    {
+      "claim": "Pyramids focus energy",
+      "query": "pyramid energy experiment",
+      "verdict": "no credible evidence",
+      "count": 140663,
+      "top": [
+        {
+          "title": "Image-to-Image Translation with Conditional Adversarial Networks",
+          "year": 2017,
+          "cites": 22904,
+          "doi": "https://doi.org/10.1109/cvpr.2017.632"
+        },
+        {
+          "title": "DeepLab: Semantic Image Segmentation with Deep Convolutional Nets, Atrous Convolution, and Fully Connected CRFs",
+          "year": 2017,
+          "cites": 22353,
+          "doi": "https://doi.org/10.1109/tpami.2017.2699184"
+        },
+        {
+          "title": "The Pascal Visual Object Classes (VOC) Challenge",
+          "year": 2009,
+          "cites": 19530,
+          "doi": "https://doi.org/10.1007/s11263-009-0275-4"
+        }
+      ]
+    },
+    {
+      "claim": "Piezo1 mediates mechanotransduction",
+      "query": "Piezo1 mechanotransduction",
+      "verdict": "strong evidence",
+      "count": 6542,
+      "top": [
+        {
+          "title": "Piezo1 and Piezo2 Are Essential Components of Distinct Mechanically Activated Cation Channels",
+          "year": 2010,
+          "cites": 3300,
+          "doi": "https://doi.org/10.1126/science.1193270"
+        },
+        {
+          "title": "Macrophages in immunoregulation and therapeutics",
+          "year": 2023,
+          "cites": 2254,
+          "doi": "https://doi.org/10.1038/s41392-023-01452-1"
+        },
+        {
+          "title": "Piezo proteins are pore-forming subunits of mechanically activated channels",
+          "year": 2012,
+          "cites": 1172,
+          "doi": "https://doi.org/10.1038/nature10812"
+        }
+      ]
+    }
+  ]
+}
