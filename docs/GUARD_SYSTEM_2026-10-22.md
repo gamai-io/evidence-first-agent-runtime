@@ -44,7 +44,7 @@ bound.
 - Plan admission is static: symlinks and runtime dynamic dispatch are covered by
   `safe_exec`/`openat2`, not by the parser.
 - Embedding cascade was 2.7 s/item before batching; batch + prototype cache
-  reduced the 40-item blind run 190 s -> 55 s (~1.4 s/item). Run it async;
-  GPU E4 stays on VastVM.
+  reduced the 40-item blind run 190 s -> 55 s on CPU and **3.31 s on a
+  GTX 1660S** (Ollama bge-m3, same 29/30, 0 FP). Run it async in production.
 - A filter (lexical or embedding) may only add denial/escalation; it never
   grants authority.
