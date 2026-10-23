@@ -18,7 +18,7 @@ artifact. This index is deliberately short; the full claims ledger is in
 | German cross-language holdout: 1/30 (3.3%), 0/15 benign FP | `python3 polymorph/e3_cross_language.py` | `polymorph/corpus/e3_results.json`, `docs/E3_RESULTS_2026-10-22.md` | Human-authored German, not adaptive; shows filter is language-specific |
 | German semantic gate: tuned 28/30, fresh 6/12 (50%) | `python3 polymorph/semantic_gate.py` | `polymorph/corpus/e4_results.json`, `docs/E4_RESULTS_2026-10-22.md` | Prompt leakage and tuned guards; embedding cascade 10/12; not a boundary |
 | TOCTOU: 5/5 swaps allowed before exec; safe_exec denies 5/5 | `/tmp/toctou` lab; `polymorph/safe_exec.py` | `docs/TOCTOU_RESULTS_2026-10-22.md` | Shell scope; no ELF/argv/env binding yet |
-| CBR: 131 qualifying, 120 pending, 2 timers stopped | read-only SQL + systemd | `docs/SECURITY_ALERT_CBR_2026-10-22.md` | No data deleted; review required before restart |
+| CBR before gate: 131 qualifying, 120 pending, 2 timers stopped (historical) | read-only SQL + systemd | `docs/SECURITY_ALERT_CBR_2026-10-22.md` | Superseded by the live 0-promotion/58-review row; no data deleted |
 | GAMA Guard tests: 7/7 | `python3 gamai_guard/tests/run_tests.py` | test output | Unit scope; not an adaptive attacker |
 | Blind multilingual: lexical 4/30, embedding 29/30, 0/10 FP | `python3 labs/eval_blind.py` | `labs/blind_multilingual_results.json` | 30 human attacks; one wording miss; Contabo CPU, batch+cache 55 s |
 | Executed-byte binding: admitted SHA = executed SHA | `python3 polymorph/tests/test_safe_exec.py` | 3/3 tests; `polymorph/safe_exec.py --receipt` | Shell scope; no ELF/argv/env binding |

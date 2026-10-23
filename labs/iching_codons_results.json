@@ -6,6 +6,6 @@
   "mantel_p": 0.0001,
   "verdict": "tautology: both sides are the same 6-bit hypercube; r=1 is constructed by the bit mapping, not biological evidence",
   "evidence_for_connection": false,
-  "pass": true,
+  "negative_control_ok": true,
   "limits": "Equal counts (64=2^6 vs 4^3) and a distance-preserving 6-bit mapping make this test non-identifiable"
 }
