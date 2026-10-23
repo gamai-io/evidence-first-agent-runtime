@@ -1,0 +1,47 @@
+{
+  "test": "CGR box-counting, genome vs mononucleotide shuffle",
+  "limit_bp": 200000,
+  "shuffles": 5,
+  "rows": [
+    {
+      "name": "SARS-CoV-2",
+      "acc": "NC_045512.2",
+      "bp_used": 29903,
+      "D_real": 1.8173,
+      "D_shuffle_mean": 1.8412,
+      "shuffle_sd": 0.0006,
+      "delta": -0.0238,
+      "z": -38.04
+    },
+    {
+      "name": "E. coli K-12",
+      "acc": "NC_000913.3",
+      "bp_used": 200000,
+      "D_real": 1.9746,
+      "D_shuffle_mean": 1.9936,
+      "shuffle_sd": 0.0001,
+      "delta": -0.0189,
+      "z": -250.97
+    },
+    {
+      "name": "human mtDNA",
+      "acc": "NC_012920.1",
+      "bp_used": 16569,
+      "D_real": 1.7324,
+      "D_shuffle_mean": 1.7454,
+      "shuffle_sd": 0.001,
+      "delta": -0.0129,
+      "z": -12.45
+    },
+    {
+      "name": "yeast chr1",
+      "acc": "NC_001133.9",
+      "bp_used": 200000,
+      "D_real": 1.978,
+      "D_shuffle_mean": 1.9837,
+      "shuffle_sd": 0.0002,
+      "delta": -0.0057,
+      "z": -27.8
+    }
+  ]
+}
