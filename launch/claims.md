@@ -27,6 +27,7 @@ limitation. If a claim is not in this table, it does not go in a post.
 | 19 | CBR promotion requires proposer≠approver and evidence | live dry-run → 0 promotions, 58 review | 58 unique cases | Operator path; HMAC key custody external | A risky goal is promoted with `GAMA_CBR_APPROVE=1` alone |
 | 20 | 64 hexagrams vs 64 codons is not evidence | `python3 labs/iching_codons.py` → r=1.0, tautology | 64×64, 10k permutations | 6-bit mapping is distance-preserving; non-identifiable | A pre-registered, out-of-sample mapping survives |
 | 21 | CGR box-counting is not a strong genome signature | `python3 labs/kmer_fractal.py` → D 1.73–1.98; Δ≤0.024 | 4 genomes, 5 shuffles | Mononucleotide shuffle; no dinucleotide control | A dinucleotide-preserving control still leaves a large, stable gap |
+| 22 | A broad bibliometric count does not validate an occult/wellness claim | `python3 labs/claims_audit.py` → 327–140,663 hits, top hits irrelevant | 10 claims, OpenAlex top-3 | Editorial verdicts; not a systematic review | A pre-registered, precise query set with primary-source appraisal reverses a verdict |
 
 ## Rules for using this table
 
