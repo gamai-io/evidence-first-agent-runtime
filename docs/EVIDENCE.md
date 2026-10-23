@@ -19,6 +19,11 @@ artifact. This index is deliberately short; the full claims ledger is in
 | German semantic gate: tuned 28/30, fresh 6/12 (50%) | `python3 polymorph/semantic_gate.py` | `polymorph/corpus/e4_results.json`, `docs/E4_RESULTS_2026-10-22.md` | Prompt leakage and tuned guards; embedding cascade 10/12; not a boundary |
 | TOCTOU: 5/5 swaps allowed before exec; safe_exec denies 5/5 | `/tmp/toctou` lab; `polymorph/safe_exec.py` | `docs/TOCTOU_RESULTS_2026-10-22.md` | Shell scope; no ELF/argv/env binding yet |
 | CBR: 131 qualifying, 120 pending, 2 timers stopped | read-only SQL + systemd | `docs/SECURITY_ALERT_CBR_2026-10-22.md` | No data deleted; review required before restart |
+| GAMA Guard tests: 7/7 | `python3 gamai_guard/tests/run_tests.py` | test output | Unit scope; not an adaptive attacker |
+| Blind multilingual: lexical 4/30, embedding 29/30, 0/10 FP | `python3 labs/eval_blind.py` | `labs/blind_multilingual_results.json` | 30 human attacks; one wording miss; Contabo CPU, batch+cache 55 s |
+| Executed-byte binding: admitted SHA = executed SHA | `python3 polymorph/tests/test_safe_exec.py` | 3/3 tests; `polymorph/safe_exec.py --receipt` | Shell scope; no ELF/argv/env binding |
+| CBR gate: 0 automatic promotions, 58 unique review; dual control | live `/opt/gama-harness/gama_cbr_promote.py` dry-run | `_cbr_review.jsonl`, `_cbr_approvals.json` | Operator path; approval key custody external |
+| I Ching/codon: r=1 is a tautology | `python3 labs/iching_codons.py` | `labs/iching_codons_results.json` | 6-bit mapping is distance-preserving; non-identifiable |
 | Agent-immunity tests: 40/40 | `python3 agent-immunity/tests/run_tests.py` | test output | Stdlib only; no adaptive attacker |
 | crossnode-bench: 46/48, 2 false successes | `python3 crossnode-bench/crossnode.py --demo --runs 1` | `crossnode-bench/runs/<stamp>/report.json` | Demo uses mocked lying nodes; fleet run is separate |
 | CI runs on Python 3.10/3.11/3.12 | `.github/workflows/ci.yml` | GitHub Actions run | Hosted runner, public logs only |

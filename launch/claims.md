@@ -21,6 +21,11 @@ limitation. If a claim is not in this table, it does not go in a post.
 | 13 | CI runs the full repro on every push | `.github/workflows/ci.yml` | Python 3.10/3.11/3.12 | GitHub-hosted runner, public logs only | Workflow fails or is disabled |
 | 14 | Provenance signatures detect tampering | `proofgate/tests/test_provenance.py` | 9 tests (HMAC + Ed25519) | Proves integrity/authenticity, **not** source truthfulness; key custody is external | A mutated signed report still verifies |
 | 15 | Pricing tiers are proposed, not validated | README "gamAI Trust Layer" section | none | Hypotheses; no buyer tests | Buyer research contradicts the ranges |
+| 16 | A strict plan gate denies effect/scope widening before execution | `python3 gamai_guard/tests/run_tests.py` → 7/7 | 7 unit tests | Static plan; `safe_exec` covers runtime TOCTOU | A widened effect/scope passes admission, or a malformed plan is admitted |
+| 17 | A multilingual embedding cascade recovers attacks the lexical filter misses | `python3 labs/eval_blind.py` → lexical 4/30, embedding 29/30, 0/10 FP | 30 attacks + 10 benign (DE/FR/ES/BS) | Human-authored; one wording miss; CPU 55 s; prototypes cached | A fresh blind corpus stays near 13% or FP >0 |
+| 18 | Executed bytes are bound to the admitted bytes | `python3 polymorph/tests/test_safe_exec.py` → 3/3 | 3 TOCTOU/PATH cases | Shell scripts only | A swapped file executes while the receipt still verifies |
+| 19 | CBR promotion requires proposer≠approver and evidence | live dry-run → 0 promotions, 58 review | 58 unique cases | Operator path; HMAC key custody external | A risky goal is promoted with `GAMA_CBR_APPROVE=1` alone |
+| 20 | 64 hexagrams vs 64 codons is not evidence | `python3 labs/iching_codons.py` → r=1.0, tautology | 64×64, 10k permutations | 6-bit mapping is distance-preserving; non-identifiable | A pre-registered, out-of-sample mapping survives |
 
 ## Rules for using this table
 
