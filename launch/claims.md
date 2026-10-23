@@ -26,6 +26,7 @@ limitation. If a claim is not in this table, it does not go in a post.
 | 18 | Executed bytes are bound to the admitted bytes | `python3 polymorph/tests/test_safe_exec.py` → 3/3 | 3 TOCTOU/PATH cases | Shell scripts only | A swapped file executes while the receipt still verifies |
 | 19 | CBR promotion requires proposer≠approver and evidence | live dry-run → 0 promotions, 58 review | 58 unique cases | Operator path; HMAC key custody external | A risky goal is promoted with `GAMA_CBR_APPROVE=1` alone |
 | 20 | 64 hexagrams vs 64 codons is not evidence | `python3 labs/iching_codons.py` → r=1.0, tautology | 64×64, 10k permutations | 6-bit mapping is distance-preserving; non-identifiable | A pre-registered, out-of-sample mapping survives |
+| 21 | CGR box-counting is not a strong genome signature | `python3 labs/kmer_fractal.py` → D 1.73–1.98; Δ≤0.024 | 4 genomes, 5 shuffles | Mononucleotide shuffle; no dinucleotide control | A dinucleotide-preserving control still leaves a large, stable gap |
 
 ## Rules for using this table
 
