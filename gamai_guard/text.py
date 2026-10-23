@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import math
+import os
 import re
 import sys
 import urllib.request
@@ -32,16 +34,21 @@ def _post(url: str, body: dict, timeout: float = 20.0):
     return json.load(urllib.request.urlopen(req, timeout=timeout))
 
 
-def embed(text: str, url: str, model: str) -> list[float] | None:
+def embed_many(texts: list[str], url: str, model: str) -> list[list[float]] | None:
     try:
-        d = _post(url, {"model": model, "input": [text]})
+        d = _post(url, {"model": model, "input": list(texts)}, timeout=120)
         if "embeddings" in d:
-            return d["embeddings"][0]
+            return d["embeddings"]
         if "data" in d:
-            return d["data"][0]["embedding"]
+            return [x["embedding"] for x in d["data"]]
     except Exception:
         pass
     return None
+
+
+def embed(text: str, url: str, model: str) -> list[float] | None:
+    rows = embed_many([text], url, model)
+    return rows[0] if rows else None
 
 
 def cosine(a: list[float], b: list[float]) -> float:
@@ -58,21 +65,52 @@ class Cascade:
         self.model = model
         self.threshold = threshold
         self._proto = None
+        self._text_cache: dict[str, float] = {}
+        self._cache_dir = Path(os.path.expanduser("~/.cache/gamai_guard"))
+        self._cache_dir.mkdir(parents=True, exist_ok=True)
+
+    def _proto_path(self) -> Path:
+        h = hashlib.sha256(json.dumps(PROTOTYPES, sort_keys=True).encode()).hexdigest()[:16]
+        safe = re.sub(r"[^A-Za-z0-9_.-]", "_", self.model)
+        return self._cache_dir / ("proto_%s_%s.json" % (safe, h))
 
     def _vectors(self):
         if self._proto is not None:
             return self._proto
         if not self.embed_url:
             return None
-        out = {}
+        path = self._proto_path()
+        try:
+            raw = json.loads(path.read_text(encoding="utf-8"))
+            self._proto = raw
+            return raw
+        except Exception:
+            pass
+        flat, spans = [], []
         for cls, texts in PROTOTYPES.items():
-            vecs = [v for v in (embed(t, self.embed_url, self.model) for t in texts) if v]
-            if vecs:
-                out[cls] = vecs
+            spans.append((cls, len(flat), len(flat) + len(texts)))
+            flat.extend(texts)
+        vecs = embed_many(flat, self.embed_url, self.model)
+        out = {}
+        if vecs and len(vecs) == len(flat):
+            for cls, a, b in spans:
+                out[cls] = vecs[a:b]
+        else:
+            for cls, texts in PROTOTYPES.items():
+                rows = [v for v in (embed(t, self.embed_url, self.model) for t in texts) if v]
+                if rows:
+                    out[cls] = rows
         self._proto = out
+        if out:
+            try:
+                path.write_text(json.dumps(out), encoding="utf-8")
+            except Exception:
+                pass
         return out
 
     def embedding_score(self, text: str) -> float | None:
+        if text in self._text_cache:
+            return self._text_cache[text]
         vecs = self._vectors()
         if not vecs:
             return None
@@ -81,15 +119,47 @@ class Cascade:
             return None
         attack = max((cosine(v, x) for k, xs in vecs.items() if k != "benign" for x in xs), default=0.0)
         benign = max((cosine(v, x) for x in vecs.get("benign", [])), default=0.0)
-        return attack - benign
+        score = attack - benign
+        self._text_cache[text] = score
+        return score
 
     def check(self, text: str, tool: str = "answer") -> dict:
-        if ANALYTIC.search(text):
-            return {"allow": True, "via": "analytic", "score": None}
-        d = I.Store("/tmp/gamai-guard.db").shield_check(text, tool=tool)
-        if not d["allow"]:
-            return {"allow": False, "via": "lexical", "reason": d.get("reason")}
-        score = self.embedding_score(text)
-        if score is not None and score >= self.threshold:
-            return {"allow": False, "via": "embedding", "score": round(score, 4)}
-        return {"allow": True, "via": "clean", "score": None if score is None else round(score, 4)}
+        return self.check_many([text], tool)[0]
+
+    def check_many(self, texts: list[str], tool: str = "answer") -> list[dict]:
+        results: list[dict | None] = [None] * len(texts)
+        pending: list[tuple[int, str]] = []
+        store = I.Store("/tmp/gamai-guard.db")
+        for i, text in enumerate(texts):
+            if ANALYTIC.search(text):
+                results[i] = {"allow": True, "via": "analytic", "score": None}
+                continue
+            d = store.shield_check(text, tool=tool)
+            if not d["allow"]:
+                results[i] = {"allow": False, "via": "lexical", "reason": d.get("reason")}
+            else:
+                pending.append((i, text))
+        if not pending or not self.embed_url:
+            for i, text in pending:
+                results[i] = {"allow": True, "via": "clean", "score": None}
+            return results  # type: ignore[return-value]
+        vecs = self._vectors()
+        if not vecs:
+            for i, text in pending:
+                results[i] = {"allow": True, "via": "clean", "score": None}
+            return results  # type: ignore[return-value]
+        flat = [t for _, t in pending]
+        embedded = embed_many(flat, self.embed_url, self.model)
+        for j, (i, text) in enumerate(pending):
+            v = embedded[j] if embedded and j < len(embedded) else None
+            if not v:
+                results[i] = {"allow": True, "via": "clean", "score": None}
+                continue
+            attack = max((cosine(v, x) for k, xs in vecs.items() if k != "benign" for x in xs), default=0.0)
+            benign = max((cosine(v, x) for x in vecs.get("benign", [])), default=0.0)
+            score = attack - benign
+            self._text_cache[text] = score
+            results[i] = ({"allow": False, "via": "embedding", "score": round(score, 4)}
+                          if score >= self.threshold else
+                          {"allow": True, "via": "clean", "score": round(score, 4)})
+        return results  # type: ignore[return-value]

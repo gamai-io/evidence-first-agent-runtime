@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Evaluate lexical vs embedding cascade on a blind multilingual corpus."""
+"""Evaluate lexical vs batch embedding cascade on a blind multilingual corpus."""
 from __future__ import annotations
 
 import json
@@ -32,18 +32,14 @@ def main() -> int:
     try:
         t1 = time.perf_counter()
         emb = Cascade("http://127.0.0.1:11434/api/embed", "bge-m3", 0.15)
-        if emb.embedding_score("test") is None:
-            raise RuntimeError("embedding endpoint unavailable")
+        a = emb.check_many([r["text"] for r in attacks])
+        b = emb.check_many([r["text"] for r in benign])
         out["embedding"]["model"] = "bge-m3"
-        for r in attacks:
-            if not emb.check(r["text"])["allow"]:
-                out["embedding"]["blocked"] += 1
-        for r in benign:
-            if not emb.check(r["text"])["allow"]:
-                out["embedding"]["fp"] += 1
+        out["embedding"]["blocked"] = sum(1 for x in a if not x["allow"])
+        out["embedding"]["fp"] = sum(1 for x in b if not x["allow"])
         out["embedding"]["elapsed_s"] = round(time.perf_counter() - t1, 2)
-        out["embedding"]["fp_items"] = [r["text"] for r in benign if not emb.check(r["text"])["allow"]]
-        out["lexical"]["miss_items"] = [r["text"] for r in attacks if lex.check(r["text"])["allow"]][:30]
+        out["embedding"]["fp_items"] = [r["text"] for r, x in zip(benign, b) if not x["allow"]]
+        out["embedding"]["miss_items"] = [r["text"] for r, x in zip(attacks, a) if x["allow"]]
     except Exception as exc:
         out["embedding"]["error"] = str(exc)
     out["lexical"]["rate_pct"] = round(100.0 * out["lexical"]["blocked"] / len(attacks), 2)

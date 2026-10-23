@@ -43,7 +43,8 @@ bound.
 
 - Plan admission is static: symlinks and runtime dynamic dispatch are covered by
   `safe_exec`/`openat2`, not by the parser.
-- Embedding cascade costs ~2.7 s/item on loaded Contabo CPU; run it async or
-  cache prototypes. GPU E4 stays on VastVM.
+- Embedding cascade was 2.7 s/item before batching; batch + prototype cache
+  reduced the 40-item blind run 190 s -> 55 s (~1.4 s/item). Run it async;
+  GPU E4 stays on VastVM.
 - A filter (lexical or embedding) may only add denial/escalation; it never
   grants authority.
