@@ -39,6 +39,12 @@ when `GAMA_CBR_APPROVE=1`. `gama-skill-evolve.timer` remains off.
 report/evidence bundle. This closes the E2 gap where only the plan hash was
 bound.
 
+## GPU worker
+
+`gamai_guard/worker.py` serves `/check` and `/check_many` on
+`127.0.0.1:8091`, one warm `Cascade`, one lock. On the GTX 1660S VM a
+40-text blind batch took 1.37 s (29/30, 0 FP) after warm-up.
+
 ## Limits
 
 - Plan admission is static: symlinks and runtime dynamic dispatch are covered by
