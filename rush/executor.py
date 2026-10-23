@@ -157,6 +157,17 @@ class VultrVMExecutor:
     def available(self) -> bool:
         return bool(self.host) and shutil.which("ssh") is not None
 
+    image: str = "python:3.12-slim"
+    workdir: str = "/work"
+
+    def _wrap(self, command: str) -> str:
+        inner = shlex.quote(command)
+        return (
+            f"docker run --rm --network none --read-only --cap-drop ALL "
+            f"--security-opt no-new-privileges --memory 256m --pids-limit 64 --cpus 1.0 "
+            f"-v {self.workdir}:{self.workdir} -w {self.workdir} {self.image} sh -lc {inner}"
+        )
+
     def run(self, command: str, timeout: float = 30.0) -> ExecResult:
         started = time.time()
         if not self.available():
@@ -167,7 +178,7 @@ class VultrVMExecutor:
         ]
         if self.key_path:
             argv += ["-i", os.path.expanduser(self.key_path)]
-        argv += [f"{self.user}@{self.host}", command]
+        argv += [f"{self.user}@{self.host}", self._wrap(command)]
         try:
             proc = subprocess.run(argv, capture_output=True, text=True, timeout=timeout, check=False)
             rc, out, err = proc.returncode, proc.stdout, proc.stderr
@@ -176,7 +187,8 @@ class VultrVMExecutor:
         return ExecResult(rc == 0, rc, out, err, int((time.time() - started) * 1000), self.name)
 
     def info(self) -> dict:
-        return {"backend": self.name, "host": self.host or "unset", "isolated": True}
+        return {"backend": self.name, "host": self.host or "unset", "isolated": True,
+                "container": self.image, "network": "none"}
 
 
 def pick_executor() -> Executor:
