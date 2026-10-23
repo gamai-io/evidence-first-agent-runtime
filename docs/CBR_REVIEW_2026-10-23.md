@@ -23,12 +23,12 @@ working as designed, not a backlog to auto-approve.
 
 ## Skill-evolve decision
 
-`gama-skill-evolve.timer` remains **inactive**. It calls
-`gama_learn.py promote --min 5`, which uses `gama_skill_evolve.deploy()`:
-staging + static/synthetic gates + backup/rollback/audit, but **no CBR
-dual-control**. Enabling it would deploy auto-skills without
-`proposer != approver` or a signed approval, so it must stay off until the
-service is wrapped by a signed-approval path.
+`gama-skill-evolve.timer` is now **active but review-only** (see
+[SKILL_EVOLVE_APPROVAL_2026-10-23.md](SKILL_EVOLVE_APPROVAL_2026-10-23.md)).
+The old unit called `gama_learn.py promote --min 5`, which could deploy
+auto-skills without CBR dual-control. It now runs `skill_evolve_review.py`
+(stage/gate/review only); deployment requires a signed approval and
+`--apply-approved`.
 
 `gama_skill_evolve.py self-test` passes 8/8 (gate/reject/repair/rollback/audit).
 `gama_skill_evolve.py propose --min 5 --dry` currently lists 8 candidates and
