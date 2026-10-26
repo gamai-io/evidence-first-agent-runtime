@@ -37,7 +37,8 @@
 - Repo: https://github.com/gamai-io/evidence-first-agent-runtime
 - App: `rush/` (README: run + API + tests)
 - Blog (BS): https://gamai.io/blog/evidence-first-agent-runtime.html
-- Demo: `docs/demo.gif` (30 s terminal), video 3 min (niže scenario)
+- Demo video (23 s, snimljen iz UI-a): `docs/rush_demo.mp4` · https://github.com/gamai-io/evidence-first-agent-runtime/raw/main/docs/rush_demo.mp4
+- Demo GIF (30 s terminal): `docs/demo.gif` · scenario za duži video: sekcija 3
 
 ---
 
