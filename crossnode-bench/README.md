@@ -159,6 +159,19 @@ A fourth node (contabo) was excluded because its HC lease returned `busy` under
 concurrent load; transient `busy`/`connection refused` responses are retried in
 the runner. This is a real command-level workload, not GUI/ERP automation.
 
+## Five-node mixed run (Linux + Windows)
+
+`real1000_five.py` runs 1,000 tasks across **oracle, linux3, vast, kuca, podrum**:
+100 arithmetic, 50 echo, 40 file write/read and 10 failure probes per node.
+Linux uses `python3`; Windows uses PowerShell.
+
+```bash
+python3 real1000_five.py
+```
+
+Measured 2026-10-29: **1,000/1,000 pass, 0 false success, 124.84 s,
+p50 369.3 ms, p95 754.0 ms** (evidence sha256 `6690d4aa…009b5`).
+
 ## Tests
 
 ```bash
