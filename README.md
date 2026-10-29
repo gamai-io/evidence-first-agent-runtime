@@ -18,6 +18,19 @@ The thesis is simple: **capability is no longer the bottleneck — trust is.**
 A runtime that can prove an action, remember a refusal, and measure its own
 false-success rate is more useful than one that is merely fast.
 
+## Standalone packages
+
+The components are also published as focused packages:
+
+| Package | What it is |
+|---|---|
+| [gamai-trust](https://github.com/gamai-io/gamai-trust) | aggregate Python API + CLI + MCP server for the three checks |
+| [sigil](https://github.com/gamai-io/sigil) | proof-carrying execution profile: grants, receipts, signed bundles |
+| [gamai-guard](https://github.com/gamai-io/gamai-guard) | multilingual injection cascade (29/30 blind, 0/10 false positives) |
+| [crossnode-bench](https://github.com/gamai-io/crossnode-bench) | standalone false-success benchmark |
+| [polymorph](https://github.com/gamai-io/polymorph) | effect leases + pinned-hash execution + replay-safe bundles |
+| [floor-copilot](https://github.com/gamai-io/floor-copilot) | applied evidence-gated invoice intake (live demo) |
+
 ![30-second terminal demo](docs/demo.gif)
 
 ## Hackathon app: rush (Blast Radius Zero)
