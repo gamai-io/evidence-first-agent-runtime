@@ -40,8 +40,9 @@ ud = """#!/bin/bash
 set -eux
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
-apt-get install -y docker.io python3 git curl
+apt-get install -y docker.io python3 python3-venv git curl
 systemctl enable --now docker
+ufw allow 8098/tcp || true
 mkdir -p /work && chmod 777 /work
 """
 print(json.dumps({"region":region,"plan":plan,"os_id":int(osid),"label":label,

@@ -2,8 +2,8 @@
 
 **Tim:** gamAI Trust Layer · **Leader:** renatogama (Renato Suster) · **Faza:** online build 3–8.11.2026
 **Repo:** https://github.com/gamai-io/evidence-first-agent-runtime · **Licenca:** MIT
-**Live app:** https://contabo-vps.tailf8e6be.ts.net/rush/ (FastAPI + Docker executor; no network, read-only, cap-drop)
-**Vultr deploy:** `deploy_vultr.sh up` (Cloud Compute, fra, vc2-1c-1gb) — script ready; the Vultr account is currently locked at a negative balance, so the public demo runs the same Docker executor on a separate host until the credit is applied.
+**Live app:** http://45.76.91.239:8098/ (Vultr VM `rush2`, fra, vc2-1c-1gb, Ubuntu 24.04; Docker executor: no network, read-only, cap-drop)
+**Vultr deploy:** `deploy_vultr.sh up` (Cloud Compute, fra) + `gama-rush.service`; public port 8098 allowed in ufw.
 
 ---
 
@@ -36,7 +36,7 @@
 
 **Links**
 - Repo: https://github.com/gamai-io/evidence-first-agent-runtime
-- Live app: https://contabo-vps.tailf8e6be.ts.net/rush/ (Docker executor; Vultr deploy script in repo)
+- Live app: http://45.76.91.239:8098/ (Vultr VM + Docker executor)
 - App source: `rush/` (README: run + API + tests)
 - Blog (BS): https://gamai.io/blog/evidence-first-agent-runtime.html
 - Demo video (23 s, snimljen iz UI-a): `docs/rush_demo.mp4` · https://github.com/gamai-io/evidence-first-agent-runtime/raw/main/docs/rush_demo.mp4
@@ -54,15 +54,16 @@
 | crossnode-bench | **46/48**, detektuje **2 lažna uspjeha** koja naive `ok:true` scorer broji kao pass | `python3 crossnode-bench/crossnode.py --demo` |
 | Live run (Docker backend) | `backend: docker`, `network: none`, `read_only: true`; korak `cd /work && pwd && ls -la` → rc 0, `stdout_sha256: a2788c91…`, 855 ms | `POST /api/run` |
 
-### 29.10.2026 — public demo (Docker executor)
+### 29.10.2026 — public demo on Vultr (Docker executor)
 
 | Provjera | Rezultat | Dokaz |
 |---|---|---|
 | `rush/tests` | **6 passed** | `python3 -m pytest rush/tests -q` |
-| Public `/health` | `backend: docker`, `network: none`, `read_only: true` | `GET /rush/health` |
-| Public `/api/run` benign | `report.status: confirmed`, rc 0, `stdout_sha256` present, ledger 6 records, `verify.ok: true` | `POST /rush/api/run` |
-| Injection task | **refused before sandbox**, `matched: ['instruction_override','tool_injection']` | `POST /rush/api/run` |
-| Destructive task | **refused**, score 1.0, `matched: ['tool_injection']` | `POST /rush/api/run` |
+| Vultr VM | `rush2` 45.76.91.239, fra, vc2-1c-1gb, docker 29.1.3, `gama-rush.service` active | `systemctl status gama-rush` |
+| Public `/health` | `backend: docker`, `network: none`, `read_only: true` | `GET http://45.76.91.239:8098/health` |
+| Public `/api/run` benign | `report.status: confirmed`, rc 0, `stdout_sha256`, ledger 6 records, `verify.ok: true` (6.0 s incl. image pull) | `POST /api/run` |
+| Injection task | **refused before sandbox**, `matched: ['instruction_override','tool_injection']` | `POST /api/run` |
+| Destructive task | **refused**, score 1.0, `matched: ['tool_injection']` | `POST /api/run` |
 
 ---
 
@@ -78,9 +79,9 @@
 
 ## 4) Prije submita (checklist)
 - [x] `python3 -m pytest rush/tests -q` → 6 passed
-- [x] Public demo health + benign run + refusal verified (29.10.)
+- [x] Public demo on Vultr health + benign run + refusals verified (29.10.)
 - [ ] Snimiti 3-min video po scenariju (postoji 23 s teaser `docs/rush_demo.mp4`)
 - [ ] LabLab: Submit → unijeti title/tagline/description/tags/links + video URL
 - [x] Repo radi bez naših ključeva (deterministički planner; Vultr ključevi opcioni)
-- [ ] Vultr: dopuniti balans / primijeniti $200 credit, pa `deploy_vultr.sh up` i prebaciti demo na Vultr VM
+- [x] Vultr VM deployan (`rush2`, 45.76.91.239:8098), ufw 8098/tcp allow
 - [ ] (opciono) Showcase na community.vultr.com
