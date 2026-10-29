@@ -51,6 +51,8 @@ See [rush/README.md](rush/README.md).
 
 **Live on Vultr:** https://gamai.io (Docker sandbox on a `vc2-1c-1gb` instance, `fra`).
 
+**Demo (2:47):** [docs/rush_demo_3min.mp4](docs/rush_demo_3min.mp4)
+
 ## Quickstart
 
 ```bash
