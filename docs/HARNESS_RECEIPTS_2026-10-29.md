@@ -84,3 +84,14 @@ Response (trimmed):
 
 The in-process denial test with a dead gate also returned
 `{"ok":false,"blocked":"sigil"}` and did not execute the command.
+
+## Safe fail-closed checks for high-risk tools
+
+With the guard enabled and a deliberately dead gate (`127.0.0.1:9`), the
+authorization step returned `denied` for both `sql_write` and `mail`; no
+statement was executed and no message was sent:
+
+```text
+sql_write {'denied': True, 'err': 'connection refused'}
+mail      {'denied': True, 'err': 'connection refused'}
+```
