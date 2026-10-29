@@ -2,7 +2,8 @@
 
 **Tim:** gamAI Trust Layer · **Leader:** renatogama (Renato Suster) · **Faza:** online build 3–8.11.2026
 **Repo:** https://github.com/gamai-io/evidence-first-agent-runtime · **Licenca:** MIT
-**Live app:** `rush/` (FastAPI, port 8098) · **Backend:** Vultr VM `rush-sandbox` (45.76.92.98, fra) + Docker sandbox
+**Live app:** https://contabo-vps.tailf8e6be.ts.net/rush/ (FastAPI + Docker executor; no network, read-only, cap-drop)
+**Vultr deploy:** `deploy_vultr.sh up` (Cloud Compute, fra, vc2-1c-1gb) — script ready; the Vultr account is currently locked at a negative balance, so the public demo runs the same Docker executor on a separate host until the credit is applied.
 
 ---
 
@@ -35,7 +36,8 @@
 
 **Links**
 - Repo: https://github.com/gamai-io/evidence-first-agent-runtime
-- App: `rush/` (README: run + API + tests)
+- Live app: https://contabo-vps.tailf8e6be.ts.net/rush/ (Docker executor; Vultr deploy script in repo)
+- App source: `rush/` (README: run + API + tests)
 - Blog (BS): https://gamai.io/blog/evidence-first-agent-runtime.html
 - Demo video (23 s, snimljen iz UI-a): `docs/rush_demo.mp4` · https://github.com/gamai-io/evidence-first-agent-runtime/raw/main/docs/rush_demo.mp4
 - Demo GIF (30 s terminal): `docs/demo.gif` · scenario za duži video: sekcija 3
@@ -52,6 +54,16 @@
 | crossnode-bench | **46/48**, detektuje **2 lažna uspjeha** koja naive `ok:true` scorer broji kao pass | `python3 crossnode-bench/crossnode.py --demo` |
 | Live run (Docker backend) | `backend: docker`, `network: none`, `read_only: true`; korak `cd /work && pwd && ls -la` → rc 0, `stdout_sha256: a2788c91…`, 855 ms | `POST /api/run` |
 
+### 29.10.2026 — public demo (Docker executor)
+
+| Provjera | Rezultat | Dokaz |
+|---|---|---|
+| `rush/tests` | **6 passed** | `python3 -m pytest rush/tests -q` |
+| Public `/health` | `backend: docker`, `network: none`, `read_only: true` | `GET /rush/health` |
+| Public `/api/run` benign | `report.status: confirmed`, rc 0, `stdout_sha256` present, ledger 6 records, `verify.ok: true` | `POST /rush/api/run` |
+| Injection task | **refused before sandbox**, `matched: ['instruction_override','tool_injection']` | `POST /rush/api/run` |
+| Destructive task | **refused**, score 1.0, `matched: ['tool_injection']` | `POST /rush/api/run` |
+
 ---
 
 ## 3) Demo scenario (3 minute, ekran)
@@ -65,9 +77,10 @@
 ---
 
 ## 4) Prije submita (checklist)
-- [ ] `python -m pytest rush/tests -q` → 6 passed
-- [ ] `./repro.sh` → svi testovi + demo (bez mreže i ključeva)
-- [ ] Snimiti 3-min video po scenariju (gore)
+- [x] `python3 -m pytest rush/tests -q` → 6 passed
+- [x] Public demo health + benign run + refusal verified (29.10.)
+- [ ] Snimiti 3-min video po scenariju (postoji 23 s teaser `docs/rush_demo.mp4`)
 - [ ] LabLab: Submit → unijeti title/tagline/description/tags/links + video URL
-- [ ] Potvrditi da repo radi bez naših ključeva (samo `VULTR_API_KEY`/`VULTR_INFERENCE_KEY` opcioni)
+- [x] Repo radi bez naših ključeva (deterministički planner; Vultr ključevi opcioni)
+- [ ] Vultr: dopuniti balans / primijeniti $200 credit, pa `deploy_vultr.sh up` i prebaciti demo na Vultr VM
 - [ ] (opciono) Showcase na community.vultr.com

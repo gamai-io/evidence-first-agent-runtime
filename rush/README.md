@@ -5,6 +5,10 @@ dispatches every command into an isolated sandbox, and returns output that is on
 accepted when the sandbox itself proves it (exit code + SHA-256 of stdout), all
 chained into a tamper-evident ledger.
 
+**Live demo:** https://contabo-vps.tailf8e6be.ts.net/rush/ — Docker executor (`--network none`,
+read-only root, cap-drop, memory/PID limits). `deploy_vultr.sh up` switches the same executor
+to a Vultr Cloud Compute instance when `VULTR_API_KEY` and an active balance are available.
+
 ```
 task ──► guard ──► planner ──► guard ──► sandbox ──► verify ──► evidence chain
           │                     │            │            │
