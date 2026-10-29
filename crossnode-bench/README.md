@@ -142,6 +142,23 @@ This is a real execution run, but the task mix is intentionally simple. It
 proves fleet execution and claim checking at 1,000 tasks; it does not prove
 complex GUI/ERP workflows. Use `crossnode.py` for the richer 16-task suite.
 
+## Complex 1,000-task fleet run
+
+`real1000_complex.py` mixes **400 Python calculations, 300 file write/read,
+200 SHA-256 hashes and 100 failure probes** across three Linux nodes.
+
+```bash
+python3 real1000_complex.py
+```
+
+Measured 2026-10-29 on **oracle, linux3, vast**:
+**1,000/1,000 pass, 0 false success, 131.25 s, p50 218 ms, p95 420.8 ms**
+(evidence sha256 `f0c3873e…4e20a7`).
+
+A fourth node (contabo) was excluded because its HC lease returned `busy` under
+concurrent load; transient `busy`/`connection refused` responses are retried in
+the runner. This is a real command-level workload, not GUI/ERP automation.
+
 ## Tests
 
 ```bash
