@@ -3,7 +3,7 @@
 **Tim:** gamAI Trust Layer · **Leader:** renatogama (Renato Suster) · **Faza:** online build 3–8.11.2026
 **Repo:** https://github.com/gamai-io/evidence-first-agent-runtime · **Licenca:** MIT
 **Live app:** http://45.76.91.239:8098/ (Vultr VM `rush2`, fra, vc2-1c-1gb, Ubuntu 24.04; Docker executor: no network, read-only, cap-drop)
-**Vultr deploy:** `deploy_vultr.sh up` (Cloud Compute, fra) + `gama-rush.service`; public port 8098 allowed in ufw.
+**Vultr deploy:** `deploy_vultr.sh up` (Cloud Compute, fra) then `scp deploy_rush.sh root@<ip>:` and `bash deploy_rush.sh`; installs `gama-rush.service` and allows 8098/tcp.
 
 ---
 
