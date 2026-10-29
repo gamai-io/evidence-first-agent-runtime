@@ -39,7 +39,7 @@
 - Live app: http://45.76.91.239:8098/ (Vultr VM + Docker executor)
 - App source: `rush/` (README: run + API + tests)
 - Blog (BS): https://gamai.io/blog/evidence-first-agent-runtime.html
-- Demo video (23 s, snimljen iz UI-a): `docs/rush_demo.mp4` · https://github.com/gamai-io/evidence-first-agent-runtime/raw/main/docs/rush_demo.mp4
+- Demo video (2:47, live Vultr UI + refusals): `docs/rush_demo_3min.mp4` · https://github.com/gamai-io/evidence-first-agent-runtime/raw/main/docs/rush_demo_3min.mp4
 - Demo GIF (30 s terminal): `docs/demo.gif` · scenario za duži video: sekcija 3
 
 ---
@@ -80,7 +80,7 @@
 ## 4) Prije submita (checklist)
 - [x] `python3 -m pytest rush/tests -q` → 6 passed
 - [x] Public demo on Vultr health + benign run + refusals verified (29.10.)
-- [ ] Snimiti 3-min video po scenariju (postoji 23 s teaser `docs/rush_demo.mp4`)
+- [x] 2:47 demo video `docs/rush_demo_3min.mp4` (live Vultr UI, benign + refusal + evidence)
 - [ ] LabLab: Submit → unijeti title/tagline/description/tags/links + video URL
 - [x] Repo radi bez naših ključeva (deterministički planner; Vultr ključevi opcioni)
 - [x] Vultr VM deployan (`rush2`, 45.76.91.239:8098), ufw 8098/tcp allow
