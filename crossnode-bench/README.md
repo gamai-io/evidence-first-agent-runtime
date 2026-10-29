@@ -124,6 +124,24 @@ Measured 2026-10-29 on 3 nodes: **48/48 pass, 0 false success**, p50 179.7 ms,
 p95 740.8 ms. This is a real execution, but still a small task set; the 1,000-task
 external run remains the next milestone.
 
+## Real 1,000-task fleet run
+
+`real1000.py` assigns 1,000 distinct tasks round-robin across real GAMA nodes
+and records claim vs ground truth. Commands are non-destructive (`echo` plus
+5% `run missing` probes).
+
+```bash
+python3 real1000.py
+```
+
+Measured 2026-10-29 across **oracle, linux3, vast, kuca, podrum**:
+**1,000/1,000 pass, 0 false success, 78.63 s, p50 326 ms, p95 462.9 ms**
+(200 tasks per node, evidence sha256 `7366c151…b053de`).
+
+This is a real execution run, but the task mix is intentionally simple. It
+proves fleet execution and claim checking at 1,000 tasks; it does not prove
+complex GUI/ERP workflows. Use `crossnode.py` for the richer 16-task suite.
+
 ## Tests
 
 ```bash
