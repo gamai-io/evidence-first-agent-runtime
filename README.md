@@ -49,6 +49,8 @@ python -m pytest rush/tests -q                # 6 tests
 
 See [rush/README.md](rush/README.md).
 
+**Live on Vultr:** https://gamai.io (Docker sandbox on a `vc2-1c-1gb` instance, `fra`).
+
 ## Quickstart
 
 ```bash

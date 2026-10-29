@@ -5,9 +5,9 @@ dispatches every command into an isolated sandbox, and returns output that is on
 accepted when the sandbox itself proves it (exit code + SHA-256 of stdout), all
 chained into a tamper-evident ledger.
 
-**Live demo:** https://gamai.io/rush/ — Docker executor (`--network none`,
-read-only root, cap-drop, memory/PID limits). `deploy_vultr.sh up` switches the same executor
-to a Vultr Cloud Compute instance when `VULTR_API_KEY` and an active balance are available.
+**Live demo (Vultr):** https://gamai.io — Docker executor (`--network none`,
+read-only root, cap-drop, memory/PID limits) on a Vultr `vc2-1c-1gb` instance in `fra`.
+`deploy_vultr.sh up` provisions the instance; `gama-rush.service` runs the app.
 
 ```
 task ──► guard ──► planner ──► guard ──► sandbox ──► verify ──► evidence chain
