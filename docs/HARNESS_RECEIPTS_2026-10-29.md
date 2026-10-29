@@ -51,3 +51,36 @@ TOKEN=$(grep '^GAMA_HARNESS_TOKEN=' /etc/gama-harness.env | cut -d= -f2-)
 curl -s -H "X-Token: $TOKEN" http://127.0.0.1:7125/gtl/stats
 curl -s -H "X-Token: $TOKEN" http://127.0.0.1:7125/gtl/pubkey
 ```
+
+## SIGIL grant before the effect (live, 2026-10-29)
+
+`gama_sigil_guard.py` is now enabled for `shell` and `run` through a systemd
+drop-in (`/etc/systemd/system/gama-harness.service.d/zz-sigil-guard.conf`).
+For those tools the order is:
+
+```
+grant -> authorize -> execute -> record -> verify
+```
+
+The guard is fail-closed when `SIGIL_GUARD_ENFORCE=1`. The SIGIL receipt is
+attached to the tool result as `_sigil`.
+
+Live proof through the harness itself:
+
+```bash
+TOKEN=$(grep '^GAMA_HARNESS_TOKEN=' /etc/gama-harness.env | cut -d= -f2-)
+curl -s -X POST http://127.0.0.1:7125/mcp/call \
+  -H "X-Token: $TOKEN" -H 'Content-Type: application/json' \
+  -d '{"name":"shell","arguments":{"cmd":"echo SIGIL-MCP-LIVE"}}'
+```
+
+Response (trimmed):
+
+```json
+{"ok":true,"result":{"ok":true,"out":"SIGIL-MCP-LIVE\n",
+ "_gtl_receipt":{"seq":807,"signed":true,"key_id":"b04f903a64d346df"},
+ "_sigil":{"receipt_id":"8f459a6d-...","verified":true}}}
+```
+
+The in-process denial test with a dead gate also returned
+`{"ok":false,"blocked":"sigil"}` and did not execute the command.
