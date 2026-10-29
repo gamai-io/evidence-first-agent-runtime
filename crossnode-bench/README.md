@@ -90,6 +90,40 @@ stable over runs, ~20 s/run. False-success classes found:
 These are the failures that make an agent look reliable in a demo and fail in
 production.
 
+## Scale test (1,000 tasks)
+
+`scale1000.py` is a **synthetic regression/scale test**, not independent fleet
+validation: 1,000 distinct tasks, 5 node adapters, one host, evidence JSONL.
+
+```bash
+python3 scale1000.py
+```
+
+Measured 2026-10-29: **5,000 records, 4,997 pass, 3 intentional false successes,
+8.08 s**, p50 1.4 ms, p95 2.2 ms. The three false successes are mock liars and
+validate detection; they are not a model-safety result.
+
+## Real fleet adapter
+
+`gama-cli` nodes run `gama --json hc <target> shell <cmd>` and are useful on the
+GAMA fleet:
+
+```json
+{"nodes":[
+ {"type":"gama-cli","name":"oracle","target":"oracle"},
+ {"type":"gama-cli","name":"linux3","target":"linux3"},
+ {"type":"gama-cli","name":"contabo","target":"contabo"}
+]}
+```
+
+```bash
+python3 crossnode.py --config nodes.json --runs 1
+```
+
+Measured 2026-10-29 on 3 nodes: **48/48 pass, 0 false success**, p50 179.7 ms,
+p95 740.8 ms. This is a real execution, but still a small task set; the 1,000-task
+external run remains the next milestone.
+
 ## Tests
 
 ```bash

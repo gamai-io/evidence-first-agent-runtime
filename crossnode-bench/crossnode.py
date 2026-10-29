@@ -93,6 +93,60 @@ class HTTPNode(Node):
 
 
 @dataclass
+class FleetNode(Node):
+    """HTTP fleet bridge node: POST {"cmd": ..., "to": target}."""
+    name: str
+    url: str
+    target: str
+    token: str = ""
+    token_env: str = "FLEET_TOKEN"
+    probe: str = "all"
+    prefix: str = "shell "
+
+    def run(self, cmd: str, timeout: int = 25) -> dict:
+        body = json.dumps({"cmd": self.prefix + cmd, "to": self.target}).encode()
+        headers = {"Content-Type": "application/json"}
+        token = self.token or os.environ.get(self.token_env, "")
+        if token:
+            headers["X-Token"] = token
+        req = urllib.request.Request(self.url, data=body, method="POST", headers=headers)
+        t0 = time.perf_counter()
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                data = json.loads(resp.read(2 * 1024 * 1024).decode("utf-8", "replace"))
+        except (urllib.error.URLError, TimeoutError, ValueError, OSError) as exc:
+            return {"ok": False, "rc": 124, "out": "", "err": str(exc)[:400],
+                    "ms": round((time.perf_counter() - t0) * 1000, 1)}
+        item = (data.get("results") or {}).get(self.target, data)
+        item.setdefault("ms", round((time.perf_counter() - t0) * 1000, 1))
+        item.setdefault("rc", 0 if item.get("ok") else 1)
+        return item
+
+
+@dataclass
+class CliNode(Node):
+    """Use the `gama --json hc <target> shell <cmd>` CLI path."""
+    name: str
+    target: str = ""
+    probe: str = "all"
+    timeout: int = 30
+
+    def run(self, cmd: str, timeout: int = 25) -> dict:
+        t0 = time.perf_counter()
+        try:
+            proc = subprocess.run(["gama", "--json", "hc", self.target or self.name,
+                                   "shell " + cmd], capture_output=True, text=True,
+                                  timeout=max(timeout, self.timeout))
+            data = json.loads(proc.stdout.strip().splitlines()[-1])
+            data.setdefault("ms", round((time.perf_counter() - t0) * 1000, 1))
+            data.setdefault("rc", 0 if data.get("ok") else 1)
+            return data
+        except Exception as exc:
+            return {"ok": False, "rc": 124, "out": "", "err": str(exc)[:400],
+                    "ms": round((time.perf_counter() - t0) * 1000, 1)}
+
+
+@dataclass
 class MockLiar(Node):
     """Wraps a node; returns ok:true for configured probe ids even on failure.
 
@@ -309,6 +363,14 @@ def load_config(path: str) -> list[Node]:
         elif item.get("type") == "http":
             nodes.append(HTTPNode(item["name"], item["url"],
                                   token_env=item.get("token_env", "NODE_TOKEN")))
+        elif item.get("type") == "gama-cli":
+            nodes.append(CliNode(item.get("name", item.get("target", "node")),
+                                 item.get("target", item.get("name"))))
+        elif item.get("type") == "fleet":
+            nodes.append(FleetNode(item.get("name", item.get("target", "fleet")),
+                                   item["url"], item.get("target", item.get("name")),
+                                   token_env=item.get("token_env", "FLEET_TOKEN"),
+                                   prefix=item.get("prefix", "shell ")))
         else:
             raise SystemExit("unknown node type: %r" % item.get("type"))
     return nodes
