@@ -37,8 +37,8 @@ deploys **0**.
 ## Commands
 
 ```bash
-wc -l ~/.gama/_cbr_review.jsonl
+wc -l $HOME/.gama/_cbr_review.jsonl
 systemctl is-active gama-cbr-promote.timer gama-skill-evolve.timer
-python3 ~/gamaos/gama_skill_evolve.py self-test
-python3 ~/gamaos/gama_skill_evolve.py propose --min 5 --dry
+python3 $HOME/gamaos/gama_skill_evolve.py self-test
+python3 $HOME/gamaos/gama_skill_evolve.py propose --min 5 --dry
 ```

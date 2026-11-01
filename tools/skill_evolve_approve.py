@@ -9,8 +9,8 @@ import json
 import os
 import time
 
-KEY = "~/.gama/.skill_evolve_approval_key"
-APPROVALS = "~/.gama/_skill_evolve_approvals.json"
+KEY = "$HOME/.gama/.skill_evolve_approval_key"
+APPROVALS = "$HOME/.gama/_skill_evolve_approvals.json"
 
 
 def canon(name, sha, proposer, approver, ts) -> str:

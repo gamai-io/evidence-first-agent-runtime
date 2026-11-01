@@ -6,7 +6,7 @@ could deploy auto-skills without CBR dual-control. It is now **review-only**.
 ## State
 - `gama-skill-evolve.timer`: **active**, next run ~04:30 (+ jitter).
 - `gama-skill-evolve.service`: runs `skill_evolve_review.py --min 5`.
-- Review file: `~/.gama/_skill_evolve_review.jsonl`.
+- Review file: `$HOME/.gama/_skill_evolve_review.jsonl`.
 - Latest run: **8 reviewed, 0 deployed**; live manifest unchanged (49 skills).
 - Backup units: `*.bak_review_20261023`.
 
@@ -14,14 +14,14 @@ could deploy auto-skills without CBR dual-control. It is now **review-only**.
 1. Review a record: name, sha, gate result, goal.
 2. Sign exactly that name + sha:
    ```bash
-   python3 ~/gamaos/skill_evolve_approve.py \
+   python3 $HOME/gamaos/skill_evolve_approve.py \
      --name gama-auto-... --sha <64hex> --proposer agent --approver human
    ```
-   Creates `~/.gama/.skill_evolve_approval_key` (0600) and
+   Creates `$HOME/.gama/.skill_evolve_approval_key` (0600) and
    `_skill_evolve_approvals.json` (0600), HMAC-signed.
 3. Apply only approved records:
    ```bash
-   python3 ~/gamaos/skill_evolve_review.py --min 5 --apply-approved
+   python3 $HOME/gamaos/skill_evolve_review.py --min 5 --apply-approved
    ```
    Rejects if proposer==approver, sha differs, or the signature does not verify.
 

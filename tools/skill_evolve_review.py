@@ -19,9 +19,9 @@ sys.path.insert(0, "~/gamaos")
 import gama_cases as gc  # type: ignore
 import gama_skill_evolve as EV  # type: ignore
 
-REVIEW = "~/.gama/_skill_evolve_review.jsonl"
-APPROVALS = "~/.gama/_skill_evolve_approvals.json"
-KEY = "~/.gama/.skill_evolve_approval_key"
+REVIEW = "$HOME/.gama/_skill_evolve_review.jsonl"
+APPROVALS = "$HOME/.gama/_skill_evolve_approvals.json"
+KEY = "$HOME/.gama/.skill_evolve_approval_key"
 
 
 def _sha(s: str) -> str:

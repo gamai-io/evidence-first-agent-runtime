@@ -8,7 +8,7 @@ Defensive lab only. Host: `ubuntu` (GPU VM, 10 vCPU, 32 GB RAM, GTX 1660 SUPER 6
 - `systemctl restart docker` -> client/server **29.1.3**, API **1.52**; `docker run hello-world` OK.
 - Disk: **84% -> 75%**, 6.6 GB -> **9.8 GB free**.
 - Removed `/opt/android-sdk` (3.3 GB, reinstallable). Phone code + APK + install logs backed up first:
-  `~/backups/vastvm-phone-20261022.tgz` (4.9 MB) on VM.
+  `$HOME/backups/vastvm-phone-20261022.tgz` (4.9 MB) on VM.
 - Emulator PID 33918 stopped; phone bridge was already dead.
 
 ## gVisor checkpoint/restore, n=20
@@ -44,9 +44,9 @@ snapshot creation; the existing `/opt/fc/mem.bin` and `snap.bin` were reused.
 
 ## Artifacts
 
-- `~/gv20_summary.json` (GPU VM): all 20 gVisor records.
+- `$HOME/gv20_summary.json` (GPU VM): all 20 gVisor records.
 - `/opt/p4/fc.json` and `/tmp/fcJ_*.json` (GPU VM): FC batches.
-- `~/backups/vastvm-phone-20261022.tgz` (VM): phone backup.
+- `$HOME/backups/vastvm-phone-20261022.tgz` (VM): phone backup.
 
 ## Limits
 

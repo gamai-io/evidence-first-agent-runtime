@@ -26,7 +26,7 @@ python3 -m gamai_guard.cli cbr "summarize report" "..." --evidence sha256:... --
 - `proposer != approver`
 - at least one effect-evidence token
 - risk scan (delete/rm/drop/ssh/system-prompt/harness/shell/fleet/mail/send)
-- HMAC signature in `~/.gama/_cbr_approvals.json`
+- HMAC signature in `$HOME/.gama/_cbr_approvals.json`
 
 The live promoter defaults to dry-run and requires an approval signature even
 when `GAMA_CBR_APPROVE=1`. `gama-skill-evolve.timer` remains off.

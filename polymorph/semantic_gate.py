@@ -18,7 +18,7 @@ sys.path.insert(0, str(HERE))
 from e3_cross_language import ATTACKS, BENIGN  # noqa: E402
 
 URL = "http://127.0.0.1:8080/v1/chat/completions"
-MODEL = "~/qwen3b.gguf"
+MODEL = "$HOME/qwen3b.gguf"
 
 
 def classify(items: list[dict]) -> list[dict]:

@@ -26,8 +26,8 @@ def main() -> int:
     ap.add_argument("--reviewer", required=True)
     ap.add_argument("--ok", type=int, default=5)
     ap.add_argument("--fail", type=int, default=0)
-    ap.add_argument("--store", default="~/.gama/_cbr_approvals.json")
-    ap.add_argument("--key-file", default="~/.gama/.cbr_approval_key")
+    ap.add_argument("--store", default="$HOME/.gama/_cbr_approvals.json")
+    ap.add_argument("--key-file", default="$HOME/.gama/.cbr_approval_key")
     args = ap.parse_args()
     kf = Path(args.key_file)
     if not kf.exists():

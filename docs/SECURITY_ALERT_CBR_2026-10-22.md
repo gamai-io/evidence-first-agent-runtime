@@ -4,7 +4,7 @@ A read-only review of the local CBR store found a persistence risk.
 
 ## Finding
 
-- `~/gamacode/cases.db`: **833 cases**, **131** qualify for promotion
+- `$HOME/gamacode/cases.db`: **833 cases**, **131** qualify for promotion
   (`ok>=3`, `fail<=1`), **120** were still unpromoted.
 - Nightly timers:
   - `gama-cbr-promote.timer` 03:40
