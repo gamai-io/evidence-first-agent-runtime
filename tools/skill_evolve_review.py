@@ -15,7 +15,7 @@ import os
 import sys
 import time
 
-sys.path.insert(0, "~/gamaos")
+sys.path.insert(0, "$HOME/gamaos")
 import gama_cases as gc  # type: ignore
 import gama_skill_evolve as EV  # type: ignore
 
