@@ -1,3 +1,5 @@
+> **Live evidence dashboard:** https://gamai-io.github.io/demo/
+
 # gamAI Trust Layer
 
 [![ci](https://github.com/gamai-io/evidence-first-agent-runtime/actions/workflows/ci.yml/badge.svg)](https://github.com/gamai-io/evidence-first-agent-runtime/actions/workflows/ci.yml)
