@@ -1,4 +1,4 @@
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 from .core import (  # noqa: F401
     Broker,
@@ -18,6 +18,7 @@ from .core import (  # noqa: F401
     digest_bytes,
     verdict_for,
 )
-from .adapters import FileAdapter, SqliteAdapter  # noqa: F401
+from .signing import Ed25519Signer, Ed25519Verifier, HmacSigner  # noqa: F401
+from .adapters import FileAdapter, HttpAdapter, SqliteAdapter  # noqa: F401
 from .evidence import Evidence  # noqa: F401
 from .attacks import run_all  # noqa: F401

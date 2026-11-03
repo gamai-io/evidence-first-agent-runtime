@@ -1,10 +1,11 @@
 import hashlib
-import hmac
 import json
 import time
 import uuid
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, Optional
+
+from .signing import HmacSigner
 
 SCHEMA = "effect-broker/0.1"
 LAB_KEY = b"effect-broker-lab-key-not-for-production"
@@ -83,7 +84,7 @@ class Grant:
     expires_at: float
     sig: str
 
-    def token(self) -> Dict[str, str]:
+    def token(self) -> Dict[str, Any]:
         return {"grant_id": self.grant_id, "intent_hash": self.intent_hash, "expires_at": self.expires_at, "sig": self.sig}
 
 
@@ -157,12 +158,13 @@ class Broker:
         adapters: Dict[str, Any],
         policy: Optional[Policy] = None,
         key: bytes = LAB_KEY,
+        signer: Any = None,
         now: Optional[Callable[[], float]] = None,
         evidence=None,
     ):
         self.adapters = adapters
         self.policy = policy or Policy()
-        self.key = key
+        self.signer = signer or HmacSigner(key)
         self.now = now or time.time
         self.evidence = evidence
         self._grants: Dict[str, Dict[str, Any]] = {}
@@ -171,12 +173,15 @@ class Broker:
         self._idem: Dict[str, str] = {}
         self._used_tokens: set = set()
 
-    def _sign(self, payload: Dict[str, Any]) -> str:
-        return hmac.new(self.key, canon(payload), hashlib.sha256).hexdigest()
+    def _sign(self, body: Dict[str, Any]) -> str:
+        return self.signer.sign(canon(dict(body, alg=self.signer.alg)))
+
+    def _verify(self, body: Dict[str, Any], sig: str) -> bool:
+        return self.signer.verify(canon(dict(body, alg=self.signer.alg)), sig)
 
     def _record(self, kind: str, **fields) -> None:
         if self.evidence is not None:
-            self.evidence.append({"schema": SCHEMA, "kind": kind, **fields})
+            self.evidence.append({"schema": SCHEMA, "kind": kind, "alg": self.signer.alg, **fields})
 
     def authorize(self, intent: Intent) -> Grant:
         if intent.action not in self.adapters:
@@ -190,7 +195,7 @@ class Broker:
         expires_at = self.now() + self.policy.ttl_s
         body = {"grant_id": grant_id, "intent_hash": intent.hash(), "expires_at": expires_at}
         grant = Grant(grant_id=grant_id, intent_hash=body["intent_hash"], expires_at=expires_at, sig=self._sign(body))
-        self._grants[grant_id] = {"intent": intent, "used": False, "expires_at": expires_at, "sig": grant.sig}
+        self._grants[grant_id] = {"intent": intent, "used": False, "body": body, "sig": grant.sig}
         self._record("grant", grant_id=grant_id, intent_hash=grant.intent_hash, action=intent.action, target=intent.target)
         return grant
 
@@ -198,11 +203,11 @@ class Broker:
         state = self._grants.get(grant.grant_id)
         if state is None:
             raise GrantInvalid("unknown grant")
-        if not hmac.compare_digest(state["sig"], grant.sig):
+        if not self._verify(state["body"], grant.sig):
             raise GrantInvalid("grant signature mismatch")
         if grant.intent_hash != state["intent"].hash():
             raise GrantInvalid("grant bound to another intent")
-        if self.now() > state["expires_at"]:
+        if self.now() > state["body"]["expires_at"]:
             raise GrantInvalid("grant expired")
         if state["used"]:
             raise GrantInvalid("grant already used")
@@ -221,7 +226,7 @@ class Broker:
         body = {"effect_id": effect_id, "intent_hash": intent.hash(), "nonce": nonce, "result": result, "executed_at": executed_at}
         effect = Effect(effect_id=effect_id, intent_hash=body["intent_hash"], nonce=nonce, result=result, executed_at=executed_at, sig=self._sign(body))
         state["used"] = True
-        self._effects[effect_id] = {"intent": intent, "effect": effect, "grant": grant}
+        self._effects[effect_id] = {"intent": intent, "effect": effect, "effect_body": body, "grant": grant}
         if intent.idempotency_key:
             self._idem[intent.idempotency_key] = effect_id
         self._record("effect", effect_id=effect_id, intent_hash=effect.intent_hash, nonce=nonce, action=intent.action, target=intent.target)
@@ -235,7 +240,7 @@ class Broker:
         state = self._effects.get(effect.effect_id)
         if state is None:
             raise NoEffect("unknown effect")
-        if not hmac.compare_digest(state["effect"].sig, effect.sig):
+        if not self._verify(state["effect_body"], effect.sig):
             raise GrantInvalid("effect signature mismatch")
         intent = state["intent"]
         probe = self.probe(intent, effect)
@@ -274,7 +279,7 @@ class Broker:
             expires_at=expires_at,
             sig=self._sign(body),
         )
-        self._tokens[token_id] = {"intent": intent, "effect": effect, "token": token}
+        self._tokens[token_id] = {"intent": intent, "effect": effect, "token": token, "body": body}
         self._record("commit", token_id=token_id, effect_id=effect.effect_id, verdict=verdict, probe_sha256=probe.get("sha256"), mismatch=None)
         return {"verdict": verdict, "token": token, "probe": probe, "mismatch": None}
 
@@ -292,7 +297,7 @@ class Broker:
             "issued_at": token.issued_at,
             "expires_at": token.expires_at,
         }
-        if not hmac.compare_digest(self._sign(body), token.sig):
+        if not self._verify(body, token.sig):
             raise GrantInvalid("commit token signature mismatch")
         if self.now() > token.expires_at:
             raise Stale("commit token expired")

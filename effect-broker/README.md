@@ -43,9 +43,10 @@ assert broker.verify(result["token"])["ok"]
 |---|---|---|---|
 | `FileAdapter` | `file.write` | filesystem | sha256 of file bytes |
 | `SqliteAdapter` | `sql.insert` | SQLite row | sha256 of stored value |
+| `HttpAdapter` | `http.get` | HTTP endpoint | sha256 of response body |
 
-Both adapters enforce scope on the target (`out/...` path or `<table>:<key>`), not just
-on the action name.
+All adapters enforce scope on the target (`out/...` path, `<table>:<key>`, or `host:port`),
+not just on the action name.
 
 ## Attack suite (8)
 
@@ -75,10 +76,27 @@ in-memory record and, if a path is given, to JSONL:
 record hashes pairwise. This makes the run tamper-evident at rest; it does not make the
 host trusted.
 
+## Signing
+
+Default is HMAC-SHA256 with a lab key. Ed25519 is optional:
+
+```bash
+python -m pip install ".[ed25519]"
+```
+
+```python
+from effectbroker import Ed25519Signer, Ed25519Verifier
+signer = Ed25519Signer()                      # holds the private key
+verifier = Ed25519Verifier(signer.public_pem())  # verify-only; sign() raises
+```
+
+The public verifier can verify tokens but cannot mint them, so a separate service can
+check receipts without holding signing material.
+
 ## Honest limitations
 
-- HMAC-SHA256 with a **lab key**; production needs Ed25519/KMS + mTLS. The key is not a
-  hardware root and this repo does not implement key rotation.
+- Default signing is HMAC-SHA256 with a **lab key**; Ed25519 is available, but there is no
+  KMS/HSM, no key rotation, and no mTLS yet. The lab key is not a hardware root.
 - SQLite is single-node. No replication, no distributed concurrency, no fencing token.
 - The broker is not a sandbox: adapters run in-process. Isolation belongs to srt/gVisor/
   microVM; the broker governs **effect evidence**.

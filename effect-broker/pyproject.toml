@@ -4,12 +4,15 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "effect-broker"
-version = "0.1.0"
-description = "Policy gate before an agent acts, commit token after the effect is probed in the system-of-record."
+version = "0.2.0"
+description = "Policy gate before an agent acts, commit token after the effect is probed in the system-of-record. File, SQL and HTTP adapters; 8 attacks."
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "Apache-2.0" }
 authors = [{ name = "gamAI" }]
+
+[project.optional-dependencies]
+ed25519 = ["cryptography>=42"]
 
 [project.scripts]
 effect-broker = "effectbroker.cli:main"

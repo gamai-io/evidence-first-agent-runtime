@@ -85,3 +85,82 @@ class TestSqlAdapter(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+try:
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey  # noqa: F401
+
+    HAVE_CRYPTO = True
+except Exception:
+    HAVE_CRYPTO = False
+
+
+@unittest.skipUnless(HAVE_CRYPTO, "cryptography not installed")
+class TestEd25519(unittest.TestCase):
+    def test_public_verifier_cannot_sign(self):
+        from effectbroker import Ed25519Signer, Ed25519Verifier
+
+        signer = Ed25519Signer()
+        payload = b"effect-broker"
+        sig = signer.sign(payload)
+        verifier = Ed25519Verifier(signer.public_pem())
+        self.assertTrue(verifier.verify(payload, sig))
+        self.assertFalse(verifier.verify(b"tampered", sig))
+        with self.assertRaises(NotImplementedError):
+            verifier.sign(payload)
+
+    def test_broker_with_ed25519(self):
+        from effectbroker import Ed25519Signer
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = os.path.join(tmp, "root")
+            os.makedirs(root, exist_ok=True)
+            broker = Broker(
+                {"file.write": FileAdapter(root)},
+                policy=Policy(actions={"file.write": {}}),
+                signer=Ed25519Signer(),
+                evidence=Evidence(),
+            )
+            intent = Intent("t1", "file.write", "out/a.txt", "out", sha("hello"))
+            effect = broker.execute(broker.authorize(intent), {"content": "hello"})
+            result = broker.commit(effect, "success")
+            self.assertEqual(result["verdict"], "pass")
+            self.assertTrue(broker.verify(result["token"])["ok"])
+
+
+class TestHttpAdapter(unittest.TestCase):
+    def test_system_of_record_http(self):
+        import http.server
+        import threading
+
+        class Handler(http.server.BaseHTTPRequestHandler):
+            def do_GET(self):
+                body = b"http-effect" if self.path == "/ok" else b"other"
+                self.send_response(200)
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+
+            def log_message(self, *args):
+                pass
+
+        server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+        port = server.server_address[1]
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            from effectbroker import HttpAdapter
+
+            adapter = HttpAdapter(allowed_ports=(port,))
+            broker = Broker({"http.get": adapter}, policy=Policy(actions={"http.get": {}}), evidence=Evidence())
+            scope = "127.0.0.1:%d" % port
+            good = Intent("t1", "http.get", "http://127.0.0.1:%d/ok" % port, scope, sha("http-effect"))
+            token = broker.commit(broker.execute(broker.authorize(good), {}), "success")["token"]
+            self.assertTrue(broker.verify(token)["ok"])
+            bad = Intent("t2", "http.get", "http://127.0.0.1:%d/wrong" % port, scope, sha("http-effect"))
+            result = broker.commit(broker.execute(broker.authorize(bad), {}), "success")
+            self.assertEqual(result["verdict"], "false_success")
+            self.assertIsNone(result["token"])
+        finally:
+            server.shutdown()
+            server.server_close()
