@@ -122,6 +122,8 @@ def guard_answer(prompt):
         from decimal import Decimal, ROUND_HALF_UP
         pct = Decimal(m.group(1).replace(",", ".")); net = Decimal(m.group(2).replace(",", "."))
         return str((net * (Decimal(1) + pct / Decimal(100))).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
+    if re.search(r"\bposalji\s+(mail|email|e-mail|poruku)\b.*\b(svim|sve)\b", low):
+        return "Kome tacno? Posalji mi listu primalaca i tekst poruke; ne saljem bez izricite potvrde."
     m = re.search(r"(\d+(?:[.,]\d+)?)\s*%\s*(?:od|of)\s*(\d+(?:[.,]\d+)?)", low)
     if m:
         from decimal import Decimal, ROUND_HALF_UP
