@@ -20,10 +20,14 @@ _STORE = None
 
 
 def _load(name: str, relative: str):
-    path = ROOT / relative
-    if not path.exists():
+    candidates = [
+        ROOT / relative,
+        Path(__file__).resolve().parent / "_components" / Path(relative).name,
+    ]
+    path = next((p for p in candidates if p.exists()), None)
+    if path is None:
         raise FileNotFoundError(
-            "cannot find %s; run from the repo or set GAMAI_TRUST_ROOT" % path
+            "cannot find %s; run from the repo or set GAMAI_TRUST_ROOT" % relative
         )
     spec = importlib.util.spec_from_file_location(name, path)
     if spec is None or spec.loader is None:
