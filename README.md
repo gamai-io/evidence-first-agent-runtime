@@ -11,6 +11,7 @@ Three small, dependency-free components for agents that must be **provable**,
 |---|---|---|
 | **[proofgate](proofgate/)** | "Did it actually happen?" | 16/16 tests; 10 confirmed + 2 refuted + 0 unverified; tamper-evident SHA-256; optional HMAC/Ed25519 provenance |
 | **[agent-immunity](agent-immunity/)** | "Has this attack been seen before?" | built-in suite: 100% → 0% by round 3; three tuned corpora (360 attacks, 352 benign): 100% zero-shot; 0% benign FP; independent/adaptive check not yet run |
+| **[effect-broker](effect-broker/)** | "May it run, and did the effect land?" | 8/8 attacks detected; 2 adapters (file, SQL); policy gate before, commit token after, hash-chained evidence |
 | **[crossnode-bench](crossnode-bench/)** | "Does the agent lie about other machines?" | 46/48, detects **2 false successes** a naive `ok:true` scorer counts as passes |
 
 
