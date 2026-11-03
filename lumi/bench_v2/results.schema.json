@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LUMI bench result row (JSONL)",
+  "type": "object",
+  "required": ["run_id", "i", "case", "mode", "ok", "status", "ms", "false_success", "ttft_ms", "prompt_sha", "ts"],
+  "properties": {
+    "run_id": {"type": "string"},
+    "i": {"type": "integer"},
+    "case": {"type": "string"},
+    "mode": {"enum": ["model", "harness"]},
+    "model": {"type": "string"},
+    "prompt_sha": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "unique": {"type": "boolean"},
+    "status": {"type": "integer"},
+    "ok": {"type": "boolean"},
+    "err": {"type": "string"},
+    "ms": {"type": "number", "minimum": 0},
+    "ttft_ms": {"type": ["number", "null"], "minimum": 0},
+    "text_len": {"type": "integer", "minimum": 0},
+    "usage": {"type": "object"},
+    "false_success": {"type": ["boolean", "null"]},
+    "false_note": {"type": "string"},
+    "text": {"type": "string", "maxLength": 600},
+    "ts": {"type": "number"}
+  }
+}
