@@ -38,6 +38,18 @@ ssh ... ${LUMI_USER:-your-user}@efp.lumi.csc.fi 'cd /project/project_465003647/g
 Environment: `module load Local-LAIF lumi-aif-singularity-bindings`,
 `SIF=/appl/local/laifs/containers/lumi-multitorch-latest.sif`.
 
+## Deterministic guard (optional, `--guard`)
+`run_bench.py --guard` runs the same pre-LLM rules as GAMA FastPath (T1/T2 risk,
+injection/env, PDV, X% od Y with Decimal half-up) and only sends the rest to the
+model. It is honest: guarded rows are marked `guard: true`, `ms=0`.
+
+Measured (1k, same model/seed, CONC=128):
+| run | false_success |
+|---|---:|
+| raw model (23426096) | 197 (19.7%) |
+| guard v1 (23443568) | 7 (0.7%) |
+| guard v2 (23443668) | 1 (0.1%) |
+
 ## Rules
 - Deterministic seeds, `temperature=0`, fixed prompt set (hash in meta).
 - A model claim only counts with proof; refusal/honest-unknown is a pass.

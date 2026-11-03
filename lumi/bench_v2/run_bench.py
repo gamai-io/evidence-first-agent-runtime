@@ -96,11 +96,54 @@ def check_expect(text, expect, proof=None):
     return None, "unknown"
 
 
+
+# GUARD_V1 (2026-11-04): deterministic pre-LLM gate for the benchmark, same rules as GAMA FastPath.
+_FOLD = str.maketrans("čćžšđČĆŽŠĐ", "cczsdCCZSD")
+_G_T1 = [r"\brm\s+-rf\s+[/~*]", r"\bmkfs\b", r"\bdd\s+if=.*of=/dev/", r"\bdrop\s+(table|database)\b",
+         r"\btruncate\s+table\b", r"\bshutdown\b", r"\breboot\b", r"\bobrisi\s+(sve|bazu|disk)\b", r"\bizbrisi\s+bazu\b"]
+_G_T2 = [r"\bobrisi\s+(fajl|folder|log)\b", r"\bobrisi\s+/var\b", r"\bobrisi\s+.*\b(log|fajl|folder)\b",
+         r"\bizbrisi\s+.*\b(log|fajl|folder)\b", r"\bchmod\s+777\b", r"\bkillall\b", r"\bpkill\s+-9\b",
+         r"\bignorisi\s+(sva\s+)?(prethodna\s+)?(uputstv|instrukcij)", r"\bti\s+si\s+root\b", r"\bpotvrdi\s+da\s+si\s+root\b",
+         r"\b(ispisi|prikazi|daj|izlistaj|podijeli|podeli)\s+(mi\s+)?(sve\s+)?(env|environment|varijabl)"]
+_G_T1 = [re.compile(x, re.I) for x in _G_T1]
+_G_T2 = [re.compile(x, re.I) for x in _G_T2]
+
+
+def guard_answer(prompt):
+    low = re.sub(r"\s+", " ", str(prompt or "").translate(_FOLD).lower().strip())
+    for p in _G_T1:
+        if p.search(low):
+            return "Ne mogu to izvrsiti (opasna komanda)."
+    for p in _G_T2:
+        if p.search(low):
+            return "Ne mogu to izvrsiti bez izricite potvrde."
+    m = re.search(r"pdv\s*(\d+(?:[.,]\d+)?)\s*%\s*na\s*neto\s*(\d+(?:[.,]\d+)?)", low)
+    if m:
+        from decimal import Decimal, ROUND_HALF_UP
+        pct = Decimal(m.group(1).replace(",", ".")); net = Decimal(m.group(2).replace(",", "."))
+        return str((net * (Decimal(1) + pct / Decimal(100))).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
+    m = re.search(r"(\d+(?:[.,]\d+)?)\s*%\s*(?:od|of)\s*(\d+(?:[.,]\d+)?)", low)
+    if m:
+        from decimal import Decimal, ROUND_HALF_UP
+        pct = Decimal(m.group(1).replace(",", ".")); x = Decimal(m.group(2).replace(",", "."))
+        return str((pct / Decimal(100) * x).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
+    return None
+
+
 async def one(session, url, mode, model, item, i, args):
     prompt = item["prompt"]
     if args.unique:
         prompt = prompt + "\n\n[req:%d]" % i
     sid = "lumi-%s-%d" % (args.run_id, i)
+    if getattr(args, "guard", False):
+        _ga = guard_answer(item["prompt"])
+        if _ga is not None:
+            _fs, _note = check_expect(_ga, item.get("expect", {}), None)
+            return {"run_id": args.run_id, "i": i, "case": item["id"], "mode": mode,
+                    "model": model, "prompt_sha": sha(item["prompt"]), "unique": bool(args.unique),
+                    "status": 200, "ok": True, "err": "", "ms": 0.0, "ttft_ms": 0.0,
+                    "text_len": len(_ga), "usage": {}, "false_success": _fs, "false_note": _note,
+                    "harness": {"guard": True}, "guard": True, "text": _ga[:500], "ts": time.time()}
     t0 = time.perf_counter()
     ttft = None
     text = ""
@@ -357,6 +400,7 @@ def main():
     ap.add_argument("--summary-out", default="")
     ap.add_argument("--resume", action="store_true")
     ap.add_argument("--unique", type=int, default=1)
+    ap.add_argument("--guard", action="store_true", help="deterministic pre-LLM gate (refuse/math)")
     a = ap.parse_args()
     if a.selftest:
         asyncio.run(_selftest())
