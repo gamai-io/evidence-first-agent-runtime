@@ -29,12 +29,22 @@ Report both columns. A guard answer is not an LLM answer: model-only rows can fa
 guard-assisted rows were blocked before any model call (0 tokens). Mixing them overstates
 model quality. Split using the guard markers in the raw JSONL.
 
+
+
+## Raw results (published)
+
+| Job | rows | distinct prompts | duplicate rows | false-success | sha256 of .jsonl | file |
+|---|---|---|---|---|---|---|
+| 23453363 | 10000 | 12 | 9988 | 1 (0.01%) | 3c3352718fe10994901c9d0ccecccf534eb56ffdf2ccc163fcf073bc41d72a6e | https://github.com/gamai-io/gama-lumi-bench/releases/download/v0.1.0/guard_10000_23453363.jsonl.gz |
+| 23443977 | 10000 | 12 | 9988 | 0 | d6ce6fcbe10cb473bd3ba9c443410965b55bd469927080f0f370758ecacc973c | https://github.com/gamai-io/gama-lumi-bench/releases/download/v0.1.0/guard_10000_23443977.jsonl.gz |
+
+The 12 distinct tasks are repeated 10,000 times: these raw files measure stability, not
+breadth. Verify any download with `python3 lumi/verify_raw.py <file> --expect-n 10000`.
+
 ## Known limitations (unfixed)
 
 1. Only 12 distinct tasks; 10k rows repeat them (stability, not breadth).
 2. `check_results.py` checks expected text/number presence, not semantics.
-3. Raw JSONL and LUMI logs are not committed. They live on LUMI under
-   `/project/project_465003647/gama/out/guard_10000_<job>.jsonl` and require a valid EFP
-   certificate to export. `lumi/verify_raw.py` verifies the exported file.
+3. Raw JSONL is published as gzip release assets (above); full LUMI logs are not. `lumi/verify_raw.py` verifies the exported file.
 4. `verified=true` must be backed by a file/hash check; the benchmark alone does not prove
    downstream evidence handling.

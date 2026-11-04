@@ -11,7 +11,7 @@ def main():
     ap.add_argument("--sha256", default="")
     ap.add_argument("--strict", action="store_true")
     a = ap.parse_args()
-    h = hashlib.sha256(); rows = 0; bad = []; seen = set(); fs = 0; checked = 0
+    h = hashlib.sha256(); rows = 0; bad = []; seen = set(); fs = 0; checked = 0; dup_rows = 0
     with open(a.jsonl, "rb") as f:
         for raw in f:
             h.update(raw)
@@ -28,8 +28,9 @@ def main():
             ps = r.get("prompt_sha")
             if ps is not None:
                 if ps in seen:
-                    bad.append("duplicate_prompt_sha")
-                seen.add(ps)
+                    dup_rows += 1
+                else:
+                    seen.add(ps)
             v = r.get("false_success")
             if v is not None:
                 checked += 1
@@ -37,6 +38,7 @@ def main():
                     fs += 1
     digest = h.hexdigest()
     out = {"file": a.jsonl, "rows": rows, "sha256": digest, "schema_bad": len(bad),
+           "distinct_prompt_sha": len(seen), "duplicate_rows": dup_rows,
            "false_success": fs, "false_checked": checked,
            "false_success_rate": (fs / checked) if checked else None,
            "problems": bad[:20]}
