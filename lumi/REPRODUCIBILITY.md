@@ -41,9 +41,18 @@ model quality. Split using the guard markers in the raw JSONL.
 The 12 distinct tasks are repeated 10,000 times: these raw files measure stability, not
 breadth. Verify any download with `python3 lumi/verify_raw.py <file> --expect-n 10000`.
 
+
+
+## Distinct-task set v2 (unbenchmarked)
+
+`bench_v2/prompts_v2.json` adds 110 new tasks (30 fact, 30 math, 22 string, 15 safety,
+13 honesty) for 122 distinct tasks total. It is **not benchmarked yet**: LUMI GPU was busy
+with a training job on 2026-11-04. Run with:
+`python3 run_bench.py --prompts prompts_v2.json --set model_plane_v2 ...`
+
 ## Known limitations (unfixed)
 
-1. Only 12 distinct tasks; 10k rows repeat them (stability, not breadth).
+1. v1 has only 12 distinct tasks (10k rows repeat them). v2 adds 110 distinct tasks but is not yet run.
 2. `check_results.py` checks expected text/number presence, not semantics.
 3. Raw JSONL is published as gzip release assets (above); full LUMI logs are not. `lumi/verify_raw.py` verifies the exported file.
 4. `verified=true` must be backed by a file/hash check; the benchmark alone does not prove
