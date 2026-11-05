@@ -1,0 +1,104 @@
+[
+  {
+    "total": 50000,
+    "workers": 1,
+    "elapsed_s": 1.104,
+    "ok": 50000,
+    "exceptions": 0,
+    "bad_status": 0,
+    "nondet": 0,
+    "tamper_ok": 304,
+    "tamper_miss": 0,
+    "statuses": {
+      "confirmed": 20517,
+      "refuted": 14483,
+      "unverified": 15000
+    },
+    "throughput": 45273.0
+  },
+  {
+    "total": 200000,
+    "workers": 8,
+    "elapsed_s": 0.569,
+    "ok": 200000,
+    "exceptions": 0,
+    "bad_status": 0,
+    "nondet": 0,
+    "tamper_ok": 1212,
+    "tamper_miss": 0,
+    "statuses": {
+      "confirmed": 81991,
+      "refuted": 58009,
+      "unverified": 60000
+    },
+    "throughput": 351219.0
+  },
+  {
+    "total": 500000,
+    "workers": 32,
+    "elapsed_s": 0.496,
+    "ok": 500000,
+    "exceptions": 0,
+    "bad_status": 0,
+    "nondet": 0,
+    "tamper_ok": 3038,
+    "tamper_miss": 0,
+    "statuses": {
+      "confirmed": 205017,
+      "refuted": 144983,
+      "unverified": 150000
+    },
+    "throughput": 1008163.0
+  },
+  {
+    "total": 1000000,
+    "workers": 64,
+    "elapsed_s": 0.811,
+    "ok": 1000000,
+    "exceptions": 0,
+    "bad_status": 0,
+    "nondet": 0,
+    "tamper_ok": 6056,
+    "tamper_miss": 0,
+    "statuses": {
+      "confirmed": 410058,
+      "refuted": 289942,
+      "unverified": 300000
+    },
+    "throughput": 1232849.0
+  },
+  {
+    "total": 2000000,
+    "workers": 128,
+    "elapsed_s": 1.716,
+    "ok": 2000000,
+    "exceptions": 0,
+    "bad_status": 0,
+    "nondet": 0,
+    "tamper_ok": 12135,
+    "tamper_miss": 0,
+    "statuses": {
+      "confirmed": 820058,
+      "refuted": 579942,
+      "unverified": 600000
+    },
+    "throughput": 1165614.0
+  },
+  {
+    "total": 10000000,
+    "workers": 128,
+    "elapsed_s": 6.513,
+    "ok": 9999998,
+    "exceptions": 0,
+    "bad_status": 0,
+    "nondet": 2,
+    "tamper_ok": 60855,
+    "tamper_miss": 0,
+    "statuses": {
+      "confirmed": 4099613,
+      "refuted": 2900386,
+      "unverified": 2999999
+    },
+    "throughput": 1535421.0
+  }
+]

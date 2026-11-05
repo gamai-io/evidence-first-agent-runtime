@@ -1,0 +1,13 @@
+{
+  "n": 10000,
+  "match": 10000,
+  "mismatch": 0,
+  "false_accept": 0,
+  "false_refute": 0,
+  "wrong_unverified": 0,
+  "tamper_detect": 5512,
+  "tamper_n": 5512,
+  "determinism_50": 0,
+  "avg_ms": 0.036,
+  "p99_ms": 0.0558
+}

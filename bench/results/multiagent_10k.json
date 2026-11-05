@@ -1,0 +1,39 @@
+{
+  "agents": 200,
+  "tasks_per_agent": 50,
+  "claims": 10000,
+  "bad_claims": 1926,
+  "false_accept": 0,
+  "bad_detected": 1926,
+  "detection_rate": 1.0,
+  "good_claims": 8074,
+  "good_confirmed": 8074,
+  "good_confirm_rate": 1.0,
+  "claims_per_sec": 32551.3,
+  "per_group": {
+    "clean": {
+      "n": 2500,
+      "bad": 0,
+      "det": 0,
+      "det_rate": 0.0
+    },
+    "noisy05": {
+      "n": 2500,
+      "bad": 105,
+      "det": 105,
+      "det_rate": 1.0
+    },
+    "noisy20": {
+      "n": 2500,
+      "bad": 529,
+      "det": 529,
+      "det_rate": 1.0
+    },
+    "liar50": {
+      "n": 2500,
+      "bad": 1292,
+      "det": 1292,
+      "det_rate": 1.0
+    }
+  }
+}

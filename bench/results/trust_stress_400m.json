@@ -1,0 +1,13 @@
+{
+  "jobs": 4,
+  "nodes": 16,
+  "total": 400000000,
+  "ok": 399999934,
+  "exceptions": 0,
+  "bad_status": 0,
+  "nondet": 66,
+  "tamper_ok": 2432872,
+  "tamper_miss": 0,
+  "wall_s": 16.774,
+  "throughput_aggregate": 24406658.0
+}
