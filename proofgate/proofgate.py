@@ -62,6 +62,36 @@ def evidence_hash(payload: Any) -> str:
     return sha256_text(_canon(payload))
 
 
+def _parse_decimal_text(text: str) -> Decimal:
+    """Parse BHS/EU/US money formats: 2.400,00 | 1.234.567,89 | 2,400.00 | 2400."""
+    t = str(text).strip().replace("\u00a0", "").replace(" ", "")
+    if not t:
+        raise ValueError("empty number")
+    sign = ""
+    if t[0] in "+-":
+        sign, t = t[0], t[1:]
+    if not t:
+        raise ValueError("empty number")
+    if "." in t and "," in t:
+        if t.rfind(",") > t.rfind("."):
+            t = t.replace(".", "").replace(",", ".")
+        else:
+            t = t.replace(",", "")
+    elif "," in t:
+        if t.count(",") > 1:
+            t = t.replace(",", "")
+        else:
+            t = t.replace(",", ".")
+    elif "." in t:
+        parts = t.split(".")
+        if len(parts) > 2 or (len(parts) == 2 and len(parts[1]) == 3):
+            t = t.replace(".", "")
+    d = Decimal(sign + t)
+    if not d.is_finite():
+        raise ValueError("not finite")
+    return d
+
+
 def _is_number(value: Any) -> bool:
     if isinstance(value, bool) or value is None:
         return False
@@ -69,9 +99,9 @@ def _is_number(value: Any) -> bool:
         return True
     if isinstance(value, str):
         try:
-            Decimal(value.strip().replace(",", "."))
+            _parse_decimal_text(value)
             return True
-        except (InvalidOperation, AttributeError):
+        except (InvalidOperation, ValueError, AttributeError):
             return False
     return False
 
@@ -79,10 +109,11 @@ def _is_number(value: Any) -> bool:
 def _to_decimal(value: Any) -> Decimal:
     if isinstance(value, bool) or value is None:
         raise EvidenceError("not a number")
-    text = str(value).strip().replace(",", ".")
+    if isinstance(value, (int, float, Decimal)):
+        return Decimal(str(value))
     try:
-        return Decimal(text)
-    except InvalidOperation as exc:
+        return _parse_decimal_text(value)
+    except (InvalidOperation, ValueError, AttributeError) as exc:
         raise EvidenceError("not a number: %r" % (value,)) from exc
 
 

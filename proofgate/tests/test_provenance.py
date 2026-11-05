@@ -48,6 +48,17 @@ try:
 except ImportError:
     ok("ed25519 optional dependency absent (skipped)", True, "install cryptography to test")
 
+bhs = proofgate.evaluate({"text": "bhs total", "observed": "2.400,00",
+                          "expected": "2400,00", "predicate": "eq_num"})
+ok("bhs money confirmed", bhs["status"] == "confirmed", str(bhs))
+bhs_dot = proofgate.evaluate({"text": "bhs thousands", "observed": "2.400",
+                              "expected": "2400", "predicate": "eq_num"})
+ok("bhs dot-thousands confirmed", bhs_dot["status"] == "confirmed", str(bhs_dot))
+us = proofgate.evaluate({"text": "us total", "observed": "2,400.00",
+                         "expected": "2400", "predicate": "eq_num"})
+ok("us money confirmed", us["status"] == "confirmed", str(us))
+
+
 passed = sum(1 for c in checks if c["ok"])
 for c in checks:
     print(("PASS " if c["ok"] else "FAIL ") + c["name"] + (
