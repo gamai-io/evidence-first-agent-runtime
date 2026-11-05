@@ -21,6 +21,7 @@ unverified: evidence missing/malformed, or unknown predicate
 from __future__ import annotations
 
 import hashlib
+import hmac
 import json
 import re
 import sys
@@ -118,7 +119,10 @@ def _to_decimal(value: Any) -> Decimal:
 
 
 def _norm_str(value: Any) -> str:
-    return re.sub(r"\s+", " ", str(value)).strip()
+    import unicodedata
+    s = re.sub(r"\s+", " ", str(value)).strip()
+    s = unicodedata.normalize("NFKD", s)
+    return "".join(c for c in s if not unicodedata.combining(c))
 
 
 def _missing(value: Any) -> bool:
@@ -178,6 +182,8 @@ def evaluate(claim: dict) -> dict:
             else:
                 ok = sha256_text(obs) == sha256_text(exp)
         elif predicate == "rc_zero":
+            if isinstance(observed, bool):
+                raise EvidenceError("rc_zero requires an integer exit code, not bool")
             ok = int(observed) == 0
         elif predicate == "contains":
             if _missing(expected):
@@ -196,6 +202,81 @@ def evaluate(claim: dict) -> dict:
     out["status"] = "confirmed" if ok else "refuted"
     out["reason"] = "predicate holds" if ok else "predicate mismatch"
     return out
+
+
+def attest_claims(claims: list[dict], *, key: str | bytes, source: str) -> list[dict]:
+    """Sign claim bodies for a named source.
+
+    The source must be a principal outside the model (e.g. executor/sor).
+    This is a low-level HMAC helper; production should use an asymmetric
+    signer whose private key the agent process cannot read.
+    """
+    if isinstance(key, str):
+        key = key.encode("utf-8")
+    if not key:
+        raise ValueError("attestation key must not be empty")
+    out = []
+    for claim in claims:
+        signed_claim = {**claim, "source": source}
+        body = _canon({k: v for k, v in signed_claim.items() if k != "attestation"})
+        sig = hmac.new(key, body.encode("utf-8"), hashlib.sha256).hexdigest()
+        out.append({**signed_claim, "attestation": {"alg": "HMAC-SHA256", "value": sig}})
+    return out
+
+
+def check_attested(claims: list[dict], *, key: str | bytes, source: str,
+                   trusted_sources: tuple[str, ...] = ("executor", "sor")) -> dict:
+    """Evaluate only claims attested by a trusted, non-model source."""
+    if source not in trusted_sources:
+        return {"ok": False, "status": "unverified", "reason": "untrusted evidence source: %s" % source,
+                "claims": [], "counts": {"confirmed": 0, "refuted": 0, "unverified": 0}}
+    if isinstance(key, str):
+        key = key.encode("utf-8")
+    checked = []
+    for claim in claims:
+        sig = (claim.get("attestation") or {}).get("value")
+        body = _canon({k: v for k, v in claim.items() if k != "attestation"})
+        expected = hmac.new(key, body.encode("utf-8"), hashlib.sha256).hexdigest()
+        if not sig or not hmac.compare_digest(str(sig), expected):
+            return {"ok": False, "status": "unverified", "reason": "claim attestation missing or invalid",
+                    "claims": [], "counts": {"confirmed": 0, "refuted": 0, "unverified": 0}}
+        checked.append(claim)
+    return check(checked)
+
+
+
+
+def check_attested_ed25519(claims: list[dict], *, public_key_pem: bytes, source: str,
+                           trusted_sources: tuple[str, ...] = ("executor", "sor")) -> dict:
+    """Verify claims signed by an external Ed25519 private key.
+
+    The agent only needs the public key; the private key stays outside the
+    agent process. This is the production-shaped variant of check_attested.
+    """
+    if source not in trusted_sources:
+        return {"ok": False, "status": "unverified", "reason": "untrusted evidence source: %s" % source,
+                "claims": [], "counts": {"confirmed": 0, "refuted": 0, "unverified": 0}}
+    try:
+        import base64
+        from cryptography.hazmat.primitives.serialization import load_pem_public_key
+        from cryptography.exceptions import InvalidSignature
+    except ImportError as exc:  # pragma: no cover - optional dependency
+        raise RuntimeError("Ed25519 attestation requires: pip install cryptography") from exc
+    key = load_pem_public_key(public_key_pem)
+    checked = []
+    for claim in claims:
+        sig = (claim.get("attestation") or {})
+        if sig.get("alg") != "Ed25519" or not sig.get("value"):
+            return {"ok": False, "status": "unverified", "reason": "missing Ed25519 attestation",
+                    "claims": [], "counts": {"confirmed": 0, "refuted": 0, "unverified": 0}}
+        body = _canon({k: v for k, v in claim.items() if k != "attestation"})
+        try:
+            key.verify(base64.b64decode(str(sig["value"])), body.encode("utf-8"))
+        except (InvalidSignature, ValueError, TypeError):
+            return {"ok": False, "status": "unverified", "reason": "invalid Ed25519 attestation",
+                    "claims": [], "counts": {"confirmed": 0, "refuted": 0, "unverified": 0}}
+        checked.append(claim)
+    return check(checked)
 
 
 def check(claims: list[dict], *, reported_hash: str | None = None) -> dict:
