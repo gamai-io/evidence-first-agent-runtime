@@ -32,7 +32,7 @@ The components are also published as focused packages:
 | [gamai-guard](https://github.com/gamai-io/gamai-guard) | multilingual injection cascade (29/30 blind, 0/10 false positives) |
 | [crossnode-bench](https://github.com/gamai-io/crossnode-bench) | standalone false-success benchmark |
 | [polymorph](https://github.com/gamai-io/polymorph) | effect leases + pinned-hash execution + replay-safe bundles |
-| [floor-copilot](https://github.com/gamai-io/floor-copilot) | applied evidence-gated invoice intake (live demo) |
+| [floor-copilot](https://github.com/renatoschust-dot/floor-copilot) | applied evidence-gated invoice intake (live demo) |
 
 ![30-second terminal demo](docs/demo.gif)
 
