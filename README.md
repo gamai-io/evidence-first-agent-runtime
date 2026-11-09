@@ -209,7 +209,7 @@ Proposed packaging (**hypotheses, not market-validated prices**):
 
 | Tier | Proposed price | What it could include |
 |---|---:|---|
-| Open source | free | this repo, MIT |
+| Open source | free | this repo, Apache-2.0 |
 | Developer Pro | $29–79/mo | hosted verification, dashboards, retention |
 | Team | $199–499/mo | shared policies, SSO, audit export, support |
 | Enterprise | $1,000+/mo | on-prem/private, audit, centralized policy, SLA |
@@ -243,4 +243,4 @@ trust layer around existing agents.
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+Apache-2.0. See [LICENSE](LICENSE).
