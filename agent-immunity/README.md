@@ -23,11 +23,11 @@ python3 eval.py
 
 ```
 baseline_asr: 1.0
-taint_only_asr_rounds: [0.0, 0.1, 0.0]     # filter-only: reworded payload escapes
-treatment_asr_rounds:  [0.0, 0.0, 0.0]      # memory closes it
+taint_only_asr_rounds: [0.0, 0.0, 0.0]     # filter-only, this run (see harder-corpus note)
+treatment_asr_rounds:  [0.0, 0.0, 0.0]      # taint + antibodies, this run
 treatment_utility_min: 100.0
 false_denial_max: 0.0
-guard_p50_ms: ~1.3
+guard_mean_ms: 1.911                        # mean, from eval_results.json (not p50)
 ```
 
 ## API
@@ -72,11 +72,11 @@ object, stdout = one JSON object. Tools: `taint_write`, `shield_check`,
 | mode | round 1 | round 2 | round 3 | utility | false denial |
 |---|---|---|---|---|---|
 | baseline (no defense) | 100% | 100% | 100% | 100% | 0% |
-| filter only | 0% | 10% | 0% | 100% | 0% |
+| filter only | 0% | 0% | 0% | 100% | 0% |
 | taint + antibodies | **0%** | **0%** | **0%** | **100%** | **0%** |
 
-10 payloads × 3 channels (memory, tool, skill) × 3 rounds; 20 benign tasks.
-Reference run on a harder corpus: 3.3% → 0% → 0%, guard 1.55 ms.
+10 payloads × 3 channels (memory, tool, skill) × 3 rounds; 20 benign tasks. These numbers are read from `eval_results.json` in this repo (baseline ASR 1.0; both defended arms 0/0/0). An earlier draft reported a 10% reworded-payload escape for filter-only in round 2; that figure is not present in the shipped `eval_results.json` and is no longer quoted here.
+Reference run on a harder corpus: 3.3% → 0% → 0%, guard 1.55 ms mean.
 
 **Tuned corpora:** 200 development, 90 second-corpus and 70 edge attacks plus
 352 benign controls. All reach **100%** after tuning
