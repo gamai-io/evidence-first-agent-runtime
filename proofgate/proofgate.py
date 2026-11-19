@@ -234,6 +234,11 @@ def check_attested(claims: list[dict], *, key: str | bytes, source: str,
         key = key.encode("utf-8")
     checked = []
     for claim in claims:
+        cs = claim.get("source")
+        if cs is not None and (cs not in trusted_sources or cs != source):
+            return {"ok": False, "status": "unverified",
+                    "reason": "claim source not trusted/mismatched: %s" % cs,
+                    "claims": [], "counts": {"confirmed": 0, "refuted": 0, "unverified": 0}}
         sig = (claim.get("attestation") or {}).get("value")
         body = _canon({k: v for k, v in claim.items() if k != "attestation"})
         expected = hmac.new(key, body.encode("utf-8"), hashlib.sha256).hexdigest()
@@ -265,6 +270,11 @@ def check_attested_ed25519(claims: list[dict], *, public_key_pem: bytes, source:
     key = load_pem_public_key(public_key_pem)
     checked = []
     for claim in claims:
+        cs = claim.get("source")
+        if cs is not None and (cs not in trusted_sources or cs != source):
+            return {"ok": False, "status": "unverified",
+                    "reason": "claim source not trusted/mismatched: %s" % cs,
+                    "claims": [], "counts": {"confirmed": 0, "refuted": 0, "unverified": 0}}
         sig = (claim.get("attestation") or {})
         if sig.get("alg") != "Ed25519" or not sig.get("value"):
             return {"ok": False, "status": "unverified", "reason": "missing Ed25519 attestation",
