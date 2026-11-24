@@ -244,3 +244,9 @@ trust layer around existing agents.
 ## License
 
 Apache-2.0. See [LICENSE](LICENSE).
+
+## One product, not three (noted on AI Lounge, 24 Nov 2026)
+
+Pulling proofgate, agent-immunity and crossnode-bench into one runtime is deliberate: a SaaS CEO
+buys **one product** with one invoice, not three repositories to wire together. The three names
+stay as components; the thing a customer installs is this runtime.
