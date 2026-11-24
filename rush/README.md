@@ -32,9 +32,16 @@ Executor selection (`RUSH_EXECUTOR`):
 | `srt` | Anthropic sandbox-runtime profile (`offline`) when available |
 | `vultr` | SSH into a disposable Vultr instance (`VULTR_HOST`, `VULTR_SSH_PORT`, `VULTR_SSH_USER`, `VULTR_SSH_KEY`) |
 
-Planner: **Vultr Serverless Inference** when `VULTR_INFERENCE_KEY` is set
-(`VULTR_MODEL`, `VULTR_INFERENCE_BASE`), otherwise a deterministic planner so the
-demo works offline and never depends on a network.
+Planner: **NVIDIA NIM** when `NVIDIA_NIM_API_KEY` is set (`NVIDIA_NIM_MODEL`,
+`NVIDIA_NIM_BASE`, default `nvidia/nemotron-3.5-bolt-e4b` on
+`https://integrate.api.nvidia.com/v1`), then **Vultr Serverless Inference** when
+`VULTR_INFERENCE_KEY` is set (`VULTR_MODEL`, `VULTR_INFERENCE_BASE`), otherwise a
+deterministic planner so the demo works offline and never depends on a network.
+
+NIM is the free tier: no card, OpenAI-compatible, so the same code path works for
+both providers and the planner origin is reported as `<provider>:<model>` in the
+evidence chain. Reasoning models on the gateway may return an empty `content`
+with the text in `reasoning_content`; the client accepts either.
 
 ## API
 

@@ -81,9 +81,9 @@ Emitter = Callable[[dict], None]
 
 
 class Agent:
-    def __init__(self, executor: Executor | None = None, planner: llm.VultrInference | None = None) -> None:
+    def __init__(self, executor: Executor | None = None, planner: "llm.VultrInference | llm.NvidiaNim | None" = None) -> None:
         self.executor = executor or pick_executor()
-        self.planner = planner or llm.VultrInference()
+        self.planner = planner or llm.build_planner()
 
     def run(self, task: str, emit: Emitter | None = None) -> tuple[Run, Ledger]:
         emit = emit or (lambda _e: None)

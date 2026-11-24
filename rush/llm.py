@@ -1,4 +1,8 @@
-"""Planning: Vultr Serverless Inference first, deterministic planner as fallback.
+"""Planning: a hosted chat model first, deterministic planner as fallback.
+
+Two OpenAI-compatible providers are supported: NVIDIA NIM (free tier, no card,
+`integrate.api.nvidia.com`) and Vultr Serverless Inference. `build_planner()`
+picks whichever key is configured, preferring NIM.
 
 The planner only proposes shell steps that run inside the sandbox. Every step is
 still filtered by the pre-execution guard, so a bad plan cannot escape.
@@ -16,6 +20,9 @@ from dataclasses import dataclass
 DEFAULT_BASE = os.environ.get("VULTR_INFERENCE_BASE", "https://api.vultrinference.com/v1")
 DEFAULT_MODEL = os.environ.get("VULTR_MODEL", "llama-3.1-70b-instruct")
 
+NIM_BASE = os.environ.get("NVIDIA_NIM_BASE", "https://integrate.api.nvidia.com/v1")
+NIM_MODEL = os.environ.get("NVIDIA_NIM_MODEL", "nvidia/nemotron-3.5-bolt-e4b")
+
 SYSTEM = (
     "You are a sandbox operator. You plan short shell pipelines that run inside "
     "an isolated container with a writable /work directory and no network. "
@@ -24,10 +31,55 @@ SYSTEM = (
 )
 
 
+def _chat(base: str, key: str, model: str, messages: list[dict], max_tokens: int, timeout: float) -> str:
+    """One OpenAI-compatible chat completion. Raises on transport/API errors.
+
+    Reasoning models on the NIM gateway can return an empty `content` with the
+    text in `reasoning_content`, so the answer is taken from either field.
+    """
+    payload = {"model": model, "messages": messages, "max_tokens": max_tokens, "temperature": 0.2}
+    req = urllib.request.Request(
+        f"{base.rstrip('/')}/chat/completions",
+        data=json.dumps(payload).encode(),
+        headers={"Content-Type": "application/json", "Authorization": f"Bearer {key}"},
+        method="POST",
+    )
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        body = json.loads(resp.read().decode("utf-8"))
+    message = body["choices"][0]["message"]
+    text = message.get("content") or message.get("reasoning_content")
+    if not text:
+        raise ValueError(f"{model}: empty completion (raise max_tokens)")
+    return text
+
+
 @dataclass
 class Step:
     cmd: str
     why: str = ""
+
+
+class NvidiaNim:
+    """NVIDIA NIM hosted API — free prototyping tier, OpenAI-compatible.
+
+    Same interface as VultrInference so `plan()` can take either. Model IDs are
+    whatever the account can see at `<base>/models`; deprecated models answer 410.
+    """
+
+    name = "nvidia-nim"
+
+    def __init__(self, api_key: str | None = None, model: str | None = None, base: str | None = None) -> None:
+        self.api_key = api_key if api_key is not None else os.environ.get("NVIDIA_NIM_API_KEY", "")
+        self.model = model or NIM_MODEL
+        self.base = (base or NIM_BASE).rstrip("/")
+
+    def available(self) -> bool:
+        return bool(self.api_key)
+
+    def chat(self, messages: list[dict], max_tokens: int = 700, timeout: float = 45.0) -> str:
+        if not self.available():
+            raise RuntimeError("NVIDIA_NIM_API_KEY not set")
+        return _chat(self.base, self.api_key, self.model, messages, max_tokens, timeout)
 
 
 class VultrInference:
@@ -44,16 +96,15 @@ class VultrInference:
     def chat(self, messages: list[dict], max_tokens: int = 700, timeout: float = 45.0) -> str:
         if not self.available():
             raise RuntimeError("VULTR_INFERENCE_KEY not set")
-        body = json.dumps({"model": self.model, "messages": messages, "max_tokens": max_tokens, "temperature": 0.2}).encode()
-        req = urllib.request.Request(
-            f"{self.base}/chat/completions",
-            data=body,
-            headers={"Content-Type": "application/json", "Authorization": f"Bearer {self.api_key}"},
-            method="POST",
-        )
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
-            payload = json.loads(resp.read().decode("utf-8"))
-        return payload["choices"][0]["message"]["content"]
+        return _chat(self.base, self.api_key, self.model, messages, max_tokens, timeout)
+
+
+def build_planner() -> "VultrInference | NvidiaNim":
+    """First configured provider wins: NVIDIA NIM (free) before Vultr (paid)."""
+    for provider in (NvidiaNim(), VultrInference()):
+        if provider.available():
+            return provider
+    return VultrInference()
 
 
 def _extract_json(text: str) -> dict:
@@ -82,7 +133,7 @@ def deterministic_plan(task: str) -> list[Step]:
     return [Step("cd /work && pwd && ls -la", "inspect empty workspace")]
 
 
-def plan(task: str, llm: VultrInference | None = None) -> tuple[list[Step], str]:
+def plan(task: str, llm: "VultrInference | NvidiaNim | None" = None) -> tuple[list[Step], str]:
     if llm is not None and llm.available():
         try:
             raw = llm.chat([{"role": "system", "content": SYSTEM}, {"role": "user", "content": task}])
