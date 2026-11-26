@@ -21,6 +21,16 @@ The thesis is simple: **capability is no longer the bottleneck — trust is.**
 A runtime that can prove an action, remember a refusal, and measure its own
 false-success rate is more useful than one that is merely fast.
 
+## Vendored copies vs canonical repositories
+
+This repository is an **umbrella snapshot**: `proofgate/`, `gamai_trust/`,
+`gamai_guard/`, `crossnode-bench/` and `polymorph/` are copies of the standalone
+repositories above, made at different times. The standalone repositories are
+canonical; a copy here can be older. `tools/check_vendored.py` compares every
+vendored file against upstream and `vendored-drift.yml` runs it weekly. It is
+currently red on purpose: all five copies have drifted, and the long-term fix is
+to delete them and depend on the packages instead of copying them.
+
 ## Standalone packages
 
 The components are also published as focused packages:
