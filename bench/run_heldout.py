@@ -24,8 +24,8 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT))
-from gamai_trust import immunity  # noqa: E402
+sys.path.insert(0, str(ROOT / "agent-immunity"))
+import immunity  # noqa: E402  (local component; matches repro.sh)
 
 HERE = Path(__file__).resolve().parent
 

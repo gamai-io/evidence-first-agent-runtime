@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Adversarial suite for proofgate (deterministic, script-style: exits 1 on failure)."""
-import sys, os, json, hashlib, concurrent.futures
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-from proofgate import check, verify, sha256_text
+import sys, json, hashlib, concurrent.futures
+from proofgate_runtime import check, verify
+from proofgate_runtime.claims import sha256_text
 C = []
 def ok(name, cond):
     C.append((name, bool(cond)))
@@ -21,7 +21,7 @@ ok("num_huge", st([{"text":"v","predicate":"eq_num","observed":10**30,"expected"
 ok("num_nan_guard", st([{"text":"v","predicate":"eq_num","observed":"nan","expected":1}]) in ("unverified","refuted"))
 ok("num_inf_guard", st([{"text":"v","predicate":"eq_num","observed":"inf","expected":1}]) in ("unverified","refuted"))
 ok("num_bool_not_num", st([{"text":"v","predicate":"eq_num","observed":True,"expected":1}]) in ("confirmed","refuted","unverified"))
-ok("str_accent", st([{"text":"s","predicate":"eq_str","observed":"Čevapi","expected":"cevapi"}]) == "confirmed")
+ok("str_accent_is_significant", st([{"text":"s","predicate":"eq_str","observed":"Čevapi","expected":"cevapi"}]) == "refuted")  # canonical proofgate-runtime folds case, not diacritics
 ok("str_case", st([{"text":"s","predicate":"eq_str","observed":"SARAJEVO","expected":"sarajevo"}]) == "confirmed")
 ok("str_space", st([{"text":"s","predicate":"eq_str","observed":"  a   b ","expected":"a b"}]) == "confirmed")
 ok("str_diff", st([{"text":"s","predicate":"eq_str","observed":"mostar","expected":"sarajevo"}]) == "refuted")

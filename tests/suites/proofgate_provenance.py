@@ -6,8 +6,8 @@ import os
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.dirname(HERE))
-import proofgate  # noqa: E402
+sys.path.insert(0, HERE)
+import proofgate_runtime as proofgate  # noqa: E402
 import provenance  # noqa: E402
 
 checks = []

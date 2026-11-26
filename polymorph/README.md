@@ -1,3 +1,9 @@
+> **Pinned vendored mirror:** upstream is
+> https://github.com/gamai-io/polymorph at commit
+> `2e3778014bc35d47b7d2d405ce78bdf56078aae0`. It is copied here only because
+> upstream has no `pyproject.toml`/`setup.py`; `tools/check_vendored.py`
+> compares the Python files every week.
+
 # Polymorph E1 — capability widening
 
 Defensive prototype. It does **not** generate malware and does **not** execute

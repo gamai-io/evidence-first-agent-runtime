@@ -1,9 +1,8 @@
 import sys, unittest
 from pathlib import Path
-ROOT = Path(__file__).resolve().parents[1]
-for p in (ROOT, ROOT/"proofgate"):
-    sys.path.insert(0, str(p))
-from proofgate import attest_claims, check_attested
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+from attest_helpers import attest_claims, check_attested
 
 class ClaimSourceGap(unittest.TestCase):
     def test_rejects_untrusted_claim_source_even_if_arg_trusted(self):

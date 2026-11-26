@@ -40,9 +40,9 @@ claim about the tests that were run.
 `gamai-io/evidence-first-agent-runtime` implements the three components used in
 this draft:
 
-- `proofgate/` — claim/evidence gate
+- proofgate — claim/evidence gate (installed from `gamai-io/proofgate-runtime`)
 - `agent-immunity/` — refusal memory
-- `crossnode-bench/` — remote false-success detection
+- `crossnode-bench/` — remote false-success detection (pinned snapshot)
 
 Run `./repro.sh` and compare the published output with your own.
 

@@ -49,7 +49,7 @@
 | Provjera | Rezultat | Dokaz |
 |---|---|---|
 | `rush/tests` | **6 passed** | `python -m pytest rush/tests -q` |
-| proofgate demo | **unverified: 0** | `python3 proofgate/proofgate.py demo` → `evidence_sha256: 790e4d6d…` |
+| proofgate demo | **unverified: 0** | `proofgate demo` → `evidence_sha256: 790e4d6d…` |
 | agent-immunity eval | **utility 100.0**, **false denial 0.0**, guard p50 **1.222 ms** | `python3 agent-immunity/eval.py` |
 | crossnode-bench | **46/48**, detektuje **2 lažna uspjeha** koja naive `ok:true` scorer broji kao pass | `python3 crossnode-bench/crossnode.py --demo` |
 | Live run (Docker backend) | `backend: docker`, `network: none`, `read_only: true`; korak `cd /work && pwd && ls -la` → rc 0, `stdout_sha256: a2788c91…`, 855 ms | `POST /api/run` |

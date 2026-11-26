@@ -2,33 +2,19 @@
 
 from __future__ import annotations
 
-import importlib.util
 import time
 import uuid
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import Any, Callable
 
 from . import guard, llm
 from .evidence import Ledger
 from .executor import ExecResult, Executor, pick_executor
 
-ROOT = Path(__file__).resolve().parents[1]
-
-
-def _load_proofgate():
-    path = ROOT / "proofgate" / "proofgate.py"
-    if not path.exists():
-        return None
-    spec = importlib.util.spec_from_file_location("gama_proofgate", path)
-    if spec is None or spec.loader is None:
-        return None
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
-
-
-PROOFGATE = _load_proofgate()
+try:  # canonical package; pip install -r requirements-vendored.txt
+    import proofgate_runtime as PROOFGATE
+except ImportError:  # pragma: no cover - demo still runs without the gate
+    PROOFGATE = None
 
 
 @dataclass

@@ -1,6 +1,5 @@
 import sys,json,random,hashlib,time
-sys.path.insert(0,"/scratch/project_465003647/efar/proofgate")
-from proofgate import check,verify
+from proofgate_runtime import check,verify
 rnd=random.Random(42); C=[]
 def A(kind,claims,exp): C.append((kind,claims,exp))
 h=hashlib.sha256(b"proof").hexdigest()

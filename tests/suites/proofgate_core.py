@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-"""Dependency-free test suite for proofgate (no pytest needed)."""
-import os
-import sys
+"""Test suite for proofgate-runtime (no pytest needed).
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, ROOT)
-
-import proofgate as pg  # noqa: E402
+The canonical package is installed from gamai-io/proofgate-runtime; this file
+keeps the umbrella's contract checks without vendoring the implementation.
+"""
+import proofgate_runtime as pg
 
 CASES = []
 
