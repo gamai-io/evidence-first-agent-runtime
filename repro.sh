@@ -5,7 +5,8 @@ set -euo pipefail
 cd "$(dirname "$0")"
 python3 - <<'PY'
 import importlib.util, sys
-missing = [m for m in ("proofgate_runtime", "gamai_trust", "gamai_guard")
+missing = [m for m in ("proofgate_runtime", "gamai_trust", "gamai_guard",
+                     "crossnode", "effect_lease")
            if importlib.util.find_spec(m) is None]
 if missing:
     sys.exit("missing canonical packages: %s\nrun: python3 -m pip install -r "
@@ -42,13 +43,10 @@ python3 -m gamai_guard.tests.run_tests | tail -2
 echo "== I Ching/codon negative control =="
 python3 labs/iching_codons.py | tail -5
 
-echo "== polymorph E1 =="
-python3 polymorph/run_e1.py | tail -12
-python3 polymorph/tests/run_tests.py | tail -2
-python3 polymorph/tests/test_safe_exec.py
-python3 polymorph/run_e2.py | tail -6
-python3 polymorph/tests/test_lease_proof.py
-python3 polymorph/e3_cross_language.py | tail -8
+echo "== polymorph E1 (installed package) =="
+python3 -m run_e1 | tail -12
+python3 -m run_e2 | tail -6
+python3 bench/polymorph_e3.py | tail -8
 
 echo "== provenance =="
 python3 tests/suites/proofgate_provenance.py | tail -2
@@ -62,8 +60,20 @@ python3 bench/run_heldout.py --limit 20 --out /tmp/heldout_smoke.json | tail -8
 echo "== edge corpus =="
 python3 bench/run_edge.py | tail -6
 
-echo "== crossnode-bench =="
-python3 crossnode-bench/tests/run_tests.py | tail -2
-python3 crossnode-bench/crossnode.py --demo --runs 1
+echo "== crossnode-bench (installed package) =="
+python3 -m crossnode --demo --runs 1 --outdir /tmp/crossnode_demo > /tmp/crossnode_demo.json
+python3 - <<'PY'
+import json
+d = json.load(open('/tmp/crossnode_demo.json'))
+assert d['records'] == 48 and d['passed'] == 46 and d['false_success'] == 2, d
+print("demo: %d/%d passed, %d false successes" % (d['passed'], d['records'], d['false_success']))
+PY
+python3 -m crossnode --verify-report /tmp/crossnode_demo/report.json > /tmp/crossnode_verify.json
+python3 - <<'PY'
+import json
+v = json.load(open('/tmp/crossnode_verify.json'))
+assert v['ok'] and v['counts']['records'] == 48, v
+print("report verified:", v['counts'])
+PY
 
 echo "OK — all components reproduced locally."

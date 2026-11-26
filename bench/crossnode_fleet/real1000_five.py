@@ -8,7 +8,9 @@ from __future__ import annotations
 
 import argparse, concurrent.futures as cf, hashlib, json, os, time
 from dataclasses import dataclass
-from crossnode import CliNode, _norm
+from crossnode import _norm
+
+from fleet_nodes import CliNode  # umbrella adapter (was inside the vendored copy)
 
 OS = {"oracle": "linux", "linux3": "linux", "vast": "linux",
       "kuca": "windows", "podrum": "windows"}

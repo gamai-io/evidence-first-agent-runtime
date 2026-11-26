@@ -42,7 +42,7 @@ this draft:
 
 - proofgate — claim/evidence gate (installed from `gamai-io/proofgate-runtime`)
 - `agent-immunity/` — refusal memory
-- `crossnode-bench/` — remote false-success detection (pinned snapshot)
+- crossnode-bench — remote false-success detection (installed from `gamai-io/crossnode-bench`)
 
 Run `./repro.sh` and compare the published output with your own.
 

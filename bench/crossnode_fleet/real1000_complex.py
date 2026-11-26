@@ -10,7 +10,9 @@ import os
 import time
 from dataclasses import dataclass
 
-from crossnode import CliNode, _norm
+from crossnode import _norm
+
+from fleet_nodes import CliNode  # umbrella adapter (was inside the vendored copy)
 
 
 @dataclass

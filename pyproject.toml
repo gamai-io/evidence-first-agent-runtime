@@ -24,6 +24,8 @@ dependencies = [
   "proofgate-runtime @ git+https://github.com/gamai-io/proofgate-runtime@6ad4e0b1e807cfe47bda1e892b022d3db05a0bde",
   "gamai-trust @ git+https://github.com/gamai-io/gamai-trust@936a2cb505bceb5308b2ccba85204aeba72353af",
   "gamai-guard @ git+https://github.com/gamai-io/gamai-guard@1fa20420eb3ec5e957d88d1f7f5a689cc8dc59a9",
+  "crossnode-bench @ git+https://github.com/gamai-io/crossnode-bench@33b8369d4a6e43a4f9c6bf2afef3dea850dea284",
+  "polymorph @ git+https://github.com/gamai-io/polymorph@2d8bdf8c2f242f7d8cb74fdc888548f9f6cb4b18",
 ]
 
 [project.urls]

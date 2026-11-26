@@ -36,8 +36,8 @@
       }
     },
     "latency_ms": {
-      "p50": 0.16,
-      "p95": 0.27
+      "p50": 0.25,
+      "p95": 0.51
     }
   },
   "learned_from_blocks": {
@@ -77,8 +77,8 @@
       }
     },
     "latency_ms": {
-      "p50": 1.82,
-      "p95": 3.97
+      "p50": 2.83,
+      "p95": 12.71
     }
   },
   "oracle_upper_bound": {
@@ -115,21 +115,21 @@
       }
     },
     "latency_ms": {
-      "p50": 1.92,
-      "p95": 5.2
+      "p50": 3.77,
+      "p95": 22.85
     }
   },
   "benign_false_positive": {
     "blocked": 0,
     "rate_pct": 0.0,
     "latency_ms": {
-      "p50": 0.12,
-      "p95": 0.27
+      "p50": 0.15,
+      "p95": 0.33
     },
     "after_learning_blocked": 1,
     "after_learning_rate_pct": 0.96
   },
   "limitations": "Edge regression corpus. It was used during tuning, so 100% is a regression result, not an independent estimate. Adaptive attackers are not covered.",
-  "ts": "2026-10-22T22:36:42Z",
+  "ts": "2026-11-26T17:38:34Z",
   "corpus": "edge"
 }

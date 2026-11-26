@@ -1,5 +1,27 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- `crossnode-bench` and `polymorph` are installed instead of copied. Both
+  upstream repositories now ship `pyproject.toml` (crossnode-bench 1.7.0,
+  polymorph 0.1.0), so the vendored directories are gone and
+  `requirements-vendored.txt` pins all five components.
+- The two local adaptations moved into umbrella code: `FleetNode`/`CliNode`
+  and the `gama-cli`/`fleet` config types live in `bench/crossnode_fleet/`
+  (with the real-1000 runners), and polymorph's E3 `agent-immunity` path is in
+  `bench/polymorph_e3.py`.
+- `repro.sh` runs `python -m crossnode`, `python -m run_e1`, `python -m run_e2`
+  and the E3 wrapper, and verifies the produced crossnode report.
+- `tools/check_vendored.py` reports all five components as installed from
+  `<repo>@<sha>` and fails only if a copy reappears or a pin drifts
+  (requirements vs pyproject, or installed commit vs pin). No network needed;
+  the weekly job now installs the pins first.
+- New `tests/test_installed_components.py` pins the component contracts this
+  harness relies on (25 passed, 2 skipped).
+- Migration notes: `docs/MIGRATION.md`.
+
 ## 0.2.0 - 2026-10-22
 
 ### Added

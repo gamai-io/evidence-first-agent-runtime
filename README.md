@@ -12,7 +12,7 @@ Three small, dependency-free components for agents that must be **provable**,
 | **[proofgate](https://github.com/gamai-io/proofgate-runtime)** | "Did it actually happen?" | 16/16 tests; 10 confirmed + 2 refuted + 0 unverified; tamper-evident SHA-256; optional HMAC/Ed25519 provenance |
 | **[agent-immunity](agent-immunity/)** | "Has this attack been seen before?" | built-in suite: 100% → 0% by round 3; three tuned corpora (360 attacks, 352 benign): 100% zero-shot; 0% benign FP; independent/adaptive check not yet run |
 | **[effect-broker](effect-broker/)** | "May it run, and did the effect land?" | 8/8 attacks detected; 3 adapters (file, SQL, HTTP); policy gate before, commit token after, hash-chained evidence |
-| **[crossnode-bench](crossnode-bench/)** | "Does the agent lie about other machines?" | 46/48, detects **2 false successes** a naive `ok:true` scorer counts as passes |
+| **[crossnode-bench](https://github.com/gamai-io/crossnode-bench)** | "Does the agent lie about other machines?" | 46/48, detects **2 false successes** a naive `ok:true` scorer counts as passes |
 
 
 **Blog post (BS):** [Agent koji ne laže: dokaz, imunitet i poštenje](https://gamai.io/blog/evidence-first-agent-runtime.html)
@@ -21,29 +21,34 @@ The thesis is simple: **capability is no longer the bottleneck — trust is.**
 A runtime that can prove an action, remember a refusal, and measure its own
 false-success rate is more useful than one that is merely fast.
 
-## Vendored copies vs canonical repositories
+## Canonical repositories, installed not copied
 
 Canonical code lives in its own repository. This repo is a harness: it installs
 the packages instead of copying them, so a fix lands once and every consumer
-picks it up. Three copies were deleted; two remain because their upstream
-repositories have no packaging metadata yet.
+picks it up. All five used to be vendored here and the copies drifted; the
+directories are gone and `tools/check_vendored.py` fails if one comes back or a
+pin drifts.
 
 | Component | In this tree | Source (pinned) |
 |---|---|---|
 | proofgate | **not vendored** — installed dependency | [proofgate-runtime](https://github.com/gamai-io/proofgate-runtime) `6ad4e0b` |
 | gamai-trust | **not vendored** — installed dependency | [gamai-trust](https://github.com/gamai-io/gamai-trust) `936a2cb` |
 | gamai-guard | **not vendored** — installed dependency | [gamai-guard](https://github.com/gamai-io/gamai-guard) `1fa2042` |
-| crossnode-bench | **vendored** (no `pyproject.toml`/`setup.py` upstream) | [crossnode-bench](https://github.com/gamai-io/crossnode-bench) `9629770` |
-| polymorph | **vendored** (no `pyproject.toml`/`setup.py` upstream) | [polymorph](https://github.com/gamai-io/polymorph) `2e37780` |
+| crossnode-bench | **not vendored** — installed dependency | [crossnode-bench](https://github.com/gamai-io/crossnode-bench) `33b8369` |
+| polymorph | **not vendored** — installed dependency | [polymorph](https://github.com/gamai-io/polymorph) `2d8bdf8` |
 
 Pins live in [`requirements-vendored.txt`](requirements-vendored.txt), and the
-same commits are in `pyproject.toml`. `tools/check_vendored.py` reports the
-three removed directories as "not vendored" and fails if one comes back; for
-the two snapshots it compares the Python files against the pinned commit and
-fails on unexpected drift. `vendored-drift.yml` runs it weekly. The known local
-differences (the umbrella's fleet adapters, a path adaptation) are recorded with
-both hashes, so the job turns red when either side changes and a human must
-re-review.
+same commits are in `pyproject.toml`. `tools/check_vendored.py` reports each one
+as "installed from `<repo>@<sha>`" and exits non-zero only if a directory
+reappears or the two pin lists (or the installed commit) disagree;
+`vendored-drift.yml` runs it weekly.
+
+Two behaviours used to live inside the copied files. They are umbrella code and
+now live here: the `FleetNode`/`CliNode` adapters and the `gama-cli`/`fleet`
+config types in [`bench/crossnode_fleet/`](bench/crossnode_fleet/), and the
+`agent-immunity` path for polymorph's E3 probe in
+[`bench/polymorph_e3.py`](bench/polymorph_e3.py). Details:
+[docs/MIGRATION.md](docs/MIGRATION.md).
 
 ## Standalone packages
 
@@ -101,8 +106,8 @@ python3 tests/suites/proofgate_core.py
 python3 agent-immunity/immunity.py selftest < /dev/null
 python3 agent-immunity/eval.py
 
-# 3. detect lying nodes (pinned snapshot; no pip package upstream)
-python3 crossnode-bench/crossnode.py --demo
+# 3. detect lying nodes (installed crossnode-bench)
+python3 -m crossnode --demo
 
 # 4. development, second and edge corpora
 python3 bench/run_heldout.py
@@ -168,8 +173,9 @@ also honors `GAMAI_TRUST_ROOT` for its own component lookup.)
   3-round corpus: baseline ASR **100%**, filter-only **0% / 10% / 0%**,
   antibody memory **0% / 0% / 0%**, utility **100%**, false denial **0%**,
   guard **~1.1–1.3 ms**. See the development and near-frozen second-check results below for the honest caveat.
-- **crossnode-bench**: 10/10 tests; demo **46/48 pass, 2 false successes**
-  across three nodes. A reference run on a real heterogeneous fleet
+- **crossnode-bench**: demo **46/48 pass, 2 false successes**
+  across three nodes (the component's own 105-test scorer suite runs in its
+  repository). A reference run on a real heterogeneous fleet
   (Windows/Linux/Android, six nodes, 16 tasks × 3 runs) reproduced three
   classes of false success: a missing program reported `ok:true`, a missing
   Android package reported `ok:true`, and a GUI action executed in the wrong

@@ -15,20 +15,20 @@ artifact. This index is deliberately short; the full claims ledger is in
 | Learned variants: 200/200 dev, 90/90 second check | both runs | both reports | Only attacks blocked once can be learned |
 | Benign false positives: 0/154 dev, 0/94 second check | both runs | both reports | Small, English/Bosnian benign set |
 | Edge-corpus zero-shot: 100% (tuned) | `python3 bench/run_edge.py` | `bench/edge_results.json`, `bench/EDGE_REPORT.md` | Also used during tuning; not independent |
-| German cross-language holdout: 1/30 (3.3%), 0/15 benign FP | `python3 polymorph/e3_cross_language.py` | `polymorph/corpus/e3_results.json`, `docs/E3_RESULTS_2026-10-22.md` | Human-authored German, not adaptive; shows filter is language-specific |
-| German semantic gate: tuned 28/30, fresh 6/12 (50%) | `python3 polymorph/semantic_gate.py` | `polymorph/corpus/e4_results.json`, `docs/E4_RESULTS_2026-10-22.md` | Prompt leakage and tuned guards; embedding cascade 10/12; not a boundary |
-| TOCTOU: 5/5 swaps allowed before exec; safe_exec denies 5/5 | `/tmp/toctou` lab; `polymorph/safe_exec.py` | `docs/TOCTOU_RESULTS_2026-10-22.md` | Shell scope; no ELF/argv/env binding yet |
+| German cross-language holdout: 1/30 (3.3%), 0/15 benign FP | `python3 bench/polymorph_e3.py` | installed `polymorph` corpus (`corpus/e3_results.json`), `docs/E3_RESULTS_2026-10-22.md` | Human-authored German, not adaptive; shows filter is language-specific |
+| German semantic gate: tuned 28/30, fresh 6/12 (50%) | `python3 -m semantic_gate` | installed `polymorph` corpus (`corpus/e4_results.json`), `docs/E4_RESULTS_2026-10-22.md` | Prompt leakage and tuned guards; embedding cascade 10/12; not a boundary |
+| TOCTOU: 5/5 swaps allowed before exec; safe_exec denies 5/5 | `/tmp/toctou` lab; `python3 -m safe_exec` | `docs/TOCTOU_RESULTS_2026-10-22.md` | Shell scope; no ELF/argv/env binding yet |
 | CBR before gate: 131 qualifying, 120 pending, 2 timers stopped (historical) | read-only SQL + systemd | `docs/SECURITY_ALERT_CBR_2026-10-22.md` | Superseded by the live 0-promotion/58-review row; no data deleted |
 | GAMA Guard tests: 7/7 | `python3 -m gamai_guard.tests.run_tests` | test output | Unit scope; not an adaptive attacker |
 | Blind multilingual: lexical 4/30, embedding 29/30, 0/10 FP | `python3 labs/eval_blind.py` | `labs/blind_multilingual_results.json` | 30 human attacks; one wording miss; CPU 55 s / GTX 1660S 3.31 s |
 | Guard worker: 40 texts in 1.37 s, 29/30, 0 FP | `POST localhost:18091/check_many` | `docs/GUARD_WORKER_2026-10-23.md` | VM-only; 127.0.0.1; serialized GPU batch |
-| Executed-byte binding: admitted SHA = executed SHA | `python3 polymorph/tests/test_safe_exec.py` | 3/3 tests; `polymorph/safe_exec.py --receipt` | Shell scope; no ELF/argv/env binding |
+| Executed-byte binding: admitted SHA = executed SHA | `python3 -m pytest tests/test_installed_components.py -q` | installed `safe_exec.py --receipt` | Shell scope; no ELF/argv/env binding |
 | CBR gate: 0 automatic promotions, 58 unique review; dual control | live `$HOME/.gama/gama_cbr_promote.py` dry-run | `_cbr_review.jsonl`, `_cbr_approvals.json` | Operator path; approval key custody external |
 | Naive claim-count screen is not evidence | `python3 labs/claims_audit.py` | `labs/claims_audit_results.json` | Broad OpenAlex hits; top hits often irrelevant |
 | CGR fractal: D≈1.73–1.98, Δ≤0.024 vs shuffle | `python3 labs/kmer_fractal.py` | `labs/kmer_fractal_results.json` | Composition bias; not a useful signature |
 | I Ching/codon: r=1 is a tautology | `python3 labs/iching_codons.py` | `labs/iching_codons_results.json` | 6-bit mapping is distance-preserving; non-identifiable |
 | Agent-immunity tests: 40/40 | `python3 agent-immunity/tests/run_tests.py` | test output | Stdlib only; no adaptive attacker |
-| crossnode-bench: 46/48, 2 false successes | `python3 crossnode-bench/crossnode.py --demo --runs 1` | `crossnode-bench/runs/<stamp>/report.json` | Demo uses mocked lying nodes; fleet run is separate |
+| crossnode-bench: 46/48, 2 false successes | `python3 -m crossnode --demo --runs 1` | `--outdir` `report.json` | Demo uses mocked lying nodes; fleet run is separate |
 | CI runs on Python 3.10/3.11/3.12 | `.github/workflows/ci.yml` | GitHub Actions run | Hosted runner, public logs only |
 | MCP server exposes 5 tools | `python3 -m gamai_trust.mcp_server --selftest` | `mcp selftest ok: 5 tools` | No transport authentication; stdio only |
 

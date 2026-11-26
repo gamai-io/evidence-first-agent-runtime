@@ -1,182 +1,143 @@
 #!/usr/bin/env python3
-"""Fail when a vendored component has drifted from its standalone repository.
+"""Fail when a component is copied back into this tree, or a pin drifts.
 
-Most components used to be copied into this tree, and the copies silently
-diverged. They are now installed from their own repositories instead. Two
-components cannot be installed because their upstream repositories ship no
-``pyproject.toml``/``setup.py``; those stay here as pinned snapshots.
+Every component used to be vendored here and the copies silently diverged.
+Now each one is installed from its own repository at a pinned commit. This
+check enforces exactly two things:
 
-This check therefore does two things:
+1. no vendored copy reappears under the old directory name (that would restore
+   the drift source);
+2. the pin does not drift: ``requirements-vendored.txt`` and ``pyproject.toml``
+   must agree on the commit, and — when the package is installed from a git
+   checkout, which is how CI installs it — the installed commit must be that
+   commit from that repository.
 
-* for installed components, it fails if the vendored directory comes back
-  (that would re-introduce the drift source);
-* for the two pinned snapshots, it clones the upstream repository at the pinned
-  commit and compares the Python files. A file that differs is drift unless it
-  is an explicitly recorded local divergence; the recorded local and upstream
-  hashes make sure an exception is re-reviewed when either side changes.
+It does not compare file contents (there are no copies left to compare) and it
+needs no network. A package that is not installed here is reported as such and
+skipped: absence is not drift. If a distribution was installed without VCS
+metadata (a local ``pip install .``), the pin cannot be confirmed from the
+environment and the line says so; that is reported, not failed.
 
-Directories that no longer exist are reported as "not vendored" and skipped.
-Network is required for the snapshot comparison, so this runs on a schedule and
-on demand, not on every push.
-
-Exit codes: 0 no unexpected drift, 1 drift found, 2 the check itself could not run.
+Exit codes: 0 no drift, 1 a copy is back or a pin drifted.
 """
 from __future__ import annotations
 
-import hashlib
+import importlib.metadata
+import json
 import pathlib
+import re
 import subprocess
 import sys
-import tempfile
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
+REQUIREMENTS = ROOT / "requirements-vendored.txt"
+PYPROJECT = ROOT / "pyproject.toml"
 
-# Vendored directory -> (standalone repository, pinned commit).
-# These have no packaging metadata upstream, so pip cannot install them.
-VENDORED = {
-    "crossnode-bench": (
-        "gamai-io/crossnode-bench",
-        "962977072059ea5ba13dad2114c71d40dcb62f95",
-    ),
-    "polymorph": (
-        "gamai-io/polymorph",
-        "2e3778014bc35d47b7d2d405ce78bdf56078aae0",
-    ),
-}
-
-# Former vendored directories -> (standalone repository, install name).
-# They are dependencies now: tools/check_vendored.py fails if a copy reappears.
-DEPENDENCIES = {
+# Former vendored directory -> (canonical repository, distribution name).
+COMPONENTS = {
     "proofgate": ("gamai-io/proofgate-runtime", "proofgate-runtime"),
     "gamai_trust": ("gamai-io/gamai-trust", "gamai-trust"),
     "gamai_guard": ("gamai-io/gamai-guard", "gamai-guard"),
+    "crossnode-bench": ("gamai-io/crossnode-bench", "crossnode-bench"),
+    "polymorph": ("gamai-io/polymorph", "polymorph"),
 }
 
-# Vendored file -> (local sha256, upstream sha256, reason).
-# Both hashes must still match; otherwise the exception is stale and the weekly
-# job asks for a human review instead of staying permanently green.
-KNOWN_DIVERGENCE = {
-    "crossnode-bench": {
-        "crossnode.py": (
-            "431a470cf9d32f47c3705d51ec3ac7255d2a171e5e26d3abd3749972f935409d",
-            "c2191f1ce3b2c1110502162441d83114b4e375bb28b4e8aad07caa720167e2c5",
-            "adds the FleetNode/CliNode adapters this umbrella uses",
-        ),
-    },
-    "polymorph": {
-        "e3_cross_language.py": (
-            "2381978bfb5dc81839185920f4087f432a7a13370596bee468d25c6974927116",
-            "512aab9970d39e26a84c56837bf23f0f5597208933920b55b82b4eaac248d61e",
-            "resolves agent-immunity from the umbrella root",
-        ),
-    },
-}
-
-SKIP_NAMES = {".git", "__pycache__", ".pytest_cache", "node_modules"}
-CODE_SUFFIXES = {".py"}
+# "name @ git+https://github.com/<org>/<repo>@<40-hex sha>"
+PIN_RE = re.compile(
+    r"([A-Za-z0-9][A-Za-z0-9._-]*)\s*@\s*"
+    r"(git\+https://github\.com/([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+?)@([0-9a-f]{40}))")
 
 
-def sha256(path: pathlib.Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+def parse_pins(path: pathlib.Path) -> dict[str, tuple[str, str]]:
+    """Distribution name -> (repository slug, commit) for every pin in *path*."""
+    pins: dict[str, tuple[str, str]] = {}
+    for name, _url, repo, commit in PIN_RE.findall(path.read_text(encoding="utf-8")):
+        pins[name] = (repo, commit)
+    return pins
 
 
-def code_files(base: pathlib.Path) -> dict[str, str]:
-    """Relative path -> sha256 for every Python file under *base*."""
-    out: dict[str, str] = {}
-    for path in base.rglob("*.py"):
-        if not path.is_file():
-            continue
-        if any(part in SKIP_NAMES for part in path.parts):
-            continue
-        if path.suffix not in CODE_SUFFIXES:
-            continue
-        out[path.relative_to(base).as_posix()] = sha256(path)
-    return out
+def direct_origin(url: str) -> str:
+    """Turn a local ``file://`` install URL into the clone's origin slug, if any."""
+    if not url.startswith("file://"):
+        return ""
+    path = url[len("file://"):]
+    proc = subprocess.run(["git", "-C", path, "remote", "get-url", "origin"],
+                          capture_output=True, text=True)
+    if proc.returncode != 0:
+        return ""
+    origin = proc.stdout.strip()
+    match = re.search(r"github\.com[:/]+([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+?)(?:\.git)?$", origin)
+    return match.group(1) if match else ""
 
 
-def clone_at(repo: str, commit: str, dest: pathlib.Path) -> str | None:
-    """Clone *repo* and check out *commit*. Returns an error string on failure."""
-    clone = subprocess.run(
-        ["git", "clone", "--quiet", f"https://github.com/{repo}.git", str(dest)],
-        capture_output=True, text=True)
-    if clone.returncode != 0:
-        return clone.stderr.strip()[:200]
-    checkout = subprocess.run(
-        ["git", "-C", str(dest), "checkout", "--quiet", commit],
-        capture_output=True, text=True)
-    if checkout.returncode != 0:
-        return checkout.stderr.strip()[:200]
-    return None
-
-
-def check_snapshot(local: str, repo: str, commit: str, workdir: pathlib.Path) -> int:
-    here = ROOT / local
-    if not here.is_dir():
-        print(f"{local}: not vendored (skipped; pinned snapshot removed)")
-        return 0
-
-    dest = workdir / local
-    error = clone_at(repo, commit, dest)
-    if error:
-        print(f"{local}: cannot clone {repo}@{commit[:7]}: {error}")
-        return 2
-
-    mine, theirs = code_files(here), code_files(dest)
-    common = set(mine) & set(theirs)
-    problems: list[str] = []
-    print(f"{local}: pinned at {repo}@{commit[:7]} "
-          f"({len(common)} code files compared, "
-          f"{len(set(mine) - common)} local-only, "
-          f"{len(set(theirs) - common)} upstream-only)")
-
-    for name in sorted(common):
-        if mine[name] == theirs[name]:
-            continue
-        allowed = KNOWN_DIVERGENCE.get(local, {}).get(name)
-        if allowed:
-            local_hash, upstream_hash, why = allowed
-            if mine[name] == local_hash and theirs[name] == upstream_hash:
-                print(f"  known divergence  {name} ({why})")
-                continue
-            if theirs[name] != upstream_hash:
-                problems.append(
-                    f"{name}: upstream changed since this divergence was recorded "
-                    f"({why}); re-review it")
-            if mine[name] != local_hash:
-                problems.append(
-                    f"{name}: local file changed since this divergence was recorded; "
-                    f"update KNOWN_DIVERGENCE if the change is intentional")
-            continue
-        problems.append(f"{name}: differs from {repo}@{commit[:7]}")
-
-    if problems:
-        print(f"{local}: DRIFT")
-        for problem in problems:
-            print(f"  {problem}")
-        return 1
-    print(f"{local}: in sync")
-    return 0
+def installed_pin(dist_name: str) -> tuple[str, str] | None:
+    """(repository slug, commit) recorded by pip for *dist_name*, or None."""
+    try:
+        dist = importlib.metadata.distribution(dist_name)
+    except importlib.metadata.PackageNotFoundError:
+        return None
+    raw = dist.read_text("direct_url.json")
+    if not raw:
+        return ("", "")
+    data = json.loads(raw)
+    vcs = data.get("vcs_info") or {}
+    if not vcs:
+        return ("", "")
+    repo = direct_origin(data.get("url", ""))
+    return (repo, vcs.get("commit_id", ""))
 
 
 def main() -> int:
-    drift = 0
-    for local, (repo, package) in DEPENDENCIES.items():
+    problems: list[str] = []
+
+    for local in COMPONENTS:
         if (ROOT / local).is_dir():
-            drift += 1
-            print(f"{local}: UNEXPECTED vendored copy is back; "
-                  f"depend on {package} ({repo}) and delete the directory")
-        else:
-            print(f"{local}: not vendored (installed from {repo} as {package})")
+            problems.append(f"{local}: vendored copy is back at {local}/; "
+                            f"delete it and depend on the installed package")
 
-    with tempfile.TemporaryDirectory() as td:
-        workdir = pathlib.Path(td)
-        for local, (repo, commit) in VENDORED.items():
-            result = check_snapshot(local, repo, commit, workdir)
-            if result == 2:
-                return 2
-            drift += result
+    pins_req = parse_pins(REQUIREMENTS)
+    pins_pyproject = parse_pins(PYPROJECT)
 
-    return 1 if drift else 0
+    for local, (repo, dist_name) in COMPONENTS.items():
+        pin = pins_req.get(dist_name)
+        if pin is None:
+            problems.append(f"{dist_name}: no pin in requirements-vendored.txt")
+            continue
+        if pin[0] != repo:
+            problems.append(f"{dist_name}: pinned to {pin[0]}, expected {repo}")
+            continue
+
+        other = pins_pyproject.get(dist_name)
+        if other is None:
+            problems.append(f"{dist_name}: no pin in pyproject.toml")
+        elif other != pin:
+            problems.append(f"{dist_name}: pin drift — requirements-vendored.txt says "
+                            f"{pin[0]}@{pin[1][:7]}, pyproject.toml says "
+                            f"{other[0]}@{other[1][:7]}")
+
+        line = f"{local}: installed from {repo}@{pin[1][:7]}"
+        got = installed_pin(dist_name)
+        if got is None:
+            print(f"{line} (dist {dist_name}: not installed in this environment)")
+            continue
+        if got == ("", ""):
+            print(f"{line} (dist {dist_name} installed without VCS metadata; "
+                  f"pin not verified here)")
+            continue
+        if got[0] and got[0] != repo:
+            problems.append(f"{dist_name}: installed from {got[0]}, pinned to {repo}")
+        if got[1] != pin[1]:
+            problems.append(f"{dist_name}: installed commit {got[1][:7]}, "
+                            f"pinned to {pin[1][:7]}")
+        print(f"{line} (dist {dist_name}, installed commit {got[1][:7]})")
+
+    for problem in problems:
+        print(f"DRIFT  {problem}")
+    if problems:
+        print(f"{len(problems)} problem(s): a copy is back or a pin drifted")
+        return 1
+    print("no vendored copies, pins agree, installed commits match")
+    return 0
 
 
 if __name__ == "__main__":
